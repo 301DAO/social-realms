@@ -1,12 +1,10 @@
-import { Card, Display, Image } from "@geist-ui/react";
+import { Card, Display, Grid, Image, Text } from "@geist-ui/react";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from "@web3-react/injected-connector";
-import Head from "next/head";
 import * as React from "react";
-// import logo from './tweether_logo.png';
 
 const getErrorMessage = (error) => {
   if (error instanceof NoEthereumProviderError) {
@@ -24,12 +22,10 @@ const getErrorMessage = (error) => {
 export default function App() {
   const web3Context = useWeb3React();
   const { library, active, account, chainId, address } = web3Context;
-  // TODO: add title, favicon, etc.
-  // TODO: add loading screen
 
   const note = (
     <div style={{ padding: "0 10px" }}>
-      <p>
+      <Text font={1.2}>
         To use the site make sure to switch to Ropsten network to create your
         DID when prompted “Create new identity.” After having successfully
         created DID, you can switch back to use mainnet to use all features of
@@ -38,24 +34,26 @@ export default function App() {
         <br />
         This is necessary as of now since Ceramic only supports testnet at the
         moment. The team is working on having the site use Ceramic mainnet.
-      </p>
+      </Text>
     </div>
   );
   return (
     <div>
-      <Head>
-        <title>My Realm</title>
-        <meta name="description" content="" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Grid.Container ga={2} justify="center" direction="row">
+        <Grid xs={18} md={12} h="250px" w="250px" my="15px">
+          <Image alt="logo" src={"/eth_vital.png"} w="100%" h="100%" />
+        </Grid>
+        <Grid xs={18} md={12} h="250px" w="250px" my="15px">
+          <Image alt="logo" src={"/grey_bird.png"} w="100%" h="100%" />
+        </Grid>
+      </Grid.Container>
 
-      <Display>
-        <Image alt="logo" src={"/tweether_logo.png"} />
+      <Display shadow>
+        <Card shadow w="40">
+          <h4>Note</h4>
+          {note}
+        </Card>
       </Display>
-      <Card shadow w="40">
-        <h4>Note</h4>
-        {note}
-      </Card>
     </div>
   );
 }

@@ -1,20 +1,13 @@
+import { FollowCard } from "@/components/FollowCard";
 import { LoadingUI } from "@/components/loading";
 import NftImage from "@/components/nft-image";
-import ReadableTx from "@/components/readable-tx";
-import { Card, Grid, Text, Link, Note } from "@geist-ui/react";
+import { useCeramicContext } from "@/contexts/CeramicContext";
+import { useEnsData } from "@/hooks/useEnsData";
+import { fetcher } from "@/lib/fetcher";
+import { loadFollowing } from "@/store/ceramicStore";
+import { Link, Note, Text } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import * as React from "react";
-import useSWR from "swr";
-import { useCeramicContext } from "../../contexts/CeramicContext";
-import { useEnsData } from "../../hooks/useEnsData";
-import { fetcher } from "../../lib/fetcher";
-import {
-  follow,
-  loadFollowing,
-  unfollow,
-  detectFollowListChange,
-} from "@store/ceramicStore";
-import { FollowCard } from "../../components/FollowCard";
 
 export default function Profile() {
   const web3Context = useWeb3React();
@@ -31,9 +24,6 @@ export default function Profile() {
   //   fetcher
   // );
   const [following, setFollowing] = React.useState([]);
-
-  // const txsData = data ? data.data.items : [];
-
   const { ens, url, avatar } = useEnsData({
     provider: library,
     address: account,
@@ -55,8 +45,10 @@ export default function Profile() {
 
     return () => {
       setMounted(false);
-    }
+    };
   }, [client, loading]);
+
+  console.log(111111);
 
   if (loading)
     return (
@@ -75,8 +67,8 @@ export default function Profile() {
       ) : (
         <Note>
           <Text h5>
-            You don&apos;t seem to have a primary ENS domain to serve as your web3
-            profile. Learn more{" "}
+            You don&apos;t seem to have a primary ENS domain to serve as your
+            web3 profile. Learn more{" "}
             <Link color href="https://ens.domains/" target="_blank">
               here.
             </Link>

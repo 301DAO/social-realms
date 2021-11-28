@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Button, Grid, Input } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
-import { useCeramicContext } from "contexts/CeramicContext";
+import { useCeramicContext } from "@/contexts/CeramicContext";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useState } from "react";

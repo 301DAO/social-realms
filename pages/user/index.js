@@ -1,22 +1,20 @@
+import { EnsUser } from "@/components/EnsUser";
 import { LoadingUI } from "@/components/loading";
-import NftImage from "@/components/nft-image";
-import ReadableTx from "@/components/readable-tx";
+import { useCeramicContext } from "@/contexts/CeramicContext";
+import { useBalance } from "@/hooks/useBalance";
+import { fetcher } from "@/lib/fetcher";
 import { Button, Card, Grid, Spacer } from "@geist-ui/react";
 import * as Icon from "@geist-ui/react-icons";
 import {
+  detectFollowListChange,
   follow,
   loadFollowing,
   unfollow,
-  detectFollowListChange,
 } from "@store/ceramicStore";
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
 import * as React from "react";
 import useSWR from "swr";
-import { useCeramicContext } from "../../contexts/CeramicContext";
-import { useBalance } from "../../hooks/useBalance";
-import { EnsUser } from "../../components/EnsUser";
-import { fetcher } from "../../lib/fetcher";
 
 export default function Profile() {
   const web3Context = useWeb3React();
@@ -39,15 +37,12 @@ export default function Profile() {
     fetcher
   );
 
-
   const transactionsDetail = transactionsForAddress.data;
   const transactionsError = transactionsForAddress.error;
 
   const txsData = transactionsDetail?.data.items || [];
 
   React.useEffect(() => {
-
-
     (async () => {
       if (client) {
         if (loading) {

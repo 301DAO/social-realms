@@ -22,7 +22,7 @@ import {
   unfavoriteTransaction,
   unfollow,
 } from "store/ceramicStore";
-import { useBalance } from "../hooks/useBalance";
+import { useBalance } from "@/hooks/useBalance";
 import { EthereumIcon } from "./icons/Ethereum";
 // TODO: rename file
 

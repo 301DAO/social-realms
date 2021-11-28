@@ -2,7 +2,8 @@
 import * as React from "react";
 import { Avatar } from "@geist-ui/react";
 import { useQuery } from "react-query";
-import { parseEnsAvatar } from "../util/ens-avatar-parser";
+import { parseEnsAvatar } from "@/util/ens-avatar-parser";
+
 const getImage = async (contract, tokenId) => {
   const response = await fetch(
     `/api/nft-details/?contract_address=${contract}&token_id=${tokenId}`

@@ -1,12 +1,9 @@
-import { loadFollowing } from "@store/ceramicStore";
+import { FeedCard } from "@/components/FeedCard";
+import { useCeramicContext } from "@/contexts/CeramicContext";
+import { loadFollowing } from "@/store/ceramicStore";
+import { Spacer } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import * as React from "react";
-import { useCeramicContext } from "../../contexts/CeramicContext";
-import { Card, Grid, Link, Badge, Spacer } from "@geist-ui/react";
-import { parseBigNumberToString } from "util/bigNumberConverter";
-import { ArrowRight } from '@geist-ui/react-icons'
-import { useEnsData } from "../../hooks/useEnsData";
-import { FeedCard } from "../../components/FeedCard";
 
 export const FAKE_FEED = [
   {
@@ -57,26 +54,34 @@ export default function Feed() {
         setFollowing(following);
         library.on("block", async (blockNumber) => {
           console.log(blockNumber);
-          const allBlockInfo = await library.getBlockWithTransactions(blockNumber);
+          const allBlockInfo = await library.getBlockWithTransactions(
+            blockNumber
+          );
           console.log(allBlockInfo);
 
           const newTxs = allBlockInfo.transactions
             .filter((transaction) => {
-              return following.includes(transaction.to) || following.includes(transaction.from);
+              return (
+                following.includes(transaction.to) ||
+                following.includes(transaction.from)
+              );
             })
             .map((transaction) => ({
               ...transaction,
-              timestamp: allBlockInfo.timestamp
+              timestamp: allBlockInfo.timestamp,
             }));
 
           setFollowingTransactions((previousFollowingTransactions) => {
             const transactions = [];
             for (let prevIndex in previousFollowingTransactions) {
               for (let curIndex in newTxs) {
-                if (newTxs[curIndex].hash === previousFollowingTransactions[prevIndex].hash) {
+                if (
+                  newTxs[curIndex].hash ===
+                  previousFollowingTransactions[prevIndex].hash
+                ) {
                   transactions.push(newTxs[curIndex]);
                   delete previousFollowingTransactions[prevIndex];
-                  delete newTxs[curIndex]
+                  delete newTxs[curIndex];
                 }
               }
             }
@@ -90,41 +95,34 @@ export default function Feed() {
             transactions.sort((a, b) => b.timestamp - a.timestamp);
             return transactions.slice(0, 50);
           });
-      })
+        });
       }
     })();
 
     return () => {
       if (library) {
-        library.removeAllListeners('block');
+        library.removeAllListeners("block");
       }
-    }
+    };
   }, [client, library]);
 
   return (
     <div>
-      {/* {FAKE_FEED.map((item, idx) => (
-        <FeedCard
-          key={idx}
-          address={item.address}
-          ens={item.ens}
-          balance={item.balance}
-          img={item.img}
-          text={item.text}
-          profilePath="abcd"
-        />
-      ))} */}
-      {(!following || following.length === 0)
-        ? <p>Currently you are following no one. Use the search bar to find more users to follow.</p>
-        : followingTransactions.length === 0
-        ? <p>Currently there is no events observed, please wait...</p>
-        : followingTransactions.map((tx) =>
+      {!following || following.length === 0 ? (
+        <p>
+          Currently you are following no one. Use the search bar to find more
+          users to follow.
+        </p>
+      ) : followingTransactions.length === 0 ? (
+        <p>Currently there is no events observed, please wait...</p>
+      ) : (
+        followingTransactions.map((tx) => (
           <div key={tx.hash}>
             <FeedCard transactionDetail={tx} />
             <Spacer />
           </div>
-          )
-      }
+        ))
+      )}
     </div>
   );
 }

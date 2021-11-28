@@ -1,4 +1,4 @@
-import { retrieveNftsByAddress } from "../../lib/nft-port-api-wrapper";
+import { retrieveNftsByAddress } from "@/lib/nft-port-api-wrapper";
 
 export default async function handler(req, res) {
   const { query } = req;

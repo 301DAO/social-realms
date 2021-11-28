@@ -1,6 +1,6 @@
-import * as React from "react";
+import { authenticateAndGetClient } from "@/store/ceramicStore";
 import { useWeb3React } from "@web3-react/core";
-import { authenticateAndGetClient } from "store/ceramicStore";
+import * as React from "react";
 
 export const CeramicContext = React.createContext(null);
 
@@ -8,9 +8,9 @@ export const useCeramicContext = () => {
   return React.useContext(CeramicContext);
 };
 
-export const CeramicContextWrapper = ({children}) => {
+export const CeramicContextWrapper = ({ children }) => {
   const web3Context = useWeb3React();
-  const { active, } = web3Context;
+  const { active } = web3Context;
 
   const [client, setClient] = React.useState();
 
@@ -21,14 +21,12 @@ export const CeramicContextWrapper = ({children}) => {
       const ceramicClient = await authenticateAndGetClient();
       setClient(ceramicClient);
     }
-  }
+  };
   React.useEffect(() => {
     loadCeramicClient(active);
   }, [active]);
 
   return (
-    <CeramicContext.Provider value={value}>
-      {children}
-    </CeramicContext.Provider>
-  )
-}
+    <CeramicContext.Provider value={value}>{children}</CeramicContext.Provider>
+  );
+};

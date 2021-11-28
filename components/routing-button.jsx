@@ -32,10 +32,6 @@ export const RoutingButton = (props) => {
           >
             {text}
           </Button>
-          {/*
-
-        <Spacer inline />
-        <Dot type={active ? "success" : error ? "error" : "warning"} /> */}
         </Grid>
       </Grid.Container>
     </Container>

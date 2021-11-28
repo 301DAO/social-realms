@@ -1,4 +1,4 @@
-import { retrieveNftDetails } from "../../lib/nft-port-api-wrapper";
+import { retrieveNftDetails } from "@/lib/nft-port-api-wrapper";
 // TODO: add logging and error handling
 
 export default async function handler(req, res) {
