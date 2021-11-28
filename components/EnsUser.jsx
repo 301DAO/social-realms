@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { useQuery } from "react-query";
+import { useEnsData } from "@/hooks/useEnsData";
+import { parseEnsAvatar } from "@/util/ens-avatar-parser";
+import { User } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
-import { User, Link } from "@geist-ui/react";
-import { useEnsData } from "../hooks/useEnsData";
-import { parseEnsAvatar } from "../util/ens-avatar-parser";
-
+import * as React from "react";
+import { useQuery } from "react-query";
 
 const getImage = async (contract, tokenId) => {
   const response = await fetch(
@@ -16,11 +15,13 @@ const getImage = async (contract, tokenId) => {
   return response.json();
 };
 
-
 export const EnsUser = ({ address }) => {
   const { library } = useWeb3React();
 
-  const {ens, url, avatar, ethAddress} = useEnsData({ provider: library, address });
+  const { ens, url, avatar, ethAddress } = useEnsData({
+    provider: library,
+    address,
+  });
 
   const { contract, tokenId } = parseEnsAvatar(avatar);
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -31,11 +32,23 @@ export const EnsUser = ({ address }) => {
 
   const image = data?.nft?.metadata?.image;
 
-  return <>
-    <User src={image || 'https://pbs.twimg.com/profile_images/1455381288756695041/acatxTm8_400x400.jpg'} name={ens || `${address.substring(0, 8)}...`} >
-      {url
-        ? <User.Link href={url}>{url}</User.Link>
-        : <User.Link href={`https://etherscan.io/address/${ethAddress}`}>{ethAddress}</User.Link>}
-    </User>
-  </>;
-}
+  return (
+    <>
+      <User
+        src={
+          image ||
+          "https://pbs.twimg.com/profile_images/1455381288756695041/acatxTm8_400x400.jpg"
+        }
+        name={ens || `${address.substring(0, 8)}...`}
+      >
+        {url ? (
+          <User.Link href={url}>{url}</User.Link>
+        ) : (
+          <User.Link href={`https://etherscan.io/address/${ethAddress}`}>
+            {ethAddress}
+          </User.Link>
+        )}
+      </User>
+    </>
+  );
+};

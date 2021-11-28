@@ -1,20 +1,7 @@
-import {
-  Avatar,
-  Button,
-  Divider,
-  Fieldset,
-  Grid,
-  Link,
-  Spacer,
-  Text,
-} from "@geist-ui/react";
-import * as Icon from "@geist-ui/react-icons";
-import * as React from "react";
+import { useEnsData } from "@/hooks/useEnsData";
+import { Fieldset, Grid, Link, Spacer, Text } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
-import { useEnsData } from "../hooks/useEnsData";
-import { parseEnsAvatar } from "../util/ens-avatar-parser";
-import { useQuery } from "react-query";
-
+import * as React from "react";
 import NftImage from "./nft-image";
 
 export const FollowCard = ({ address }) => {

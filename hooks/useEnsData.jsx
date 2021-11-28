@@ -1,4 +1,5 @@
 import * as React from "react";
+
 export const useEnsData = (props) => {
   const { provider, address } = props;
   const [ethAddress, setEthAddress] = React.useState();
@@ -7,7 +8,7 @@ export const useEnsData = (props) => {
   const [avatar, setAvatar] = React.useState();
   React.useEffect(() => {
     if (!!provider && !!address) {
-      console.log("provider", provider)
+      console.log("provider", provider);
       let stale = false;
       // only way to use async inside useEffect
       (async () => {

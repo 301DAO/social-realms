@@ -6,10 +6,12 @@
       "@/components/*": ["components/*"],
       "@/wallet/*": ["wallet/*"],
       "@/styles/*": ["styles/*"],
-      "@/contexts/*": ["context/*"],
+      "@/contexts/*": ["contexts/*"],
       "@store/*": ["store/*"],
       "@services/*": ["services/*"],
-      "@/hooks/*": ["hooks/*"]
+      "@/hooks/*": ["hooks/*"],
+      "@/util/*": ["util/*"],
+      "@/store/*": ["store/*"]
     }
   },
   "exclude": [
@@ -19,15 +21,17 @@
     ".npm-tmp",
     "/dist",
     "/dist*",
-    "/build",
+    ".next",
     "/node_modules",
-    "/node_modules*",
     "/out",
     "/out*",
     "/tmp",
     "/tmp*",
     "**/dist/*",
     "**/node_modules/*",
-    "/package-lock.json"
+    "/package-lock.json",
+    "./.scratch",
+    "./next",
+    "./build"
   ]
 }

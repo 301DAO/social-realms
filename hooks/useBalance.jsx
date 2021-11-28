@@ -1,5 +1,5 @@
 import * as React from "react";
-import { parseBigNumberToString } from "../util/bigNumberConverter";
+import { parseBigNumberToString } from "@/util/bigNumberConverter";
 export const useBalance = (props) => {
   const { account, library, chainId } = props;
   const [balance, setBalance] = React.useState();

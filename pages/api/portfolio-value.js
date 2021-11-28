@@ -1,5 +1,5 @@
-import { getHistoricalPortfolioValue } from "../../lib/covalent-api-wrapper";
-import { isValidEthAddress } from "../../util/string-validators";
+import { getHistoricalPortfolioValue } from "@/lib/covalent-api-wrapper";
+import { isValidEthAddress } from "@/util/string-validators";
 // TODO: add logging and error handling
 export default async function handler(req, res) {
   const { query } = req;
