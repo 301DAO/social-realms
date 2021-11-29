@@ -5,22 +5,22 @@ import { useBalance } from "@/hooks/useBalance";
 import { fetcher } from "@/lib/fetcher";
 import { Button, Card, Grid, Spacer } from "@geist-ui/react";
 import * as Icon from "@geist-ui/react-icons";
+import { useWeb3React } from "@web3-react/core";
+import { useRouter } from "next/router";
+import * as React from "react";
+import useSWR from "swr";
 import {
   detectFollowListChange,
   follow,
   loadFollowing,
   unfollow,
-} from "@store/ceramicStore";
-import { useWeb3React } from "@web3-react/core";
-import { useRouter } from "next/router";
-import * as React from "react";
-import useSWR from "swr";
+} from "../../store/ceramicStore";
 
 export default function Profile() {
   const web3Context = useWeb3React();
   const { library, chainId } = web3Context;
   const { client } = useCeramicContext();
-
+  console.log(client);
   const router = useRouter();
   const { address } = router.query;
   const [mounted, setMounted] = React.useState(false);
@@ -75,7 +75,7 @@ export default function Profile() {
     return () => {
       setMounted(false);
     };
-  }, [client, loading]);
+  }, [client, loading, address, followingList, library]);
 
   const handleFollowButtonClick = async (e) => {
     e.preventDefault();
@@ -102,6 +102,7 @@ export default function Profile() {
     );
 
     if (client) {
+      console.log(client);
       unfollow(client, resolvedName);
       setLoading(true);
     }
