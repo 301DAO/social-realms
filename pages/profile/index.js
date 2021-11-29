@@ -17,12 +17,7 @@ export default function Profile() {
   const [userData, setUserData] = React.useState({});
   const [mounted, setMounted] = React.useState(false);
   const [portfolioValue, setPortfolioValue] = React.useState();
-  const queryParams = new URLSearchParams({ account });
-  //const api_route = `/api/nft/account?${queryParams}`;
-  // const { data, error } = useSWR(
-  //   mounted ? `/api/address-txs/?address=${account}` : null,
-  //   fetcher
-  // );
+
   const [following, setFollowing] = React.useState([]);
   const { ens, url, avatar } = useEnsData({
     provider: library,

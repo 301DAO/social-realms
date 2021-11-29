@@ -3,12 +3,18 @@ import { Fieldset, Grid, Link, Spacer, Text } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import * as React from "react";
 import NftImage from "./nft-image";
-
+import Router from "next/router";
 export const FollowCard = ({ address }) => {
   const web3Context = useWeb3React();
   const { library, chainId } = web3Context;
   const { ens, url, avatar } = useEnsData({ provider: library, address });
   const topline = ens || address;
+
+  // using router instead of Link because router doesn't reload page
+  const onUserClick = async (event) => {
+    event.preventDefault();
+    Router.push(`/user/?address=${topline}`);
+  };
 
   return (
     <>
@@ -25,7 +31,7 @@ export const FollowCard = ({ address }) => {
               <Grid.Container direction="row">
                 <Grid xs={20} margin="1px">
                   <Text h4 mx="0px" my="5.5px">
-                    <Link href={`/user/?address=${topline}`}>{topline}</Link>
+                    <Link onClick={onUserClick}>{topline}</Link>
                   </Text>
                 </Grid>
                 <Grid xs={24}>
