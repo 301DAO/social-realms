@@ -1,3 +1,13 @@
+import { useBalance } from "@/hooks/useBalance";
+import {
+  authenticateAndGetClient,
+  favoriteTransaction,
+  follow,
+  loadAllFavoriteTransactions,
+  loadFollowing,
+  unfavoriteTransaction,
+  unfollow,
+} from "@/store/ceramicStore";
 import { injectedConnector } from "@/wallet/connectors";
 import { useEagerConnect, useInactiveListener } from "@/wallet/hooks";
 import styled from "@emotion/styled";
@@ -13,16 +23,6 @@ import * as Icon from "@geist-ui/react-icons";
 import { useWeb3React } from "@web3-react/core";
 import Router from "next/router";
 import * as React from "react";
-import {
-  authenticateAndGetClient,
-  favoriteTransaction,
-  follow,
-  loadAllFavoriteTransactions,
-  loadFollowing,
-  unfavoriteTransaction,
-  unfollow,
-} from "store/ceramicStore";
-import { useBalance } from "@/hooks/useBalance";
 import { EthereumIcon } from "./icons/Ethereum";
 // TODO: rename file
 

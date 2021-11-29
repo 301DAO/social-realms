@@ -48,8 +48,6 @@ export default function Profile() {
     };
   }, [client, loading]);
 
-  console.log(111111);
-
   if (loading)
     return (
       <div>

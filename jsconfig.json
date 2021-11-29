@@ -7,11 +7,10 @@
       "@/wallet/*": ["wallet/*"],
       "@/styles/*": ["styles/*"],
       "@/contexts/*": ["contexts/*"],
-      "@store/*": ["store/*"],
-      "@services/*": ["services/*"],
       "@/hooks/*": ["hooks/*"],
       "@/util/*": ["util/*"],
-      "@/store/*": ["store/*"]
+      "@/store/*": ["store/*"],
+      "@/lib/*": ["lib/*"]
     }
   },
   "exclude": [
