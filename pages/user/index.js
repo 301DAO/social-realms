@@ -75,7 +75,7 @@ export default function Profile() {
     return () => {
       setMounted(false);
     };
-  }, [client, loading, address, followingList, library]);
+  }, [client, loading]);
 
   const handleFollowButtonClick = async (e) => {
     e.preventDefault();
