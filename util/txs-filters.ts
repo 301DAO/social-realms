@@ -1,19 +1,18 @@
-const grabLogEvents = (txs) => txs.map((tx) => tx.log_events);
-const filterLogEvents = (logEvents) =>
-  logEvents.filter((log) => log?.decoded?.name === "Swap");
+const grabLogEvents = (txs: any) => txs.map((tx: any) => tx.log_events);
+const filterLogEvents = (logEvents: any) => logEvents.filter((log: any) => log?.decoded?.name === "Swap");
 
-export const parseTxs = (txs) => {
+export const parseTxs = (txs: any) => {
   const logEvents = grabLogEvents(txs);
   const filteredLogEvents = filterLogEvents(logEvents);
 
-  return filteredLogEvents.map((log) => {
+  return filteredLogEvents.map((log: any) => {
     const timestamp = log.block_signed_at;
     const tx_hash = log.tx_hash;
     const ticket_symbol = log.sender_contract_ticker_symbol;
     const coin_name = log.decoded.name;
     const from = log.decoded.params[0].value;
     const to = log.decoded.params.find(
-      (p) => p.name === "to" || p.name === "recipient"
+      (p: any) => p.name === "to" || p.name === "recipient"
     ).value;
     const amount_in = Number(
       log.decoded.params[1].value + log.decoded.params[2].value

@@ -13,7 +13,7 @@ console.log(API_KEY);
  * @return {Promise<Object>}
  */
 const NftPortRequest = async (
-  relativePath,
+  relativePath: any,
   parameters = { chain: "ethereum" }
 ) => {
   const queryParams = new URLSearchParams(parameters);
@@ -27,6 +27,7 @@ const NftPortRequest = async (
     redirect: "follow",
   };
   try {
+    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ method: string; headers: { "Co... Remove this comment to see the full error message
     const response = await fetch(url, options);
     return response.json();
   } catch (error) {
@@ -38,7 +39,7 @@ const NftPortRequest = async (
 /**
  * Returns NFTs owned by a given account (i.e. wallet) address. Can also return each NFT metadata with 'include' parameter.
  */
-export const retrieveNftsByAddress = async (address) => {
+export const retrieveNftsByAddress = async (address: any) => {
   const relativePath = `accounts/${address}`;
   return NftPortRequest(relativePath);
 };
@@ -46,7 +47,7 @@ export const retrieveNftsByAddress = async (address) => {
 /**
  * Returns details for a given NFT. These include metadata_url, metadata such as name, description, attributes, etc., image_url, cached_image_url and mint_date.
  */
-export const retrieveNftDetails = async (contractAddress, tokenId) => {
+export const retrieveNftDetails = async (contractAddress: any, tokenId: any) => {
   //const { type, contractAddress, tokenId, chainId } = parseEnsAvatar(ensAvatar);
   const relativePath = `nfts/${contractAddress}/${tokenId}`;
   return NftPortRequest(relativePath);

@@ -1,8 +1,12 @@
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/components/FeedCard' or its ... Remove this comment to see the full error message
 import { FeedCard } from "@/components/FeedCard";
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/contexts/CeramicContext' or ... Remove this comment to see the full error message
 import { useCeramicContext } from "@/contexts/CeramicContext";
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/store/ceramicStore' or its c... Remove this comment to see the full error message
 import { loadFollowing } from "@/store/ceramicStore";
 import { Spacer } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import * as React from "react";
 
 export const FAKE_FEED = [
@@ -52,7 +56,7 @@ export default function Feed() {
       if (client && library) {
         const { following } = await loadFollowing(client);
         setFollowing(following);
-        library.on("block", async (blockNumber) => {
+        library.on("block", async (blockNumber: any) => {
           console.log(blockNumber);
           const allBlockInfo = await library.getBlockWithTransactions(
             blockNumber
@@ -60,18 +64,18 @@ export default function Feed() {
           console.log(allBlockInfo);
 
           const newTxs = allBlockInfo.transactions
-            .filter((transaction) => {
+            .filter((transaction: any) => {
               return (
                 following.includes(transaction.to) ||
                 following.includes(transaction.from)
               );
             })
-            .map((transaction) => ({
-              ...transaction,
-              timestamp: allBlockInfo.timestamp,
-            }));
+            .map((transaction: any) => ({
+            ...transaction,
+            timestamp: allBlockInfo.timestamp
+          }));
 
-          setFollowingTransactions((previousFollowingTransactions) => {
+          setFollowingTransactions((previousFollowingTransactions: any) => {
             const transactions = [];
             for (let prevIndex in previousFollowingTransactions) {
               for (let curIndex in newTxs) {
@@ -107,22 +111,29 @@ export default function Feed() {
   }, [client, library]);
 
   return (
+    // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
     <div>
       {!following || following.length === 0 ? (
+        // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         <p>
           Currently you are following no one. Use the search bar to find more
           users to follow.
+        // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         </p>
       ) : followingTransactions.length === 0 ? (
+        // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
         <p>Currently there is no events observed, please wait...</p>
       ) : (
-        followingTransactions.map((tx) => (
-          <div key={tx.hash}>
-            <FeedCard transactionDetail={tx} />
-            <Spacer />
-          </div>
-        ))
+        // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+        followingTransactions.map((tx: any) => <div key={tx.hash}>
+          // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
+          <FeedCard transactionDetail={tx} />
+          // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
+          <Spacer />
+        // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+        </div>)
       )}
+    // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
     </div>
   );
 }

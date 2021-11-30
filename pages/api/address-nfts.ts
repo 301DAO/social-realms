@@ -1,6 +1,7 @@
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/lib/nft-port-api-wrapper' or... Remove this comment to see the full error message
 import { retrieveNftsByAddress } from "@/lib/nft-port-api-wrapper";
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   const { query } = req;
   if (!query.hasOwnProperty("address")) {
     res.statusCode = 400;
@@ -23,5 +24,6 @@ export default async function handler(req, res) {
     }
     res.json({ error });
   }
+  // @ts-expect-error ts-migrate(2552) FIXME: Cannot find name 'response'. Did you mean 'Respons... Remove this comment to see the full error message
   res.status(200).json(response);
 }
