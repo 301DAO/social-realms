@@ -16,6 +16,7 @@ const CLAY_TESTNET_ENDPOINT = 'https://ceramic-clay.3boxlabs.com';
 export const authenticateAndGetClient = async function() {
   const provider = await detectEthereumProvider();
   if (provider) {
+    // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
     const addresses = await provider.enable();
     const authProvider = new EthereumAuthProvider(provider, addresses[0]);
     const threeIdConnect = new ThreeIdConnect();
@@ -24,11 +25,14 @@ export const authenticateAndGetClient = async function() {
     const ceramic = new CeramicClient(CLAY_TESTNET_ENDPOINT);
     const did = new DID({
       provider: threeIdConnect.getDidProvider(),
+      // @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'CeramicClient' is not assignable... Remove this comment to see the full error message
       resolver: ThreeIdResolver.getResolver(ceramic),
     });
 
     await did.authenticate();
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'ceramic' does not exist on type 'Window ... Remove this comment to see the full error message
     window.ceramic = ceramic;
+    // @ts-expect-error ts-migrate(2339) FIXME: Property 'did' does not exist on type 'Window & ty... Remove this comment to see the full error message
     window.did = did.id;
 
     ceramic.setDID(did);
@@ -38,11 +42,13 @@ export const authenticateAndGetClient = async function() {
   return null;
 }
 
-const waitMs = (ms) => new Promise((res) => setTimeout(res, ms));
+const waitMs = (ms: any) => new Promise((res) => setTimeout(res, ms));
 
-export const detectFollowListChange = async (ceramicClient, forAddress, knownFollowingList, timeoutMs) => {
+// @ts-expect-error ts-migrate(7024) FIXME: Function implicitly has return type 'any' because ... Remove this comment to see the full error message
+export const detectFollowListChange = async (ceramicClient: any, forAddress: any, knownFollowingList: any, timeoutMs: any) => {
   const timestamp = Date.now();
 	const response = await loadFollowingForAddress(ceramicClient, forAddress);
+  // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
   if (response.following.length !== knownFollowingList.length) {
     return response;
   } else {
@@ -60,6 +66,7 @@ export const detectFollowListChange = async (ceramicClient, forAddress, knownFol
 /**
  * Follow an address. This call needs authentication
  */
+// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
 export const follow = async function(ceramicClient, followingAddress) {
   // deterministic entry, family: <authenticated address>, tags: [following]
   // https://developers.ceramic.network/streamtypes/tile-document/api/#create-a-deterministic-tiledocument
@@ -70,6 +77,7 @@ export const follow = async function(ceramicClient, followingAddress) {
 /**
  * Unfollow an address. This call needs authentication
  */
+// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
 export const unfollow = async function(ceramicClient, unfollowAddress) {
   // update stream, family: <authenticated address>, tags: [following]
   // https://developers.ceramic.network/streamtypes/tile-document/api/#update-a-tiledocument
@@ -80,6 +88,7 @@ export const unfollow = async function(ceramicClient, unfollowAddress) {
 /**
  * Load all addresses the authenticated wallet itself is following
  */
+ // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
  export const loadFollowing = async function(ceramicClient) {
   // load stream, family: <any address>, tags: [following]
   // https://developers.ceramic.network/streamtypes/tile-document/api/#query-a-deterministic-tiledocument
@@ -90,6 +99,7 @@ export const unfollow = async function(ceramicClient, unfollowAddress) {
 /**
  * Load all addresses a particular address is following. This call does not require authentication
  */
+// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
 export const loadFollowingForAddress = async function(ceramicClient, forAddress) {
   // load stream, family: <any address>, tags: [following]
   // https://developers.ceramic.network/streamtypes/tile-document/api/#query-a-deterministic-tiledocument
@@ -100,6 +110,7 @@ export const loadFollowingForAddress = async function(ceramicClient, forAddress)
 /**
  * Favorite a transaction. This call needs authentication
  */
+// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
 export const favoriteTransaction = async function(ceramicClient, transactionHash) {
   // deterministic entry, family: <authenticated address>, tags: [favorite]
 
@@ -109,6 +120,7 @@ export const favoriteTransaction = async function(ceramicClient, transactionHash
 /**
  * Un-favorite a transaction. This call needs authentication
  */
+ // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
  export const unfavoriteTransaction = async function(ceramicClient, transactionHash) {
   // update entry, family: <authenticated address>, tags: [favorite]
 
@@ -118,6 +130,7 @@ export const favoriteTransaction = async function(ceramicClient, transactionHash
 /**
  * Load all favorite transactions for wallet itself. This call needs authentication
  */
+// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
 export const loadAllFavoriteTransactions = async function(ceramicClient) {
   // load stream, family: <any address>, tags: [favorite]
 
@@ -127,12 +140,14 @@ export const loadAllFavoriteTransactions = async function(ceramicClient) {
 /**
  * Load all favorite transactions for a particular address. This call needs authentication
  */
+ // @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
  export const loadAllFavoriteTransactionsForAddress = async function(ceramicClient, forAddress) {
   // load stream, family: <any address>, tags: [favorite]
 
   return await getList(ceramicClient, 'favorite', forAddress);
 }
 
+// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
 const add = async function(ceramicClient, tag, item) {
   const retrievedDoc = await TileDocument.deterministic(
     ceramicClient,
@@ -141,6 +156,7 @@ const add = async function(ceramicClient, tag, item) {
   );
 
   if (!retrievedDoc.content
+    // @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
     || Object.keys(retrievedDoc.content).length === 0
   ) {
     if (ceramicClient.signedInEthAddress === item) {
@@ -154,6 +170,7 @@ const add = async function(ceramicClient, tag, item) {
     );
   } else {
     return await retrievedDoc.update(
+      // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
       { [tag]: [...new Set([...retrievedDoc.content[tag], item])]},
       { family: ceramicClient.signedInEthAddress, tags: [tag]},
       { pin: true }
@@ -161,6 +178,7 @@ const add = async function(ceramicClient, tag, item) {
   }
 }
 
+// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
 const remove = async function(ceramicClient, tag, item) {
   const retrievedDoc = await TileDocument.deterministic(
     ceramicClient,
@@ -172,6 +190,7 @@ const remove = async function(ceramicClient, tag, item) {
     return;
   } else {
     return await retrievedDoc.update(
+      // @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
       { [tag]: retrievedDoc.content[tag].filter(x => x !== item)},
       { family: ceramicClient.signedInEthAddress, tags: [tag]},
       { pin: true }
@@ -179,6 +198,7 @@ const remove = async function(ceramicClient, tag, item) {
   }
 }
 
+// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'ceramicClient' implicitly has an 'any' ... Remove this comment to see the full error message
 const getList = async function(ceramicClient, tag, forAddress) {
   try {
     const retrievedDoc = await TileDocument.deterministic(

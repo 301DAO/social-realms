@@ -1,6 +1,7 @@
+// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import * as React from "react";
 
-export const useEnsData = (props) => {
+export const useEnsData = (props: any) => {
   const { provider, address } = props;
   const [ethAddress, setEthAddress] = React.useState();
   const [ens, setEns] = React.useState();

@@ -14,6 +14,7 @@ export const injectedConnector = new InjectedConnector({
 
 // TODO: add connector for WalletConnect
 export const walletConnect = new WalletConnectConnector({
+  // @ts-expect-error ts-migrate(2322) FIXME: Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
   rpc: { 1: RPC_URLS[1] },
   qrcode: true,
 })
