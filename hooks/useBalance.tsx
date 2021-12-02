@@ -1,10 +1,14 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
-import * as React from "react";
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/util/bigNumberConverter' or ... Remove this comment to see the full error message
 import { parseBigNumberToString } from "@/util/bigNumberConverter";
-export const useBalance = (props: any) => {
-  const { account, library, chainId } = props;
-  const [balance, setBalance] = React.useState();
+import * as React from "react";
+
+type useBalanceProps = {
+  account: string | null | undefined;
+  library: any;
+  chainId: number | undefined;
+};
+
+export const useBalance = ({ account, library, chainId }: useBalanceProps) => {
+  const [balance, setBalance] = React.useState<string | null | undefined>(null);
   React.useEffect(() => {
     if (!!account && !!library) {
       let stale = false;

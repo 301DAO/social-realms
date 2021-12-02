@@ -1,5 +1,4 @@
 import { useWeb3React } from "@web3-react/core";
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import * as React from "react";
 import { injectedConnector } from "./connectors";
 
@@ -9,7 +8,7 @@ export const useEagerConnect = () => {
   const [tried, setTried] = React.useState(false);
 
   React.useEffect(() => {
-    injectedConnector.isAuthorized().then((isAuthorized) => {
+    injectedConnector.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
         activate(injectedConnector, undefined, true).catch(() => {
           setTried(true);
@@ -18,7 +17,6 @@ export const useEagerConnect = () => {
         setTried(true);
       }
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -29,49 +27,46 @@ export const useEagerConnect = () => {
   return tried;
 };
 
-export const useInactiveListener = (suppress = false) => {
+export const useInactiveListener = (suppress: boolean = false) => {
   const { active, error, activate } = useWeb3React();
 
   React.useEffect(() => {
-    const { ethereum } = window;
+    const { ethereum } = window as any;
 
-    // @ts-expect-error ts-migrate(2339) FIXME: Property 'on' does not exist on type 'EthereumProv... Remove this comment to see the full error message
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleConnect = () => {
         console.log("handling 'connect' event..");
         activate(injectedConnector);
       };
-      const handleChainChanged = (chainId: any) => {
+      const handleChainChanged = (chainId: string | number) => {
         console.log(`handling 'chainChanged' event..: ${chainId}`);
         activate(injectedConnector);
       };
-      const handleAccountsChanged = (accounts: any) => {
+      const handleAccountsChanged = (accounts: string[]) => {
         console.log(
           `handling 'accountsChanged' event with payload ${accounts}`
         );
         if (accounts.length > 0) {
-          // @ts-expect-error ts-migrate(2552) FIXME: Cannot find name 'deactivate'. Did you mean 'activ... Remove this comment to see the full error message
-          deactivate(injectedConnector);
           activate(injectedConnector);
         }
       };
 
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'on' does not exist on type 'EthereumProv... Remove this comment to see the full error message
+      const handleNetworkChanged = (networkId: string | number) => {
+        console.log("Handling 'networkChanged' event with payload", networkId);
+        activate(injectedConnector);
+      };
+
       ethereum.on("connect", handleConnect);
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'on' does not exist on type 'EthereumProv... Remove this comment to see the full error message
       ethereum.on("chainChanged", handleChainChanged);
-      // @ts-expect-error ts-migrate(2339) FIXME: Property 'on' does not exist on type 'EthereumProv... Remove this comment to see the full error message
       ethereum.on("accountsChanged", handleAccountsChanged);
+      ethereum.on("networkChanged", handleNetworkChanged);
 
       return () => {
-        // @ts-expect-error ts-migrate(2339) FIXME: Property 'removeListener' does not exist on type '... Remove this comment to see the full error message
         if (ethereum.removeListener) {
-          // @ts-expect-error ts-migrate(2339) FIXME: Property 'removeListener' does not exist on type '... Remove this comment to see the full error message
           ethereum.removeListener("connect", handleConnect);
-          // @ts-expect-error ts-migrate(2339) FIXME: Property 'removeListener' does not exist on type '... Remove this comment to see the full error message
           ethereum.removeListener("chainChanged", handleChainChanged);
-          // @ts-expect-error ts-migrate(2339) FIXME: Property 'removeListener' does not exist on type '... Remove this comment to see the full error message
           ethereum.removeListener("accountsChanged", handleAccountsChanged);
+          ethereum.removeListener("networkChanged", handleNetworkChanged);
         }
       };
     }

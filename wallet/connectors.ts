@@ -1,10 +1,10 @@
 import { InjectedConnector } from "@web3-react/injected-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
-const RPC_URLS = {
-  1: process.env.PRC_URL_1,
-  4: process.env.PRC_URL_4,
-}
+const RPC_URLS: { [chainId: number]: string } = {
+  1: process.env.PRC_URL_1 as string,
+  4: process.env.PRC_URL_4 as string,
+};
 
 // MetaMask handles onchain communication, and we only
 // need to specify which chain IDs we support
@@ -14,7 +14,6 @@ export const injectedConnector = new InjectedConnector({
 
 // TODO: add connector for WalletConnect
 export const walletConnect = new WalletConnectConnector({
-  // @ts-expect-error ts-migrate(2322) FIXME: Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
   rpc: { 1: RPC_URLS[1] },
   qrcode: true,
 })

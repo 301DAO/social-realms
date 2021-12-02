@@ -1,18 +1,12 @@
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/components/EnsUser' or its c... Remove this comment to see the full error message
 import { EnsUser } from "@/components/EnsUser";
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/components/loading' or its c... Remove this comment to see the full error message
 import { LoadingUI } from "@/components/loading";
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/contexts/CeramicContext' or ... Remove this comment to see the full error message
 import { useCeramicContext } from "@/contexts/CeramicContext";
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/hooks/useBalance' or its cor... Remove this comment to see the full error message
 import { useBalance } from "@/hooks/useBalance";
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/lib/fetcher' or its correspo... Remove this comment to see the full error message
 import { fetcher } from "@/lib/fetcher";
 import { Button, Card, Grid, Spacer } from "@geist-ui/react";
 import * as Icon from "@geist-ui/react-icons";
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import * as React from "react";
 import useSWR from "swr";
 import {
@@ -36,7 +30,7 @@ export default function Profile() {
 
   const [resolvedName, setResolvedName] = React.useState();
 
-  const balance = useBalance({ account: address, library, chainId });
+  const balance = useBalance({ account: `${address}`, library, chainId });
 
   const transactionsForAddress = useSWR(
     mounted ? `/api/address-txs/?address=${address}` : null,
@@ -116,49 +110,35 @@ export default function Profile() {
   };
 
   if (transactionsError) {
-    // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
     return <div>Failed to load users</div>;
   }
 
   if (!client || !library) {
     return (
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
       <div>
-        // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
         Loading... <LoadingUI />
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
       </div>
     );
   }
 
   if (!transactionsDetail || !client) {
     return (
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
       <div>
-        // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
         Loading... <LoadingUI />
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
       </div>
     );
   }
 
   return (
-    // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
     <Card>
-      // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
       <EnsUser address={address} />
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
       <p>Ξ {balance}</p>
-      // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
       <Spacer />
-      // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
       <Spacer />
-      // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
       <Grid md={24} justify="center">
         {(followingList ? followingList.includes(resolvedName) : false) ? (
-          // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
           <Button
-            // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
             icon={<Icon.UserX />}
             type="error"
             ghost
@@ -171,9 +151,7 @@ export default function Profile() {
             Unfollow
           </Button>
         ) : (
-          // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
           <Button
-            // @ts-expect-error ts-migrate(17004) FIXME: Cannot use JSX unless the '--jsx' flag is provided... Remove this comment to see the full error message
             icon={<Icon.UserPlus />}
             w="305px"
             h="40px"

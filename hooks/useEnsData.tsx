@@ -1,12 +1,18 @@
-// @ts-expect-error ts-migrate(7016) FIXME: Could not find a declaration file for module 'reac... Remove this comment to see the full error message
 import * as React from "react";
 
-export const useEnsData = (props: any) => {
-  const { provider, address } = props;
-  const [ethAddress, setEthAddress] = React.useState();
-  const [ens, setEns] = React.useState();
-  const [url, setUrl] = React.useState();
-  const [avatar, setAvatar] = React.useState();
+type UseEnsDataProps = {
+  provider: any;
+  address: string | null | undefined;
+};
+
+export function useEnsData({ provider, address }: UseEnsDataProps) {
+  const [ethAddress, setEthAddress] = React.useState<string | null | undefined>(
+    null
+  );
+  const [ens, setEns] = React.useState<string | null | undefined>(null);
+  const [url, setUrl] = React.useState<string | null | undefined>(null);
+  const [avatar, setAvatar] = React.useState<string | null | undefined>(null);
+
   React.useEffect(() => {
     if (!!provider && !!address) {
       console.log("provider", provider);
@@ -20,13 +26,10 @@ export const useEnsData = (props: any) => {
         setEthAddress(ethAddress);
         !stale && setEns(ens);
         const resolver = await provider.getResolver(ens);
-        if (resolver === null) {
-          setUrl(null);
-          setAvatar(null);
-        } else {
-          !stale && setUrl(await resolver.getText("url"));
-          !stale && setAvatar(await resolver.getText("avatar"));
-        }
+        resolver === null
+          ? (setUrl(null), setAvatar(null))
+          : (!stale && setUrl(await resolver.getText("url")),
+            !stale && setAvatar(await resolver.getText("avatar")));
       })();
       return () => {
         stale = true;
@@ -37,6 +40,5 @@ export const useEnsData = (props: any) => {
       };
     }
   }, [address]);
-  console.log(ens);
   return { ens, url, avatar, ethAddress };
-};
+}

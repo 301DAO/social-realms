@@ -1,7 +1,11 @@
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/util/string-validators' or i... Remove this comment to see the full error message
 import { isValidEthAddress } from "@/util/string-validators";
 // TODO: add logging and error handling
-export default async function handler(req: any, res: any) {
+import type { NextApiRequest, NextApiResponse } from "next";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { query } = req;
   if (!query) {
     res.status(400).send("Missing query parameters");
@@ -12,7 +16,6 @@ export default async function handler(req: any, res: any) {
     query.hasOwnProperty("contract_address") &&
     isValidEthAddress(query.address) &&
     isValidEthAddress(query.contract_address)
-      // @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'getTxsForAddress'.
       ? await getTxsForAddress(req.query.address, req.query.contract_address)
       : { data: "no data" };
 
