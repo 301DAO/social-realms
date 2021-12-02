@@ -18,7 +18,7 @@ const NftPortRequest = async (
 ) => {
   const queryParams = new URLSearchParams(parameters);
   const url = `${NFT_PORT_ENDPOINT}/${relativePath}?` + queryParams;
-  const options = {
+  const options: RequestInit = {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +27,6 @@ const NftPortRequest = async (
     redirect: "follow",
   };
   try {
-    // @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ method: string; headers: { "Co... Remove this comment to see the full error message
     const response = await fetch(url, options);
     return response.json();
   } catch (error) {
@@ -47,7 +46,10 @@ export const retrieveNftsByAddress = async (address: any) => {
 /**
  * Returns details for a given NFT. These include metadata_url, metadata such as name, description, attributes, etc., image_url, cached_image_url and mint_date.
  */
-export const retrieveNftDetails = async (contractAddress: any, tokenId: any) => {
+export const retrieveNftDetails = async (
+  contractAddress: any,
+  tokenId: any
+) => {
   //const { type, contractAddress, tokenId, chainId } = parseEnsAvatar(ensAvatar);
   const relativePath = `nfts/${contractAddress}/${tokenId}`;
   return NftPortRequest(relativePath);

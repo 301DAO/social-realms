@@ -1,5 +1,4 @@
 export const EthereumIcon = () => (
-  // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
   <svg
     version="1.1"
     id="Layer_1"
@@ -12,28 +11,24 @@ export const EthereumIcon = () => (
     xmlSpace="preserve"
     width="25px"
   >
-    // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
     <g>
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
       <polygon fill="#8A92B2" points="959.8,80.7 420.1,976.3 959.8,731 	" />
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
       <polygon fill="#62688F" points="959.8,731 420.1,976.3 959.8,1295.4 	" />
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
       <polygon fill="#62688F" points="1499.6,976.3 959.8,80.7 959.8,731 	" />
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
       <polygon fill="#454A75" points="959.8,1295.4 1499.6,976.3 959.8,731 	" />
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
       <polygon
         fill="#8A92B2"
         points="420.1,1078.7 959.8,1839.3 959.8,1397.6 	"
       />
-      // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
+
       <polygon
         fill="#62688F"
         points="959.8,1397.6 959.8,1839.3 1499.9,1078.7 	"
       />
-    // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
     </g>
-  // @ts-expect-error ts-migrate(7026) FIXME: JSX element implicitly has type 'any' because no i... Remove this comment to see the full error message
   </svg>
 );

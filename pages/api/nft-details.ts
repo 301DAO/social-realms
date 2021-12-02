@@ -1,8 +1,11 @@
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '@/lib/nft-port-api-wrapper' or... Remove this comment to see the full error message
 import { retrieveNftDetails } from "@/lib/nft-port-api-wrapper";
 // TODO: add logging and error handling
+import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req: any, res: any) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { query } = req;
   if (!query) {
     res.status(400).send("Missing query parameters");
