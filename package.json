@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build src",
     "start": "next start",
     "lint": "next lint",
     "export": "next export"
@@ -11,7 +11,9 @@
   "dependencies": {
     "@3id/connect": "^0.2.5",
     "@ceramicnetwork/3id-did-resolver": "^1.4.9",
+    "@ceramicnetwork/common": "^1.9.0",
     "@ceramicnetwork/http-client": "^1.4.4",
+    "@ceramicnetwork/stream-tile": "^1.5.0",
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@ethersproject/providers": "^5.5.0",
@@ -22,17 +24,23 @@
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/network-connector": "^6.1.9",
-    "@web3-react/walletconnect-connector": "^6.2.8",
+    "@web3-react/walletconnect-connector": "^6.2.4",
     "dids": "^2.4.2",
-    "next": "12.0.3",
+    "http-status-typed": "^1.0.1",
+    "next": "^12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "^3.33.1",
-    "styled-components": "^5.3.3",
     "swr": "^1.0.1"
   },
   "devDependencies": {
+    "@types/node": "^16.11.11",
+    "@types/react": "^17.0.37",
+    "@web3-react/types": "^6.0.7",
     "eslint": "7.32.0",
-    "eslint-config-next": "12.0.3"
+    "eslint-config-next": "12.0.4",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "typescript": "^4.5.2",
+    "typescript-plugin-css-modules": "^3.4.0"
   }
 }
