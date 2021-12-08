@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build src",
     "start": "next start",
     "lint": "next lint",
     "export": "next export"
@@ -24,6 +24,7 @@
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/network-connector": "^6.1.9",
     "@web3-react/walletconnect-connector": "^6.2.8",
+    "antd": "^4.17.2",
     "dids": "^2.4.2",
     "http-status-typed": "^1.0.1",
     "next": "12.0.4",
@@ -39,6 +40,7 @@
     "@web3-react/types": "^6.0.7",
     "eslint": "7.32.0",
     "eslint-config-next": "12.0.4",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "ts-migrate": "^0.1.26",
     "typescript": "^4.5.2",
     "typescript-plugin-css-modules": "^3.4.0"
