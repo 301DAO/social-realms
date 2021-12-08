@@ -2,15 +2,15 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/pages/*": ["pages/*"],
-      "@/components/*": ["components/*"],
-      "@/wallet/*": ["wallet/*"],
-      "@/styles/*": ["styles/*"],
-      "@/contexts/*": ["contexts/*"],
-      "@/hooks/*": ["hooks/*"],
-      "@/util/*": ["util/*"],
-      "@/store/*": ["store/*"],
-      "@/lib/*": ["lib/*"]
+      "@/pages/*": ["src/pages/*"],
+      "@/components/*": ["src/components/*"],
+      "@/wallet/*": ["src/wallet/*"],
+      "@/styles/*": ["src/styles/*"],
+      "@/contexts/*": ["src/contexts/*"],
+      "@/hooks/*": ["src/hooks/*"],
+      "@/util/*": ["src/util/*"],
+      "@/store/*": ["src/store/*"],
+      "@/lib/*": ["src/lib/*"]
     },
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext", "es6", "es7"],
