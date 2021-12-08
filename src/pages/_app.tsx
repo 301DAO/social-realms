@@ -3,13 +3,13 @@ import { CeramicProvider } from "@/contexts/CeramicContext";
 import "@/styles/globals.css";
 import { Web3Provider } from "@ethersproject/providers";
 import { Web3ReactProvider } from "@web3-react/core";
-import "antd/dist/antd.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+
 const getLibrary = (provider: any): Web3Provider => {
   const library = new Web3Provider(provider);
   library.pollingInterval = 12000;
@@ -18,24 +18,6 @@ const getLibrary = (provider: any): Web3Provider => {
 export default function Root({ Component, pageProps }: AppProps) {
   const [queryClient] = React.useState(() => new QueryClient());
   const router = useRouter();
-
-  React.useEffect(() => {
-    const handleRouteChange = (url, { shallow }) => {
-      console.log(
-        `App is changing to ${url} ${
-          shallow ? "with" : "without"
-        } shallow routing`
-      );
-    };
-
-    router.events.on("routeChangeStart", handleRouteChange);
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
-    return () => {
-      router.events.off("routeChangeStart", handleRouteChange);
-    };
-  }, []);
 
   return (
     <>
