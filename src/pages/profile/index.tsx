@@ -7,27 +7,7 @@ import { fetcher } from "@/lib/fetcher";
 import { loadFollowing } from "@/store/ceramicStore";
 import { Link, Note, Text } from "@geist-ui/react";
 import { useWeb3React } from "@web3-react/core";
-import { Tabs } from "antd";
 import * as React from "react";
-const { TabPane } = Tabs;
-
-function TabsComponent(): JSX.Element {
-  return (
-    <>
-      <Tabs size="large" style={{ marginBottom: 32 }} type="card" centered>
-        <TabPane tab="Tab 1" key="1" animated style={{ width: "100px" }}>
-          Content of Tab Pane 1
-        </TabPane>
-        <TabPane tab="Tab 2" key="2">
-          Content of Tab Pane 2
-        </TabPane>
-        <TabPane tab="Tab 3" key="3">
-          Content of Tab Pane 3
-        </TabPane>
-      </Tabs>
-    </>
-  );
-}
 
 export default function Profile() {
   const { active, account, library } = useWeb3React();
@@ -64,15 +44,6 @@ export default function Profile() {
     </>;
 
   return (
-    // <div
-    //   style={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     width: "50vw",
-    //   }}
-    // >
-    //   <TabsComponent />
-    // </div>
     <div
       style={{
         display: "flex",
