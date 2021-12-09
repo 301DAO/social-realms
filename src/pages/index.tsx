@@ -1,16 +1,9 @@
-import { Web3Provider } from "@ethersproject/providers";
-import { Card, Display, Grid, Image, Text } from "@geist-ui/react";
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import {
-  NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected,
-} from "@web3-react/injected-connector";
+import { Text, Grid, Image,Display, Card } from "@geist-ui/react";
 import type { NextPage } from "next";
 import * as React from "react";
-
 const Index: NextPage = () => {
   const note = (
-    <div style={{ padding: "0 10px" }}>
+    <div className="p-4">
       <Text font={1.2}>
         To use the site make sure to switch to Ropsten network to create your
         DID when prompted “Create new identity.” After having successfully
@@ -24,6 +17,9 @@ const Index: NextPage = () => {
     </div>
   );
   return (
+
+
+
     <div>
       <Grid.Container gap={2} justify="center" direction="row">
         <Grid xs={18} md={12} h="250px" w="250px" my="15px">
