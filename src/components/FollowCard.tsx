@@ -60,29 +60,29 @@
 //   );
 // };
 
-import { useEtherUser } from "@/hooks/useEtherUser";
-import { Fieldset, Grid, Link, Spacer, Text } from "@geist-ui/react";
-import Router from "next/router";
-import * as React from "react";
-import NftImage from "./nft-image";
+import { useEtherUser } from '@/hooks/useEtherUser'
+import { Fieldset, Grid, Link, Spacer, Text } from '@geist-ui/react'
+import Router from 'next/router'
+import * as React from 'react'
+import NftImage from './nft-image'
 
 const placeholderImage = `https://external-preview.redd.it/
 NADbWsobDS1wOTyi_AcFjYmfKmz6Oxyre1kFSD93Rts.jpg
-?auto=webp&s=832a2557421e6f81fb6dfd0110d652941b9de6c6`;
+?auto=webp&s=832a2557421e6f81fb6dfd0110d652941b9de6c6`
 
 export const FollowCard = ({ provider, address }: any) => {
-  const { ens, url, avatar } = useEtherUser({ provider, address });
-  const topline = ens || address;
+  const { ens, url, avatar } = useEtherUser({ provider, address })
+  const topline = ens || address
 
   // using router instead of Link because router doesn't reload page
   const onUserClick = async (event: any) => {
-    event.preventDefault();
-    Router.push(`/user/?address=${topline}`);
-  };
+    event.preventDefault()
+    Router.push(`/user/?address=${topline}`)
+  }
 
   return (
     <>
-      <Fieldset style={{ width: "520px", maxWidth: "calc(100% - 20px)" }}>
+      <Fieldset style={{ width: '520px', maxWidth: 'calc(100% - 20px)' }}>
         <Fieldset.Content py="8pt" px="10pt">
           <Grid.Container alignItems="center" justify="flex-start">
             <Grid w="33%">
@@ -126,5 +126,5 @@ export const FollowCard = ({ provider, address }: any) => {
       </Fieldset>
       <Spacer inline h="12pt" />
     </>
-  );
-};
+  )
+}

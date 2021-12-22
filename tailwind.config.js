@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const colors = require('tailwindcss/colors')
+const defaultTheme = require('tailwindcss/defaultTheme')
+const svgToDataUri = require('mini-svg-data-uri')
+const {
+  default: flattenColorPalette,
+} = require('tailwindcss/lib/util/flattenColorPalette')
+
 module.exports = {
- // mode: "jit",
-//  purge: ["./src/**/**/*.{js,jsx,ts,tsx}", "./src/pages/**/*.{js,ts,jsx,tsx}"],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    './src/pages/**/*.{js,ts,jsx,tsx}',
+    './src/components/**/*.{js,ts,jsx,tsx}',
   ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
+  darkMode: 'class',
+}

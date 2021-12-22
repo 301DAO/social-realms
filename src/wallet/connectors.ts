@@ -1,16 +1,16 @@
-import { InjectedConnector } from "@web3-react/injected-connector";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { InjectedConnector } from '@web3-react/injected-connector'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 
 const RPC_URLS: { [chainId: number]: string } = {
   1: process.env.PRC_URL_1 as string,
   4: process.env.PRC_URL_4 as string,
-};
+}
 
 // MetaMask handles onchain communication, and we only
 // need to specify which chain IDs we support
 export const injectedConnector = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42, 56],
-});
+  supportedChainIds: [ 1, 3, 4, 5, 42, 56 ],
+})
 
 // TODO: add connector for WalletConnect
 export const walletConnect = new WalletConnectConnector({

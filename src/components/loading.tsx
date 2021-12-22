@@ -1,5 +1,5 @@
-import { Grid, Loading } from "@geist-ui/react";
-import * as React from "react";
+import { Grid, Loading } from '@geist-ui/react'
+import * as React from 'react'
 
 export const LoadingUI = () => {
   return (
@@ -8,5 +8,5 @@ export const LoadingUI = () => {
         <Loading type="success" />
       </Grid>
     </Grid.Container>
-  );
-};
+  )
+}

@@ -1,28 +1,20 @@
-import { useBalance } from "@/hooks/useBalance";
-import { injectedConnector } from "@/wallet/connectors";
-import { useEagerConnect, useInactiveListener } from "@/wallet/hooks";
-import styled from "@emotion/styled";
-import { Web3Provider } from "@ethersproject/providers";
-import { Button, Dot, Grid, Spacer, useClipboard } from "@geist-ui/react";
-import * as Icon from "@geist-ui/react-icons";
-import { useWeb3React } from "@web3-react/core";
-import Router from "next/router";
-import * as React from "react";
-import { EthereumIcon } from "./icons/Ethereum";
+import { useBalance } from '@/hooks/useBalance'
+import { injectedConnector } from '@/wallet/connectors'
+import { useEagerConnect, useInactiveListener } from '@/wallet/hooks'
+import styled from '@emotion/styled'
+import { Web3Provider } from '@ethersproject/providers'
+import { Button, Dot, Grid, Spacer, useClipboard } from '@geist-ui/react'
+import * as Icon from '@geist-ui/react-icons'
+import { useWeb3React } from '@web3-react/core'
+import Router from 'next/router'
+import * as React from 'react'
+import { EthereumIcon } from './icons/Ethereum'
 
 function Account() {
-  const { account } = useWeb3React();
+  const { account } = useWeb3React()
   return (
-    <>
-      {account === null
-        ? "-"
-        : account
-        ? `${account.substring(0, 6)}......${account.substring(
-            account.length - 4
-          )}`
-        : ""}
-    </>
-  );
+    <>{account ? `${account.slice(0, 6)}......${account.slice(42 - 4)}` : ''}</>
+  )
 }
 
 const Container = styled.div`
@@ -32,7 +24,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-`;
+`
 
 // const testingFunction = async function () {
 //   const ceramicClient = await authenticateAndGetClient();
@@ -64,43 +56,42 @@ export const WalletMetadataView = () => {
     deactivate,
     active,
     error,
-  } = useWeb3React<Web3Provider>();
+  } = useWeb3React<Web3Provider>()
   // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = React.useState<any>();
+  const [ activatingConnector, setActivatingConnector ] = React.useState<any>()
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined);
+      setActivatingConnector(undefined)
     }
-  }, [activatingConnector, connector]);
+  }, [ activatingConnector, connector ])
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-  const triedEager = useEagerConnect();
+  const triedEager = useEagerConnect()
 
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector);
-  const { copy } = useClipboard();
+  useInactiveListener(!triedEager || !!activatingConnector)
+  const { copy } = useClipboard()
 
   const handleCopy = () => {
     if (account) {
-      copy(account);
+      copy(account)
     }
-  };
+  }
 
   const connectWallet = async () => {
-    Router.push("/feed").then(() => {
-      setActivatingConnector(injectedConnector);
-      activate(injectedConnector);
-    });
-  };
-
-  const balance = useBalance({ account, chainId, library });
+    Router.push('/feed').then(() => {
+      setActivatingConnector(injectedConnector)
+      activate(injectedConnector)
+    })
+  }
 
   const disconnectWallet = async () => {
-    Router.push("/").then(() => {
-      deactivate();
-    });
-  };
+    Router.push('/').then(() => {
+      deactivate()
+    })
+  }
 
+  const balance = useBalance({ account, chainId, library })
   return (
     <Container>
       <Grid xs={22}>
@@ -148,8 +139,8 @@ export const WalletMetadataView = () => {
 
         <Spacer inline />
 
-        <Dot type={active ? "success" : error ? "error" : "warning"} />
+        <Dot type={active ? 'success' : error ? 'error' : 'warning'} />
       </Grid>
     </Container>
-  );
-};
+  )
+}

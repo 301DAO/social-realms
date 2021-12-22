@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,13 +7,14 @@ html,
 body {
   padding: 0;
   margin: 0;
+  /* background-image: url("/assets/images/background.svg"); */
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background: #1d1e27;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Inter, sans-serif;
 }
 
 * {

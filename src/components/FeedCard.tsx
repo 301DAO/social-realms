@@ -1,8 +1,8 @@
-import { Badge, Card, Grid, Link, Spacer, Text } from "@geist-ui/react";
-import { ArrowRight } from "@geist-ui/react-icons";
-import * as React from "react";
-import { parseBigNumberToString } from "@/util/bigNumberConverter";
-import { EnsUser } from "./EnsUser";
+import { Badge, Card, Grid, Link, Spacer, Text } from '@geist-ui/react'
+import { ArrowRight } from '@geist-ui/react-icons'
+import * as React from 'react'
+import { parseBigNumberToString } from '@/util/bigNumberConverter'
+import { EnsUser } from './EnsUser'
 
 export const FeedCard = ({ transactionDetail }: any) => {
   return (
@@ -58,7 +58,7 @@ export const FeedCard = ({ transactionDetail }: any) => {
       </Fieldset>
       <Spacer inline h="12pt" /> */}
 
-      <Card shadow style={{ minWidth: "600px" }}>
+      <Card shadow style={{ minWidth: '600px' }}>
         <Spacer />
 
         <Grid.Container gap={2} justify="center">
@@ -66,7 +66,7 @@ export const FeedCard = ({ transactionDetail }: any) => {
           {/* <NftImage avatar={ensFrom.avatar} isProfilePic={true} />
           <Grid xs><Link href={`https://etherscan.io/address/${transactionDetail.from}`}>{ensFrom.ens || transactionDetail.from.substring(0, 8)}</Link></Grid> */}
 
-          <Grid style={{ minWidth: "300px", textAlign: "center" }}>
+          <Grid style={{ minWidth: '300px', textAlign: 'center' }}>
             <ArrowRight />
           </Grid>
 
@@ -89,7 +89,7 @@ export const FeedCard = ({ transactionDetail }: any) => {
           <Grid xs>Value</Grid>
 
           <Grid xs>
-            Ξ{" "}
+            Ξ{' '}
             {parseBigNumberToString(18, transactionDetail.value).substring(
               0,
               6
@@ -113,7 +113,7 @@ export const FeedCard = ({ transactionDetail }: any) => {
           <Grid xs>Transaction type</Grid>
 
           <Grid xs>
-            {transactionDetail.data === "0x" ? "Transaction" : "Smart contract"}
+            {transactionDetail.data === '0x' ? 'Transaction' : 'Smart contract'}
           </Grid>
         </Grid.Container>
 
@@ -128,10 +128,10 @@ export const FeedCard = ({ transactionDetail }: any) => {
         </Grid.Container>
 
         <Card.Footer>
-          {new Date(transactionDetail.timestamp * 1000).toDateString()}{" "}
+          {new Date(transactionDetail.timestamp * 1000).toDateString()}{' '}
           {new Date(transactionDetail.timestamp * 1000).toLocaleTimeString()}
         </Card.Footer>
       </Card>
     </>
-  );
-};
+  )
+}
