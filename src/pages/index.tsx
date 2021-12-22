@@ -1,42 +1,41 @@
-import { Text, Grid, Image,Display, Card } from "@geist-ui/react";
-import type { NextPage } from "next";
-import * as React from "react";
+import type { NextPage } from 'next'
+import * as React from 'react'
+import { toast } from 'react-hot-toast'
+import { tw } from 'twind'
 const Index: NextPage = () => {
-  const note = (
-    <div className="p-4">
-      <Text font={1.2}>
-        To use the site make sure to switch to Ropsten network to create your
-        DID when prompted “Create new identity.” After having successfully
-        created DID, you can switch back to use mainnet to use all features of
-        the website.
-        <br />
-        <br />
-        This is necessary as of now since Ceramic only supports testnet at the
-        moment. The team is working on having the site use Ceramic mainnet.
-      </Text>
-    </div>
-  );
+  const toaster = () => toast('test it')
   return (
-
-
-
-    <div>
-      <Grid.Container gap={2} justify="center" direction="row">
-        <Grid xs={18} md={12} h="250px" w="250px" my="15px">
-          <Image alt="logo" src={"/eth_vital.png"} w="100%" h="100%" />
-        </Grid>
-
-        <Grid xs={18} md={12} h="250px" w="250px" my="15px">
-          <Image alt="logo" src={"/grey_bird.png"} w="100%" h="100%" />
-        </Grid>
-      </Grid.Container>
-      <Display shadow>
-        <Card shadow w="40">
-          <h4>Note</h4>
-          {note}
-        </Card>
-      </Display>
+    <div
+      className={tw`flex flex-col items-center justify-center align-middle px-9 font-[Inter]
+        text-center text-6xl font-extrabold tracking-tighter leading-[1.1] sm:text-7xl lg:text-8xl xl:text-8xl
+        `}
+    >
+      <p
+        className={tw(
+          'text-8xl font-extrabold pb-8 text-center tracking-tight leading-[1.1] sm:text-9xl lg:text-10xl xl:text-10xl',
+          ' inline-block text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-blue-500'
+        )}
+      >
+        Social Realms.
+      </p>
+      <div
+        className={tw(
+          `space-y-8 text-3xl font-extrabold subpixel-antialiased tracking-wide leading-10 text-center`,
+          `dark:text-gray-50`
+        )}
+      >
+        <p>
+          Follow your favorite addresses in{' '}
+          <span className="underline decoration-slate-100">Crypto</span>
+        </p>
+        <p>
+          Lookup anyone by their{' '}
+          <span className="underline decoration-slate-100">ENS</span> or{' '}
+          <span className="underline decoration-slate-100">Ethereum</span>{' '}
+          address
+        </p>
+      </div>
     </div>
-  );
-};
-export default Index;
+  )
+}
+export default Index

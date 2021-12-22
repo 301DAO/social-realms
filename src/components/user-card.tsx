@@ -6,20 +6,20 @@ import {
   Link,
   Spacer,
   Text,
-} from "@geist-ui/react";
-import * as React from "react";
+} from '@geist-ui/react'
+import * as React from 'react'
 
 interface IUser {
-  img: string;
-  ens: string;
-  address: string;
-  balance?: string;
-  url: string;
-  footerButton: React.ReactNode;
+  img: string
+  ens: string
+  address: string
+  balance?: string
+  url: string
+  footerButton: React.ReactNode
 }
 const placeholderImage = `https://external-preview.redd.it/
 NADbWsobDS1wOTyi_AcFjYmfKmz6Oxyre1kFSD93Rts.jpg
-?auto=webp&s=832a2557421e6f81fb6dfd0110d652941b9de6c6`;
+?auto=webp&s=832a2557421e6f81fb6dfd0110d652941b9de6c6`
 
 export function UserCard({
   img,
@@ -30,7 +30,7 @@ export function UserCard({
   footerButton,
 }: IUser) {
   return (
-    <Fieldset style={{ width: "580px", maxWidth: "calc(100% - 20px)" }}>
+    <Fieldset style={{ width: '580px', maxWidth: 'calc(100% - 20px)' }}>
       <Fieldset.Content py="8pt" px="10pt">
         <Grid.Container alignItems="center" justify="flex-start">
           <Grid w="44%">
@@ -69,10 +69,10 @@ export function UserCard({
         py="0px"
         px="3px"
         margin="0px"
-        style={{ justifyContent: "space-between" }}
+        style={{ justifyContent: 'space-between' }}
       >
         {footerButton}
       </Fieldset.Footer>
     </Fieldset>
-  );
+  )
 }

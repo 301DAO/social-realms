@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 // import { Grid } from "@geist-ui/react";
 // import { FeedCard } from "./FeedCard";
 // export const Feed = (props: any) => {

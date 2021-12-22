@@ -1,4 +1,7 @@
 // pages/404.js
-export default function Custom404() {
-  return <h1>4O4 - Page Not Found</h1>;
+import type { NextPage } from 'next'
+const FourOFour: NextPage = () => {
+  return <div>404</div>
 }
+
+export default FourOFour
