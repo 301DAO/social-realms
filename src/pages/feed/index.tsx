@@ -58,7 +58,8 @@ export default function Feed() {
 
   return (
     <div className={tw(`flex text-gray-100 md-auto justify-center`)}>
-      {!library ? (
+     <p className={tw(`text-6xl font-extrabold`)}>Work in progress</p>
+      {/* {!library ? (
         <h1>Loading...</h1>
       ) : (
         <div className={tw(`flex flex-col justify-center w-[350px]`)}>
@@ -70,7 +71,7 @@ export default function Feed() {
             )
           })}
         </div>
-      )}
+      )} */}
     </div>
   )
 }

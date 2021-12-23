@@ -8,7 +8,7 @@ import { useWeb3React } from '@web3-react/core'
 import type { NextPage } from 'next'
 import * as React from 'react'
 import { useQuery } from 'react-query'
-
+import { tw } from 'twind'
 const Profile: NextPage = () => {
   const { active, account, library } = useWeb3React()
   const { client } = useTextileContext()
@@ -55,18 +55,24 @@ const Profile: NextPage = () => {
       )}
 
       <br />
-      <Text h1>Following</Text>
+      <p className={tw(`dark:text-gray-100`)}>Following</p>
 
       <br />
-      {following?.map((item: any) => {
-        return (
-          <FollowCard
-            key={item._id}
-            address={item.address}
-            provider={library}
-          />
-        )
-      })}
+      {following &&
+        following?.map((item: any) => {
+          return (
+            <FollowCard
+              key={item._id}
+              address={item.address}
+              provider={library}
+            />
+          )
+        })}
+        {!following && (
+          <div>
+            <p>You don't appear to be following anyone</p>
+          </div>
+        )}
     </div>
   )
 }
