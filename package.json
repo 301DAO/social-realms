@@ -10,18 +10,12 @@
     "dev-https": "concurrently \"next dev -p 3000\" \"local-ssl-proxy --source 3001 --target 3000\""
   },
   "dependencies": {
-    "@3id/connect": "^0.2.5",
-    "@ceramicnetwork/3id-did-resolver": "^1.4.9",
-    "@ceramicnetwork/common": "^1.9.0",
-    "@ceramicnetwork/http-client": "^1.4.4",
-    "@ceramicnetwork/stream-tile": "^1.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "@geist-ui/react": "^2.2.0",
     "@geist-ui/react-icons": "^1.0.1",
     "@headlessui/react": "^1.4.2",
     "@heroicons/react": "^1.0.5",
-    "@metamask/detect-provider": "^1.2.0",
     "@textile/hub": "^6.3.2",
     "@twind/next": "^1.0.9",
     "@web3-react/core": "^6.1.9",
@@ -29,7 +23,6 @@
     "@web3-react/network-connector": "^6.1.9",
     "@web3-react/walletconnect-connector": "^6.2.4",
     "dayjs": "^1.10.7",
-    "dids": "^2.4.2",
     "ethers": "^5.5.2",
     "http-status-typed": "^1.0.1",
     "mini-svg-data-uri": "^1.4.3",
@@ -38,7 +31,6 @@
     "react-dom": "17.0.2",
     "react-hot-toast": "^2.1.1",
     "react-query": "^3.34.3",
-    "swr": "^1.0.1",
     "twind": "^0.16.16"
   },
   "devDependencies": {
