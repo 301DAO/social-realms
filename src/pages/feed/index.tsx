@@ -1,43 +1,15 @@
 import { useTextileContext } from '@/contexts/TextileContext'
 import { getTxsForAddress } from '@/lib/covalent-api-wrapper'
+import * as Icon from '@heroicons/react/outline'
 import { useWeb3React } from '@web3-react/core'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import * as React from 'react'
-import { useQuery } from 'react-query'
+import { useQueryClient, useQuery } from 'react-query'
 import { tw } from 'twind'
-export const FAKE_FEED = [
-  {
-    address: '0x983110309620D911731Ac0932219af06091b6744',
-    ens: 'brantly.eth',
-    balance: '2.46',
-    url: 'http://brantly.xyz/',
-    avatar: 'eip155:1/erc721:0xb7F7F6C52F2e2fdb1963Eab30438024864c313F6/2430',
-    img: 'https://api.wrappedpunks.com/images/punks/2430.png',
-    text: 'Swapped 25 ETH for 420.69 USDC on PussySwap v69 💸',
-    details: '',
-  },
-  {
-    address: '0x648aA14e4424e0825A5cE739C8C68610e143FB79',
-    ens: 'sassal.eth',
-    balance: '69.46',
-    url: 'http://jondoe.pizza/',
-    avatar: 'eip155:1/erc721:0xb7F7F6C52F2e2fdb1963Eab30438024864c313F6/6571',
-    img: 'https://lh3.googleusercontent.com/-w3k-j9DHgkrIJ10IJ7aNmRSawLKJW3JLtLjTH9jHyxEmgBb30KFj82YX59kQImzDZy1yiu5Gv7YyAJwfTtSKcToffSM3-OcdILkNg=w600',
-    text: 'Minted a new ERC-721 token: CryptoPunk[6969] 🎨',
-    detail: '',
-  },
-  {
-    address: '0x648aA14e4424e0825A5cE739C8C686123985271',
-    ens: 'krypto.eth',
-    balance: '0.87',
-    url: 'http://jondoe.pizza/',
-    avatar: 'eip155:1/erc721:0xb7F7F6C52F2e2fdb1963Eab30438024864c313F6/6571',
-    img: 'https://lh3.googleusercontent.com/YinTK0CUDPGnoE-7RPOuSlDSO8-3WyNrpkzcOXPtKRl36yuhMGoJjLfzrCyx15bh8gCYZf33SxALC_FxxnW-tNJpUIubv4CUeAcnLDQ=s0',
-    text: 'Withdrew 75% of LINK-USDT liquidity pool 🐻 📉',
-    detail: '',
-  },
-]
+// TODO
 export default function Feed() {
+
   const { active, library, account } = useWeb3React()
   const { client } = useTextileContext()
   //@ts-ignore
@@ -46,32 +18,47 @@ export default function Feed() {
   const { data, isLoading, error, isError, refetch } = useQuery(
     ['feed', client, threadId],
     async () => await getTxsForAddress(account as string),
-    // await fetch(
-    //   `/api/address-txs/?address=0xb412DB7A26943cD260bAE812faAB53D225b3ccdD`
-    // )
     {
       enabled: !!library,
       //refetchInterval: 1000 * 60 * 5,
     }
   )
   const txs = data?.data?.items
-
   return (
-    <div className={tw(`flex text-gray-100 md-auto justify-center`)}>
-     <p className={tw(`text-6xl font-extrabold`)}>Work in progress</p>
-      {/* {!library ? (
-        <h1>Loading...</h1>
-      ) : (
-        <div className={tw(`flex flex-col justify-center w-[350px]`)}>
-          {txs?.map((item: any) => {
-            return (
-              <pre key={item?.tx_hash} className={tw('w-16 word-break')}>
-                {JSON.stringify(item?.log_events[0], null, 3)}
-              </pre>
-            )
-          })}
+    <div className="sm:mt-0 sm:py-12 mx-6">
+      <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
+        <div className="animate-pulse flex space-x-4">
+          <div className="rounded-full bg-gray-700 h-10 w-10">
+            <img src="https://static.wixstatic.com/media/95db9b_c05be7ec3cac4b8f9cbce2750b42a3de~mv2.png/v1/fill/w_360,h_360,al_c,q_95/95db9b_c05be7ec3cac4b8f9cbce2750b42a3de~mv2.webp" />
+          </div>
+          <div className="flex-1 space-y-6 py-1">
+            <div className="h-2 bg-gray-700 rounded"></div>
+            <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="h-2 bg-gray-700 rounded col-span-2"></div>
+                <div className="h-2 bg-gray-700 rounded col-span-1"></div>
+              </div>
+              <div className="h-2 bg-gray-700 rounded"></div>
+            </div>
+          </div>
         </div>
-      )} */}
+      </div>
+
+      {/** card to show ethereum transaction */}
+
     </div>
+    //{/* {!library ? (
+    //   <h1>Loading...</h1>
+    // ) : (
+    //   <div className={tw(`flex flex-col justify-center w-[350px]`)}>
+    //     {txs?.map((item: any) => {
+    //       return (
+    //         <pre key={item?.tx_hash} className={tw('w-16 word-break')}>
+    //           {JSON.stringify(item?.log_events[0], null, 3)}
+    //         </pre>
+    //       )
+    //     })}
+    //   </div>
+    // )} */}
   )
 }

@@ -1,5 +1,4 @@
 import { parseEnsAvatar } from '@/util/ens-avatar-parser'
-import { Avatar } from '@geist-ui/react'
 import * as React from 'react'
 import { useQuery } from 'react-query'
 
@@ -14,15 +13,23 @@ const placeholderImage = `https://external-preview.redd.it/
 NADbWsobDS1wOTyi_AcFjYmfKmz6Oxyre1kFSD93Rts.jpg
 ?auto=webp&s=832a2557421e6f81fb6dfd0110d652941b9de6c6`
 
-interface INftImageProps {
+interface IProfileImage {
   avatar: string
   isProfilePic: boolean
 }
 
-export default function NftImage({ avatar, isProfilePic }: INftImageProps) {
-  const { contract, tokenId } = parseEnsAvatar(avatar)
-  const { data } = useQuery(`nftImage-${tokenId}-${contract}`, async () =>
-    getImage(contract, tokenId)
+export default function ProfileImage({ avatar, isProfilePic }: IProfileImage) {
+  // memoize function
+  const { contract, tokenId } = React.useCallback(
+    () => parseEnsAvatar(avatar),
+    [ avatar ]
+  )
+  console.log(contract, tokenId);
+  
+  const { data, isLoading, isError, } = useQuery(
+    [contract, tokenId],
+    async () =>
+      await fetch(`/api/nft-details/?contract=${contract}&token_id=${tokenId}`)
   )
   const image = data?.image_url
   if (!image) return <Avatar scale={3} src={placeholderImage} />

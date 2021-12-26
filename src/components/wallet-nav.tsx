@@ -6,8 +6,10 @@ import { useWeb3React } from '@web3-react/core'
 import * as React from 'react'
 import { toast } from 'react-hot-toast'
 import { tw } from 'twind'
+import {useRouter} from 'next/router'
 export function WalletNav() {
   const _toast = () => toast('test it')
+  const router = useRouter()
   const { active, connector, account, activate, deactivate } =
     useWeb3React<Web3Provider>()
 
@@ -40,13 +42,14 @@ export function WalletNav() {
     } else {
       setActivatingConnector(injectedConnector)
       activate(injectedConnector)
-      setButtonText(elipsedAddress)
+      setButtonText(elipsedAddress),
+      (window as any).address = address
     }
   }
   const disconnectWallet = async () => {
     deactivate()
     setButtonText('Connect Wallet')
-    window.location.href = '/'
+    //router.replace('/')
   }
 
   React.useEffect(() => {
@@ -54,7 +57,7 @@ export function WalletNav() {
     if (active) setButtonText(elipsedAddress)
   }, [account, active])
 
-  //toast('a')
+
 
   return (
     <>

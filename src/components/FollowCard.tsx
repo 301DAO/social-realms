@@ -60,8 +60,8 @@
 //   );
 // };
 
-import { useEtherUser } from '@/hooks/useEtherUser'
-import { Fieldset, Grid, Link, Spacer, Text } from '@geist-ui/react'
+import { useEtherUser } from '@/hooks/use-ether-user'
+//import { Fieldset, Grid, Link, Spacer, Text } from '@geist-ui/react'
 import Router from 'next/router'
 import * as React from 'react'
 import NftImage from './nft-image'

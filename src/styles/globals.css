@@ -1,20 +1,32 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html,
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+}
 body {
   padding: 0;
   margin: 0;
-  /* background-image: url("/assets/images/background.svg"); */
+  background: #1d1e27;
+  /* padding: 0;
+  margin: 0;
+  background: #1d1e27;
   background-position: center center;
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background: #1d1e27;
+
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Inter, sans-serif;
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Inter, sans-serif; */
 }
 
 * {
