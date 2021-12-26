@@ -25,27 +25,27 @@ export default {
   },
   preflight: {
     '@import': `url('https://fonts.googleapis.com/css2?family=Inter:wght@200;600;800;900&display=swap')`,
-    '@font-face': [
-      {
-        fontFamily: 'Inter',
-        fontWeight: '200',
-        src: 'url(https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap)',
-      },
-      {
-        fontFamily: 'Inter',
-        fontWeight: '600',
-        src: 'url(https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap)',
-      },
-      {
-        fontFamily: 'Inter',
-        fontWeight: '800',
-        src: 'url(https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap)',
-      },
-      {
-        fontFamily: 'Inter',
-        fontWeight: '900',
-        src: 'url(https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap)',
-      },
-    ],
+    // '@font-face': [
+    //   {
+    //     fontFamily: 'Inter',
+    //     fontWeight: '200',
+    //     src: 'url(https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap)',
+    //   },
+    //   {
+    //     fontFamily: 'Inter',
+    //     fontWeight: '600',
+    //     src: 'url(https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap)',
+    //   },
+    //   {
+    //     fontFamily: 'Inter',
+    //     fontWeight: '800',
+    //     src: 'url(https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap)',
+    //   },
+    //   {
+    //     fontFamily: 'Inter',
+    //     fontWeight: '900',
+    //     src: 'url(https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap)',
+    //   },
+    // ],
   },
 }

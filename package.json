@@ -12,8 +12,6 @@
   "dependencies": {
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
-    "@geist-ui/react": "^2.2.0",
-    "@geist-ui/react-icons": "^1.0.1",
     "@headlessui/react": "^1.4.2",
     "@heroicons/react": "^1.0.5",
     "@textile/hub": "^6.3.2",
@@ -27,8 +25,8 @@
     "http-status-typed": "^1.0.1",
     "mini-svg-data-uri": "^1.4.3",
     "next": "^12.0.7",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-hot-toast": "^2.1.1",
     "react-query": "^3.34.3",
     "twind": "^0.16.16"

@@ -1,0 +1,11 @@
+{
+  "build": {
+    "image": "fleek/next-js:node-16",
+    "command": "npm install && npm run build",
+    "publicDir": "build",
+    "baseDir": ".",
+    "environment": {
+      "development": "Build finished!"
+    }
+  }
+}

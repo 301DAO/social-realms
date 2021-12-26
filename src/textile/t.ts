@@ -79,7 +79,7 @@ export const setup = async () => {
   // @ts-ignore
   client['threadId'] = threadId
   const ThreadId = ThreadID.fromString(threadId)
-  //console.log(`ThreadId: ${threadId}`)
+  console.log(`ThreadId: ${threadId}`)
 
   const hasFollowingCollection = await userHasCollection(
     client,
@@ -98,10 +98,14 @@ export const setup = async () => {
 
   // if (!hasFavoritesCollection === false)
   //   await createNewCollection(client, threadId, 'favorites')
+  console.log(`threadId ${threadId}`)
 
   //window.client = client
   return client
 }
+
+
+
 interface EthUser {
   _id: string
   address: string

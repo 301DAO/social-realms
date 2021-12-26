@@ -61,7 +61,7 @@ export const useEagerConnect = () => {
 }
 
 export const useInactiveListener = (suppress: boolean = false) => {
-  const { active, error, activate } = useWeb3React()
+  const { active, error, activate, } = useWeb3React()
 
   React.useEffect(() => {
     const { ethereum } = window as any
