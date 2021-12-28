@@ -1,4 +1,4 @@
-import { isValidEthAddress } from '@/util/string-validators'
+import { isValidEthAddress } from 'src/utils/string-validators'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { tw } from 'twind'

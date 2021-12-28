@@ -1,12 +1,14 @@
-import { parseEnsAvatar } from '@/util/ens-avatar-parser'
+import { parseEnsAvatar } from 'src/utils/ens-avatar-parser'
 import * as React from 'react'
 import { useQuery } from 'react-query'
+
 export function useEnsImage(avatar: string) {
+
   const { contract, tokenId } = React.useMemo(
     () => parseEnsAvatar(avatar),
     [avatar]
   )
-  const { data } = useQuery<String | undefined>(
+  const { data } = useQuery<string | undefined>(
     ['ens-image', contract, tokenId],
     async () => {
       const res = await fetch(
@@ -21,7 +23,5 @@ export function useEnsImage(avatar: string) {
       retry: false
      }
   )
-  console.log(`useEnsImage: ${avatar}`);
-
   return data
 }

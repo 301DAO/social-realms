@@ -36,14 +36,17 @@ function App({ Component, pageProps }: AppProps) {
         if (chainId != networks.ethereum.chainId) {
           switchNetwork()
           import('react-hot-toast').then(({ toast }) => {
-            toast('Switch to Ethereum Mainnet', {
-              position: 'bottom-right',
-              style: {
-                background: '#f44336',
-                color: '#fff',
-              },
-              duration: 3000,
-            })
+            toast(
+              'Your wallet is connected to the wrong network, please connect it to Ethereum mainnet',
+              {
+                position: 'bottom-right',
+                style: {
+                  background: '#f44336',
+                  color: '#fff',
+                },
+                duration: 3000,
+              }
+            )
           })
         }
       })
@@ -58,7 +61,6 @@ function App({ Component, pageProps }: AppProps) {
     }
   }, [])
   if (!hasMounted) return <p>loading</p>
-  console.log(active)
 
   return (
     <>

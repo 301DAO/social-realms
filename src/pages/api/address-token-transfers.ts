@@ -1,5 +1,5 @@
 import { getTxsForAddress } from '@/lib/covalent-api-wrapper'
-import { isValidEthAddress } from '@/util/string-validators'
+import { isValidEthAddress } from 'src/utils/string-validators'
 import type { NextApiRequest, NextApiResponse } from 'next'
 export default async function handler(
   req: NextApiRequest,

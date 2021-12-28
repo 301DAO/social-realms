@@ -1,4 +1,4 @@
-import { parseEnsAvatar } from '@/util/ens-avatar-parser'
+import { parseEnsAvatar } from 'src/utils/ens-avatar-parser'
 import * as React from 'react'
 import { useQuery } from 'react-query'
 
@@ -25,7 +25,7 @@ export default function ProfileImage({ avatar, isProfilePic }: IProfileImage) {
     [ avatar ]
   )
   console.log(contract, tokenId);
-  
+
   const { data, isLoading, isError, } = useQuery(
     [contract, tokenId],
     async () =>

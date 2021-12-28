@@ -10,6 +10,7 @@
     "dev-https": "concurrently \"next dev -p 3000\" \"local-ssl-proxy --source 3001 --target 3000\""
   },
   "dependencies": {
+    "@ethersproject/hash": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "@headlessui/react": "^1.4.2",

@@ -1,7 +1,7 @@
 declare const window: any
+import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { utils, Wallet } from 'ethers'
 import { networks } from './constants'
-import crypto from 'crypto'
 
 const newCredentials = async () => {
   const menemonic = ''
@@ -22,7 +22,45 @@ const newCredentials = async () => {
 // console.log(utils.hashMessage('0x983110309620D911731Ac0932219af06091b6744'))
 // console.log(utils.id('0x983110309620D911731Ac0932219af06091b6744'))
 
-export const checkSumAddress = (address: string) => utils.getAddress(address)
+// checksum address
+export const checksumAddress = (address: string) => {
+  try {
+    return utils.getAddress(address.toLowerCase())
+  } catch {
+    return false
+  }
+}
+// returns the checksummed address if the address is valid, otherwise returns false
+export function isAddress(value: any): string | false {
+  try {
+    return utils.getAddress(value)
+  } catch {
+    return false
+  }
+}
+
+// shorten the checksummed version of the input address to have 0x + 4 characters at start and end
+export function shortenAddress(address: string, chars = 4): string {
+  const parsed = isAddress(address)
+  if (!parsed) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
+  }
+  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
+}
+
+// account is not optional
+function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
+  return library.getSigner(account).connectUnchecked()
+}
+
+const ENS_NAME_REGEX = /^(([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\.)+)eth(\/.*)?$/
+export function parseENSAddress(
+  ensAddress: string
+): { ensName: string; ensPath: string | undefined } | undefined {
+  const match = ensAddress.match(ENS_NAME_REGEX)
+  if (!match) return undefined
+  return { ensName: `${match[1].toLowerCase()}eth`, ensPath: match[4] }
+}
 
 /**
  * by default it switches to Ethereum. Update parameters for bsc or add more chainIds and rpcUrls for other networks.

@@ -23,8 +23,19 @@ class RootDocument extends Document {
   }
   render() {
     return (
-      <Html className="dark" lang="en">
-        <Head />
+      <Html className="dark" data-theme="black" lang="en">
+        <Head>
+          <link
+            href="https://cdn.jsdelivr.net/npm/daisyui@1.20.0/dist/full.css"
+            rel="stylesheet"
+            type="text/css"
+          />
+          {/* <link
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css"
+            rel="stylesheet"
+            type="text/css"
+          /> */}
+        </Head>
         <body>
           <Main />
           <NextScript />
