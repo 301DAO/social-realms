@@ -1,4 +1,4 @@
-import { parseBigNumberToString } from '@/util/bigNumberConverter'
+import { parseBigNumberToString } from 'src/utils/bigNumberConverter'
 import * as React from 'react'
 
 type useBalanceProps = {

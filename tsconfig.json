@@ -8,7 +8,7 @@
       "@/styles/*": ["src/styles/*"],
       "@/contexts/*": ["src/contexts/*"],
       "@/hooks/*": ["src/hooks/*"],
-      "@/util/*": ["src/util/*"],
+      "@/utils/*": ["src/utils/*"],
       "@/store/*": ["src/store/*"],
       "@/lib/*": ["src/lib/*"],
       "@/assets/*": ["src/assets/*"],
@@ -37,7 +37,7 @@
     "transpileOnly": true,
     "transpiler": "ts-node/transpilers/swc-experimental"
   },
-  "include": ["next-env.d.ts", "additional.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "additional.d.ts", "**/*.ts", "**/*.tsx", "src/**/*"],
   "exclude": [
     "node_modules",
     "**/*.d.ts",

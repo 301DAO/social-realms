@@ -1,5 +1,5 @@
 import { getHistoricalPortfolioValue } from '@/lib/covalent-api-wrapper'
-import { isValidEthAddress } from '@/util/string-validators'
+import { isValidEthAddress } from 'src/utils/string-validators'
 // TODO: add logging and error handling
 import type { NextApiRequest, NextApiResponse } from 'next'
 

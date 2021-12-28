@@ -15,10 +15,10 @@ export const getServerSideProps: GetServerSideProps = async context => {
 }
 
 const Index: NextPage = () => {
-  const provider = getDefaultProvider()
-  const address = '0x8d12A197cB00D4747a1fe03395095ce2A5CC6819'
-  const balance = provider.getBalance(address)
-  balance.then(console.log)
+  // const provider = getDefaultProvider()
+  // const address = '0x8d12A197cB00D4747a1fe03395095ce2A5CC6819'
+  // const balance = provider.getBalance(address)
+  // balance.then(console.log)
   //console.log(`balance ${balance}`);
 
   const toaster = () => toast('test it')
@@ -45,7 +45,7 @@ const Index: NextPage = () => {
   // }
   return (
     <div
-      className={tw`flex flex-col items-center justify-center align-middle px-9 font-[Inter]
+      className={tw`flex flex-col items-center justify-center align-middle mt-20 px-9 font-[Inter]
         text-center text-6xl font-extrabold tracking-tighter leading-[1.1] sm:text-7xl lg:text-8xl xl:text-8xl
         `}
     >

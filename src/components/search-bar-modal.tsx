@@ -1,7 +1,23 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { useRouter } from 'next/router'
 import * as React from 'react'
+import { isValidEthAddress } from 'src/utils/string-validators'
 import { tw } from 'twind'
+
+// TODO: add ENS support
+const verifyAddress = (address: string) => {
+  if (isValidEthAddress(address) || address.endsWith('.eth')) return true
+  import('react-hot-toast').then(({ toast }) => {
+    toast('Invalid Ethereum address', {
+      position: 'bottom-right',
+      style: {
+        background: '#f44336',
+        color: '#fff',
+      },
+    })
+  })
+}
+
 export default function SearchBarModal() {
   const [open, setIsOpen] = React.useState(false)
 
@@ -20,9 +36,10 @@ export default function SearchBarModal() {
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
       hideModal()
+
       const search = searchText?.current?.value
-      if (!search) return
-      router.push(`/user?address=${search}`)
+      if (!search || !verifyAddress(search)) return
+      router.push(`/user/${search}`)
     },
     [searchText]
   )
@@ -32,9 +49,10 @@ export default function SearchBarModal() {
       if (event.key !== 'Enter') return
       event.preventDefault()
       hideModal()
+
       const search = searchText?.current?.value
-      if (!search) return
-      router.push(`/user?address=${search}`)
+      if (!search || !verifyAddress(search)) return
+      router.push(`/user/${search}`)
     },
     [searchText]
   )

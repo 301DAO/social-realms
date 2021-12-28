@@ -3,12 +3,11 @@ import { useEagerConnect, useInactiveListener } from '@/wallet/hooks'
 import type { Web3Provider } from '@ethersproject/providers'
 import { LogoutIcon } from '@heroicons/react/outline'
 import { useWeb3React } from '@web3-react/core'
+import { useRouter } from 'next/router'
 import * as React from 'react'
-import { toast } from 'react-hot-toast'
 import { tw } from 'twind'
-import {useRouter} from 'next/router'
+
 export function WalletNav() {
-  const _toast = () => toast('test it')
   const router = useRouter()
   const { active, connector, account, activate, deactivate } =
     useWeb3React<Web3Provider>()
@@ -42,8 +41,7 @@ export function WalletNav() {
     } else {
       setActivatingConnector(injectedConnector)
       activate(injectedConnector)
-      setButtonText(elipsedAddress),
-      (window as any).address = address
+      setButtonText(elipsedAddress), ((window as any).address = address)
     }
   }
   const disconnectWallet = async () => {
@@ -56,8 +54,6 @@ export function WalletNav() {
     const elipsedAddress = `${account?.slice(0, 6)}......${account?.slice(-6)}`
     if (active) setButtonText(elipsedAddress)
   }, [account, active])
-
-
 
   return (
     <>

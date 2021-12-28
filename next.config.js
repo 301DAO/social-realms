@@ -6,10 +6,10 @@
 const nextConfig = {
   experimental: {
     // concurrentFeatures: true,
-    urlImports: [ 'https://fonts.googleapis.com/' ],
+    urlImports: [ 'https://fonts.googleapis.com/', 'https://api.wrappedpunks.com/' ],
   },
   images: {
-    domains: [ 'storage.googleapis.com' ],
+    domains: [ 'storage.googleapis.com', 'api.wrappedpunks.com' ],
   },
   env: {
     RPC_URL_1: 'https://mainnet.infura.io/v3/84842078b09946638c03157f83405213',
@@ -34,22 +34,22 @@ const nextConfig = {
     // staticFolder: '/static',
     // apiUrl: 'https://api.example.com',
   },
-  webpack: (config, { dev, isServer, defaultLoaders, webpack }) => {
+  webpack: ( config, { dev, isServer, defaultLoaders, webpack } ) => {
     // Important: return the modified config
-      // if (!isServer) {
-      //   config.node = {
-      //     dgram: 'empty',
-      //     fs: 'empty',
-      //     net: 'empty',
-      //     tls: 'empty',
-      //     child_process: 'empty',
-      //   };
+    // if (!isServer) {
+    //   config.node = {
+    //     dgram: 'empty',
+    //     fs: 'empty',
+    //     net: 'empty',
+    //     tls: 'empty',
+    //     child_process: 'empty',
+    //   };
 
-      //   // ignore apm (might use in nextjs code but dont want it in client bundles)
-      //   config.plugins.push(
-      //     new webpack.IgnorePlugin(/^(elastic-apm-node)$/),
-      //   );
-      // }
+    //   // ignore apm (might use in nextjs code but dont want it in client bundles)
+    //   config.plugins.push(
+    //     new webpack.IgnorePlugin(/^(elastic-apm-node)$/),
+    //   );
+    // }
     return config
   },
   poweredByHeader: false,

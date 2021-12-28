@@ -91,6 +91,9 @@ export const setup = async () => {
     ThreadId,
     'favorite'
   )
+  const followingList = await getFollowingList(client, threadId)
+ // console.log( followingList);
+
   // TODO
   // const signature = await signMessage('TODO')
   // if (hasFollowingCollection === false)
@@ -213,11 +216,19 @@ interface Following {
 
 export const getFollowingList = async (client: Client, threadId: string) => {
   const query = new Where('_id').ne(new Date().toISOString())
-  return await client.find<Following>(
+
+  const response = await client.find<Following>(
     ThreadID.fromString(threadId),
     'following',
     query
   )
+
+  return response.map(instance => instance.address)
+  // return await client.find<Following>(
+  //   ThreadID.fromString(threadId),
+  //   'following',
+  //   query
+  // )
 }
 
 interface Favorite {

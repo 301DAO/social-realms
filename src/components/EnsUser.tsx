@@ -1,5 +1,5 @@
 import { useEtherUser } from '@/hooks/use-ether-user'
-import { parseEnsAvatar } from '@/util/ens-avatar-parser'
+import { parseEnsAvatar } from 'src/utils/ens-avatar-parser'
 import { User } from '@geist-ui/react'
 import { useWeb3React } from '@web3-react/core'
 import * as React from 'react'

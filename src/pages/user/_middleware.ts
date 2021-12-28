@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { isValidEthAddress } from '@/util/string-validators'
+import { isValidEthAddress } from 'src/utils/string-validators'
 
 const ETHERSCAN_IO = 'https://api.etherscan.io/'
 console.log(`key ${process.env.ETHERSCAN_API_KEY}`);
