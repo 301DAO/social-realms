@@ -40,7 +40,13 @@ export function isAddress(value: any): string | false {
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddress(address: string, chars = 4): string {
+export function shortenAddress({
+  address,
+  chars = 4,
+}: {
+  address: string
+  chars?: number
+}): string {
   const parsed = isAddress(address)
   if (!parsed) {
     throw Error(`Invalid 'address' parameter '${address}'.`)

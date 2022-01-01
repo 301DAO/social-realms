@@ -25,9 +25,18 @@ const CovalentRequest = async (relativePath: string) => {
 
 /**
  * retrieve past transactions for a given address
+ * @param address accepts ethereum address or ENS name
+ * @param limit number of transactions to return, default is 0 which means no limit
  */
-export const getTxsForAddress = async (address: string) => {
-  const relativePath = `address/${address}/transactions_v2/`
+export const getTransactionsForAddress = async ({
+  address,
+  limit = 1,
+}: {
+  address: string
+  limit?: number
+}) => {
+  const primer = JSON.stringify(PRIMER)
+  const relativePath = `address/${address}/transactions_v2/?limit=${limit}&primer=${primer}`
   return CovalentRequest(relativePath)
 }
 
@@ -36,10 +45,68 @@ export const getHistoricalPortfolioValue = async (address: string) => {
   return CovalentRequest(relativePath)
 }
 
-export const getERC20tokenTransfersForAddress = async (
-  address: string,
-  contractAddress: string
-) => {
-  const relativePath = `address/${address}/transfers_v2/?contract-address=${contractAddress}`
+/**
+ * retrieve past transactions for a given address
+ * @param address accepts ethereum address or ENS name
+ * @param limit number of transactions to return, default is 0 which means no limit
+ * @param contractAddress smart contract address
+ */
+export const getERC20tokenTransfersForAddress = async ({
+  address,
+  limit = 0,
+  contractAddress,
+}: {
+  address: string
+  limit?: number
+  contractAddress?: string
+}) => {
+  const relativePath = `address/${address}/transfers_v2/?contract-address=${contractAddress}&limit=${limit}`
   return CovalentRequest(relativePath)
 }
+
+// https://www.covalenthq.com/docs/developer/primer/
+const PRIMER = [
+  {
+    $match: {
+      log_events: {
+        $elemMatch: {
+          'decoded.name': {
+            $in: [
+              'Transfer',
+              'WithdrawalRequested',
+              'Approval',
+              'TransferSingle',
+              'ClaimVolts',
+              'OrderCancelled',
+              'ReMint',
+              'Trade',
+              'Withdrawal',
+              'Redeem',
+              'Print',
+              'TransactionEnqueued',
+              'Claim',
+              'ApprovalForAll',
+              'NameRenewed',
+              'Deposit',
+              'ProviderLastClaimTimeUpdated',
+              'Upgraded',
+              'DelegateChanged',
+              'NameRegistered',
+              'Mint',
+              'NameBid',
+              'NameClaimed',
+            ],
+          },
+        },
+      },
+    },
+  },
+  {
+    $group: {
+      _id: {
+        log_events: 'log_events',
+        successful: 'successful',
+      },
+    },
+  },
+]

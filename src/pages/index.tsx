@@ -1,8 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import * as React from 'react'
-import { toast } from 'react-hot-toast'
 import { tw } from 'twind'
-import { utils, providers, getDefaultProvider } from 'ethers'
 
 export const getServerSideProps: GetServerSideProps = async context => {
   //console.log(window);
@@ -10,7 +8,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   return {
     props: {
       test: context.locale || null,
-    }
+    },
   }
 }
 
@@ -20,8 +18,6 @@ const Index: NextPage = () => {
   // const balance = provider.getBalance(address)
   // balance.then(console.log)
   //console.log(`balance ${balance}`);
-
-  const toaster = () => toast('test it')
 
   // listen to wallet disconnecting
   // React.useEffect(() => {
@@ -45,8 +41,7 @@ const Index: NextPage = () => {
   // }
   return (
     <div
-      className={tw`flex flex-col items-center justify-center align-middle mt-20 px-9 font-[Inter]
-        text-center text-6xl font-extrabold tracking-tighter leading-[1.1] sm:text-7xl lg:text-8xl xl:text-8xl
+      className={tw`flex flex-col items-center align-middle mt-20 px-9 font-[Inter] text-center text-6xl font-extrabold tracking-tighter leading-[1.1] sm:text-7xl lg:text-8xl xl:text-8xl
         `}
     >
       <p

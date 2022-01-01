@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { parseBigNumberToString } from 'src/utils/bigNumberConverter'
+import { parseBigNumberToString } from '@/utils/big-number-converter'
 
 interface IUseEtherUser {
   provider: any

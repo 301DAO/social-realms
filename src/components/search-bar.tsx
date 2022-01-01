@@ -2,7 +2,7 @@ import { isValidEthAddress } from 'src/utils/string-validators'
 import { useRouter } from 'next/router'
 import * as React from 'react'
 import { tw } from 'twind'
-
+import useDebounce from '@/hooks/use-debounce'
 // TODO: add ENS support
 const verifyAddress = (address: string) => {
   if (isValidEthAddress(address) || address.endsWith('.eth')) return true
@@ -20,7 +20,6 @@ const verifyAddress = (address: string) => {
 export const SearchBar = () => {
   const router = useRouter()
   const searchText = React.useRef<HTMLInputElement>(null)
-
   const onSearchClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
