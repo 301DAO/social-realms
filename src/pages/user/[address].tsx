@@ -1,8 +1,8 @@
 //const { ethAddress, ens, balance, image, followed } = user
-import { useTextileContext } from '@/contexts/TextileContext'
+import { useTextileContext } from '@/contexts/textile-context'
 import { useEnsImage } from '@/hooks/use-ens-image'
 import { useEtherUser } from '@/hooks/use-ether-user'
-import { follow, isFollowing, unfollow } from '@/textile/textileStore'
+import { follow, isFollowing, unfollow } from '@/textile/textile-store'
 import { shortenAddress } from '@/wallet/utils'
 import { useWeb3React } from '@web3-react/core'
 import { useRouter } from 'next/router'
@@ -79,10 +79,20 @@ const user = {
   loading: false,
   followUser: () => {},
   unfollowUser: () => {},
-  buttonText: 'follow'
+  buttonText: 'follow',
 }
 
-const { ethAddress, ens, balance, image, followed, loading, followUser, unfollowUser, buttonText} = user
+const {
+  ethAddress,
+  ens,
+  balance,
+  image,
+  followed,
+  loading,
+  followUser,
+  unfollowUser,
+  buttonText,
+} = user
 
 //export default function User({ address }: { address: string }) {
 export default function User() {
@@ -108,13 +118,13 @@ export default function User() {
   const { data, isLoading, refetch, error } = useQuery(
     ['user', ethAddress, threadId],
     async (): Promise<Boolean | undefined> =>
-      await isFollowing(client, threadId, ethAddress as string),
+      await isFollowing({ client, threadId, address: ethAddress as string }),
     {
       enabled: !!client && !!threadId && !!ethAddress,
       //retry: false,
     }
   )
-  console.log(isLoading);
+  console.log(isLoading)
 
   const followed = data
   const buttonText = followed ? 'Unfollow' : isLoading ? 'Loading...' : 'Follow'
@@ -123,7 +133,11 @@ export default function User() {
     setLoading(true)
     event.preventDefault()
     if (!library) return
-    const response = await follow(client, threadId, ethAddress as string)
+    const response = await follow({
+      client,
+      threadId,
+      address: ethAddress as string,
+    })
     await refetch()
     setLoading(false)
     return response
@@ -133,7 +147,11 @@ export default function User() {
     setLoading(true)
     event.preventDefault()
     if (!library) return
-    const response = await unfollow(client, threadId, ethAddress as string)
+    const response = await unfollow({
+      client,
+      threadId,
+      address: ethAddress as string,
+    })
     await refetch()
     setLoading(false)
     return response
@@ -145,7 +163,6 @@ export default function User() {
         `items-center w-full px-4 md:mt-1 card sm:card-side flex justify-center sm:gap-x-20`,
         !ethAddress && `animate-pulse`
       )}
-      data-theme="dark"
     >
       <div className="mb-6 card card-bordered bg-[#292a37] text-neutral-content">
         <div className="py-6 px-3 self-center sm:w-96">
@@ -166,7 +183,7 @@ export default function User() {
               <span className={tw(`me-auto`)}>{balance ?? ''}</span>
             </h2>
             <button className={tw(`btn btn-ghost pl-0`)}>
-              {ethAddress && shortenAddress(ethAddress)}
+              {ethAddress && shortenAddress({ address: ethAddress, chars: 12 })}
             </button>
           </div>
           <div className="card-actions">

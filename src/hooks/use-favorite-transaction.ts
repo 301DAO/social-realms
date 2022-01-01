@@ -1,5 +1,5 @@
-import { useTextileContext } from '@/contexts/TextileContext'
-import { favoriteTransaction } from '@/textile/textileStore'
+import { useTextileContext } from '@/contexts/textile-context'
+import { favoriteTransaction } from '@/textile/textile-store'
 import * as React from 'react'
 import { useQuery } from 'react-query'
 

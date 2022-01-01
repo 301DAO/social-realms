@@ -1,6 +1,6 @@
 import { Client } from '@textile/hub'
 import * as React from 'react'
-import { setup } from 'src/textile/textileStore'
+import { setup } from '@/textile/textile-store'
 interface ITextileContext {
   client: Client
   setClient: (client: Client) => void

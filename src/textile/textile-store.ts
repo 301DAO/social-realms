@@ -1,6 +1,7 @@
 import { userAddress } from '@/wallet/utils'
 import { Client, PrivateKey, ThreadID, UserAuth, Where } from '@textile/hub'
 import { createDB, findUserDB } from './textile'
+declare const window: any
 
 // Docs: https://docs.textile.io/
 /**
@@ -11,12 +12,6 @@ import { createDB, findUserDB } from './textile'
  * 4. after creating new token, call createDB() to create a new DB.
  * one DB is created, you can call listUserThreads() to get the list of threads.
  */
-
-declare const window: any
-
-// const GROUP_KEY = 'be6a6xkfn2ogzuh4uye7r4xnv4a'
-// const GROUP_SECRET = 'blzig2hkki3cgxurowion2tsneugfszc42vdr77q'
-// const KEY = 'bshxu43my5rghzflk4pren446fa'
 
 export const auth: UserAuth = {
   msg: 'test msg1',
@@ -55,14 +50,20 @@ const identity = async () => {
 /**
  * find user's database threadId, if not found create new one.
  */
-export const getThreadId = async (client: Client, address: string) => {
-  const existing = await findUserDB(client, address)
+export const getThreadId = async ({
+  client,
+  address,
+}: {
+  client: Client
+  address: string
+}) => {
+  const existing = await findUserDB({ client, address })
   // console.log(`existing: ${existing?.id}`)
   if (existing) {
     window.threadId = existing.id
     return existing.id
   }
-  const threadId = await createDB(client, address.toLowerCase())
+  const threadId = await createDB({ client, name: address.toLowerCase() })
   window.threadId = threadId.toString()
   localStorage.setItem('threadId', threadId.toString())
   return threadId.toString()
@@ -75,24 +76,24 @@ export const setup = async () => {
   const address = await userAddress()
   const client = Client.withUserAuth(auth)
   await client.getToken(await identity())
-  const threadId = await getThreadId(client, await address)
+  const threadId = await getThreadId({ client, address: await address })
   // @ts-ignore
   client['threadId'] = threadId
   const ThreadId = ThreadID.fromString(threadId)
   //console.log(`ThreadId: ${threadId}`)
 
-  const hasFollowingCollection = await userHasCollection(
+  const hasFollowingCollection = await userHasCollection({
     client,
-    ThreadId,
-    'following'
-  )
-  const hasFavoritesCollection = await userHasCollection(
+    threadId,
+    collectionName: 'following',
+  })
+  const hasFavoritesCollection = await userHasCollection({
     client,
-    ThreadId,
-    'favorite'
-  )
-  const followingList = await getFollowingList(client, threadId)
- // console.log( followingList);
+    threadId,
+    collectionName: 'favorite',
+  })
+  const followingList = await getFollowingList({ client, threadId })
+  // console.log( followingList);
 
   // TODO
   // const signature = await signMessage('TODO')
@@ -115,11 +116,15 @@ interface TxHsah {
   hash: string
 }
 
-export const isFollowing = async (
-  client: Client,
-  threadId: string,
+export const isFollowing = async ({
+  client,
+  threadId,
+  address,
+}: {
+  client: Client
+  threadId: string
   address: string
-) => {
+}) => {
   const threadID = ThreadID.fromString(threadId)
   const query = new Where('address').eq(address)
   try {
@@ -130,11 +135,15 @@ export const isFollowing = async (
   }
 }
 
-export const follow = async (
-  client: Client,
-  threadId: string,
+export const follow = async ({
+  client,
+  threadId,
+  address,
+}: {
+  client: Client
+  threadId: string
   address: string
-) => {
+}) => {
   const threadID = ThreadID.fromString(threadId)
   const query = new Where('address').eq(address)
   const result = await client.find<EthUser>(threadID, 'following', query)
@@ -149,11 +158,15 @@ export const follow = async (
   return follow
 }
 
-export const unfollow = async (
-  client: Client,
-  threadId: string,
+export const unfollow = async ({
+  client,
+  threadId,
+  address,
+}: {
+  client: Client
+  threadId: string
   address: string
-) => {
+}) => {
   const threadID = ThreadID.fromString(threadId)
   const query = new Where('address').eq(address)
   const result = await client.find<EthUser>(threadID, 'following', query)
@@ -167,11 +180,15 @@ interface Transaction {
   hash: string
 }
 
-export const favoriteTransaction = async (
-  client: Client,
-  threadId: string,
+export const favoriteTransaction = async ({
+  client,
+  threadId,
+  hash,
+}: {
+  client: Client
+  threadId: string
   hash: string
-): Promise<'already favorited' | string[]> => {
+}): Promise<'already favorited' | string[]> => {
   const threadID = ThreadID.fromString(threadId)
   const query = new Where('hash').eq(hash)
   const result = await client.find<TxHsah>(threadID, 'favorites', query)
@@ -184,11 +201,15 @@ export const favoriteTransaction = async (
   ])
 }
 
-export const unfavorite = async (
-  client: Client,
-  threadId: string,
+export const unfavorite = async ({
+  client,
+  threadId,
+  hash,
+}: {
+  client: Client
+  threadId: string
   hash: string
-) => {
+}) => {
   const threadID = ThreadID.fromString(threadId)
   const query = new Where('hash').eq(hash)
   const result = await client.find<TxHsah>(threadID, 'favorites', query)
@@ -200,35 +221,45 @@ export const unfavorite = async (
 /**
  * This is a hacky way to get all entries in a collection
  */
-export const getAllEntitiesInCollection = async (
-  client: Client,
-  threadId: ThreadID,
+export const getAllEntitiesInCollection = async ({
+  client,
+  threadId,
+  collectionName,
+}: {
+  client: Client
+  threadId: string
   collectionName: string
-) => {
+}) => {
   const query = new Where('_id').ne(new Date().toISOString())
-  return await client.find(threadId, collectionName, query)
+  return await client.find(ThreadID.fromString(threadId), collectionName, query)
 }
 
-interface Following {
+export interface Following {
   address: string
   _id: string
 }
 
-export const getFollowingList = async (client: Client, threadId: string) => {
+export const getFollowingList = async ({
+  client,
+  threadId,
+}: {
+  client: Client
+  threadId: string
+}) => {
   const query = new Where('_id').ne(new Date().toISOString())
 
-  const response = await client.find<Following>(
-    ThreadID.fromString(threadId),
-    'following',
-    query
-  )
-
-  return response.map(instance => instance.address)
-  // return await client.find<Following>(
+  // const response = await client.find<Following>(
   //   ThreadID.fromString(threadId),
   //   'following',
   //   query
   // )
+
+  // return response.map(instance => instance.address)
+  return await client.find<Following>(
+    ThreadID.fromString(threadId),
+    'following',
+    query
+  )
 }
 
 interface Favorite {
@@ -236,7 +267,13 @@ interface Favorite {
   _id: string
 }
 
-export const getFavoritesList = async (client: Client, threadId: string) => {
+export const getFavoritesList = async ({
+  client,
+  threadId,
+}: {
+  client: Client
+  threadId: string
+}) => {
   const query = new Where('_id').ne(new Date().toISOString())
   return await client.find<Favorite[]>(
     ThreadID.fromString(threadId),
@@ -245,13 +282,21 @@ export const getFavoritesList = async (client: Client, threadId: string) => {
   )
 }
 
-async function userHasCollection(
-  client: Client,
-  threadId: ThreadID,
+async function userHasCollection({
+  client,
+  threadId,
+  collectionName,
+}: {
+  client: Client
+  threadId: string
   collectionName: string
-): Promise<boolean> {
+}): Promise<boolean> {
   try {
-    const has = await client.has(threadId, collectionName, [])
+    const has = await client.has(
+      ThreadID.fromString(threadId),
+      collectionName,
+      []
+    )
     if (has) return true
   } catch (error: any) {
     if (`${error}`.includes('collection not found')) return false
@@ -280,11 +325,6 @@ const following = {
   },
 }
 
-interface Following {
-  _id: string
-  address: string
-}
-
 const favorites = {
   title: 'Favorites',
   type: 'object',
@@ -301,11 +341,15 @@ const favorites = {
   },
 }
 
-async function createNewCollection(
-  client: Client,
-  threadId: string,
+async function createNewCollection({
+  client,
+  threadId,
+  collectionName,
+}: {
+  client: Client
+  threadId: string
   collectionName: 'following' | 'favorites'
-) {
+}) {
   const threadID = ThreadID.fromString(threadId)
   const collection = await client.newCollection(threadID, {
     name: collectionName,
