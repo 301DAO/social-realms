@@ -1,75 +1,20 @@
-import type { GetServerSideProps, NextPage } from 'next'
-import * as React from 'react'
-import { tw } from 'twind'
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  //console.log(window);
-
-  return {
-    props: {
-      test: context.locale || null,
-    },
-  }
-}
+import type { NextPage } from 'next';
+import * as React from 'react';
+import { useUser } from '@/hooks';
 
 const Index: NextPage = () => {
-  // const provider = getDefaultProvider()
-  // const address = '0x8d12A197cB00D4747a1fe03395095ce2A5CC6819'
-  // const balance = provider.getBalance(address)
-  // balance.then(console.log)
-  //console.log(`balance ${balance}`);
+  useUser({ redirectTo: '/login' });
 
-  // listen to wallet disconnecting
-  // React.useEffect(() => {
-
-  //    const signTyped =  window.ethereum.request({
-  //       method: 'eth_signTypedData',
-  //       params: [
-  //        [ {
-  //           type: 'string',
-  //           value: 'hello',
-  //           name: 'essage',
-  //         }],
-  //         '0x9FB7E6090096C3A0a6b085C8e33d99e5610234fa',
-  //       ],
-  //     })
-  //     signTyped.then(console.log)
-  // }, [])
-
-  // if (typeof window.ethereum !== 'undefined') {
-  //   window.ethereum.on('chainChanged', chainId => {})
-  // }
   return (
-    <div
-      className={tw`flex flex-col items-center align-middle mt-20 px-9 font-[Inter] text-center text-6xl font-extrabold tracking-tighter leading-[1.1] sm:text-7xl lg:text-8xl xl:text-8xl
-        `}
-    >
+    <main className="mt-40 flex flex-col items-center px-9 text-center align-middle">
       <p
-        className={tw(
-          'text-8xl font-extrabold pb-8 text-center tracking-tight leading-[1.1] sm:text-9xl lg:text-10xl xl:text-10xl',
-          ' inline-block text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-blue-500'
-        )}
-      >
+        className="lg:text-10xl xl:text-10xl inline-block bg-gradient-to-r from-red-400 to-blue-500 bg-clip-text pb-8 text-center text-8xl font-extrabold leading-[1.1] tracking-tight text-transparent
+          sm:text-9xl">
         Social Realms.
       </p>
-      <div
-        className={tw(
-          `space-y-8 text-3xl font-extrabold subpixel-antialiased tracking-wide leading-10 text-center`,
-          `dark:text-gray-300`
-        )}
-      >
-        <p>
-          Follow your favorite addresses in{' '}
-          <span className="underline decoration-slate-50">Crypto</span>
-        </p>
-        <p>
-          Lookup anyone by their{' '}
-          <span className="underline decoration-slate-50">ENS</span> or{' '}
-          <span className="underline decoration-slate-50">Ethereum</span>{' '}
-          address
-        </p>
-      </div>
-    </div>
-  )
-}
-export default Index
+      <section className="mt-10 flex w-8/12 max-w-xs flex-col items-center gap-y-8 px-9 text-center"></section>
+    </main>
+  );
+};
+
+export default Index;

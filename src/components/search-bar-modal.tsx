@@ -1,95 +1,90 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { useRouter } from 'next/router'
-import * as React from 'react'
-import { isValidEthAddress } from 'src/utils/string-validators'
-import { tw } from 'twind'
+import { isValidEthAddress } from '@/utils/string-validators';
+import { Dialog, Transition } from '@headlessui/react';
+import clsx from 'clsx';
+import { useRouter } from 'next/router';
+import * as React from 'react';
 
 // TODO: add ENS support
 const verifyAddress = (address: string) => {
-  if (isValidEthAddress(address) || address.endsWith('.eth')) return true
+  if (isValidEthAddress(address) || address.endsWith('.eth')) return true;
   import('react-hot-toast').then(({ toast }) => {
     toast('Invalid Ethereum address', {
       position: 'bottom-right',
       style: {
         background: '#f44336',
-        color: '#fff',
-      },
-    })
-  })
-}
+        color: '#fff'
+      }
+    });
+  });
+};
 
-export default function SearchBarModal() {
-  const [open, setIsOpen] = React.useState(false)
+const SearchBarModal = () => {
+  const [open, setIsOpen] = React.useState(false);
 
-  const showModal = async () => {
-    setIsOpen(true)
-  }
+  const showModal = () => setIsOpen(true);
+  const hideModal = () => setIsOpen(false);
 
-  const hideModal = () => {
-    setIsOpen(false)
-  }
-
-  const router = useRouter()
-  const searchText = React.useRef<HTMLInputElement>(null)
+  const router = useRouter();
+  const searchText = React.useRef<HTMLInputElement>(null);
 
   const onSearchClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault()
-      hideModal()
+      event.preventDefault();
+      hideModal();
 
-      const search = searchText?.current?.value
-      if (!search || !verifyAddress(search)) return
-      router.push(`/user/${search}`)
+      const search = searchText?.current?.value;
+      if (!search || !verifyAddress(search)) return;
+      router.push(`/user/${search}`);
     },
     [searchText]
-  )
+  );
 
   const onEnter = React.useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key !== 'Enter') return
-      event.preventDefault()
-      hideModal()
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      hideModal();
 
-      const search = searchText?.current?.value
-      if (!search || !verifyAddress(search)) return
-      router.push(`/user/${search}`)
+      const search = searchText?.current?.value;
+      if (!search || !verifyAddress(search)) return;
+      router.push(`/user/${search}`);
     },
     [searchText]
-  )
+  );
 
-  const showOnCmdK = async () => {
-    const keysPressed: { [key: string]: boolean } = {}
-    document.onkeydown = async (event: KeyboardEvent) => {
-      keysPressed[event.key] = true
-      if (keysPressed['Meta'] && event.key === 'k') {
-        setTimeout(async () => {
-          await showModal()
-          searchText?.current?.focus()
-        }, 0)
-      }
-    }
-  }
+  // const showOnCmdK = async () => {
+  //   const keysPressed: { [key: string]: boolean } = {};
+  //   document.onkeydown = async (event: KeyboardEvent) => {
+  //     keysPressed[event.key] = true;
+  //     if (keysPressed['Meta'] && event.key === 'k') {
+  //       setTimeout(async () => {
+  //         await showModal();
+  //         searchText?.current?.focus();
+  //       }, 0);
+  //     }
+  //   };
+  // };
 
   React.useEffect(() => {
-    const keysPressed: { [key: string]: boolean } = {}
+    const keysPressed: { [key: string]: boolean } = {};
     document.onkeydown = async (event: KeyboardEvent) => {
-      keysPressed[event.key] = true
-      if (!(keysPressed['Meta'] && event.key === 'k')) return
-      console.log(`${event.key} pressed`)
-      await showModal()
+      keysPressed[event.key] = true;
+      if (!(keysPressed['Meta'] && event.key === 'k')) return;
+      console.log(`${event.key} pressed`);
+      await showModal();
       setTimeout(async () => {
-        searchText?.current?.focus()
-      }, 100)
-    }
-    document.onkeyup = (event: KeyboardEvent) => delete keysPressed[event.key]
-  }, [])
+        searchText?.current?.focus();
+      }, 100);
+    };
+    document.onkeyup = (event: KeyboardEvent) => delete keysPressed[event.key];
+  }, []);
 
   return (
     <>
       <button
         onClick={showModal}
         type="button"
-        className={tw(
+        className={clsx(
           `flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-600`,
           `dark:text-gray-300`
         )}
@@ -170,5 +165,6 @@ export default function SearchBarModal() {
         </Dialog>
       </Transition>
     </>
-  )
-}
+  );
+};
+export default SearchBarModal;

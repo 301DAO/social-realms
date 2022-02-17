@@ -1,0 +1,8 @@
+node_modules
+logs
+run
+coverage
+Dockerfile
+.next
+.gitignore
+.scratch
