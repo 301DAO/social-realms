@@ -1,25 +1,22 @@
-import { socialLinks } from '@/components/social-items'
-import { WalletNav } from '@/components/wallet-nav'
-import { Dialog, Transition } from '@headlessui/react'
-import * as React from 'react'
-import { tw } from 'twind'
+import { socialLinks } from '@/components/social-items';
+import { Dialog, Transition } from '@headlessui/react';
+import clsx from 'clsx';
+import * as React from 'react';
+import dynamic from 'next/dynamic';
+const WalletNav = dynamic(() => import('@/components/wallet-nav'));
 
 export default function WalletModal() {
-  const [open, setIsOpen] = React.useState(false)
+  const [open, setIsOpen] = React.useState(false);
 
-  const showModal = () => {
-    setIsOpen(true)
-  }
+  const showModal = () => setIsOpen(true);
+  const hideModal = () => setIsOpen(false);
 
-  const hideModal = () => {
-    setIsOpen(false)
-  }
   return (
     <>
       <button
         onClick={showModal}
         type="button"
-        className={tw(
+        className={clsx(
           `flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-600`,
           `dark:text-gray-200`
         )}
@@ -68,12 +65,7 @@ export default function WalletModal() {
                 {/* Dialog footer */}
                 <div className="flex p-2.5 bg-gray-100 rounded-lg justify-evenly">
                   {socialLinks.map(item => (
-                    <a
-                      key={item.name}
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
+                    <a key={item.name} href={item.link} target="_blank" rel="noopener noreferrer">
                       {item.icon}
                     </a>
                   ))}
@@ -84,5 +76,5 @@ export default function WalletModal() {
         </Dialog>
       </Transition>
     </>
-  )
+  );
 }

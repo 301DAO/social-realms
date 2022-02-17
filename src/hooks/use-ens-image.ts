@@ -1,27 +1,50 @@
-import { parseEnsAvatar } from 'src/utils/ens-avatar-parser'
-import * as React from 'react'
-import { useQuery } from 'react-query'
+import { hasMetaMask } from '@/utils';
+import { providers } from 'ethers';
+import * as React from 'react';
+import { useQuery } from 'react-query';
+import { TIME } from '@/constants';
 
-export function useEnsImage(avatar: string) {
+const useProvider = () => {
+  try {
+    return React.useMemo(() => {
+      return hasMetaMask
+        ? new providers.Web3Provider(window.ethereum as any)
+        : new providers.JsonRpcProvider(process.env.NEXT_PUBLIC_INFURA_PROJECT_ID);
+    }, []);
+  } catch (error) {
+    console.log('error in useProvider: ', error instanceof Error ? error.message : error);
+  }
+  return null;
+};
 
-  const { contract, tokenId } = React.useMemo(
-    () => parseEnsAvatar(avatar),
-    [avatar]
-  )
-  const { data } = useQuery<string | undefined>(
-    ['ens-image', contract, tokenId],
+export const useEnsImage = (name: string): [string | any, boolean, boolean] => {
+  const provider = useProvider();
+
+  const [validEns, setValidEns] = React.useState(false);
+  React.useEffect(() => {
+    if (!provider) return;
+    if (name) provider.resolveName(name).then(_ => setValidEns(!!_));
+  }, [name]);
+
+  const { data, isLoading, isError } = useQuery(
+    ['ens-avatar', name],
     async () => {
-      const res = await fetch(
-        `/api/nft-details/?contract=${contract}&token_id=${tokenId}`
-      )
-      if (res.status !== 200) return
-      const json = await res.json()
-      return await json.image_url
+      try {
+        if (!provider) return;
+        const image = await provider.getAvatar(name);
+        return image;
+      } catch (error) {
+        console.error(`Error in useEnsImage: `, error instanceof Error ? error.message : error);
+      }
+      return null;
     },
     {
-      enabled: !!avatar && !!contract && !!tokenId,
-      retry: false
-     }
-  )
-  return data
-}
+      enabled: validEns,
+      staleTime: TIME.HOUR,
+      cacheTime: TIME.HOUR,
+      refetchOnMount: false,
+    }
+  );
+
+  return [data, isLoading, isError];
+};

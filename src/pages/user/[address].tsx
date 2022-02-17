@@ -1,233 +1,262 @@
-//const { ethAddress, ens, balance, image, followed } = user
-import { useTextileContext } from '@/contexts/textile-context'
-import { useEnsImage } from '@/hooks/use-ens-image'
-import { useEtherUser } from '@/hooks/use-ether-user'
-import { follow, isFollowing, unfollow } from '@/textile/textile-store'
-import { shortenAddress } from '@/wallet/utils'
-import { useWeb3React } from '@web3-react/core'
-import { useRouter } from 'next/router'
-import * as React from 'react'
-import { useQuery } from 'react-query'
-import { tw } from 'twind'
+import {
+  useCopyToClipboard,
+  useEnsImage,
+  useFollowers,
+  useFollowings,
+  useIsFollowed,
+  useQueryENS,
+  useUser,
+} from '@/hooks';
+import { Gallery } from '@/components/layouts';
+import { follow, unfollow } from '@/lib/mutations';
+import { queryClient } from '@/lib/clients';
+import { retrieveNftsByAddress } from '@/lib/wrappers';
+import clsx from 'clsx';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import * as React from 'react';
+import { useMutation, useQuery } from 'react-query';
+import { useBalance } from 'wagmi';
+import { Row } from '@/components';
 
-// export const getStaticPaths: GetStaticPaths = async () => {
-//   return { paths: [], fallback: 'blocking' }
-// }
+type TAB = 'FOLLOWERS' | 'FOLLOWING';
+const tabsReducer = (state: any, action: { type: TAB }) => {
+  switch (action.type) {
+    case 'FOLLOWING':
+      return {
+        FOLLOWING: true,
+        FOLLOWERS: false,
+      };
+    case 'FOLLOWERS':
+      return {
+        FOLLOWING: false,
+        FOLLOWERS: true,
+      };
+    default:
+      return state;
+  }
+};
+const initialState = { FOLLOWING: false, FOLLOWERS: true };
 
-// type Params = {
-//   params: {
-//     address: string
-//   }
-// }
+const User: NextPage = () => {
+  const { user } = useUser({ redirectTo: '/login' });
+  const myAddress = user?.publicAddress;
 
-// export const getStaticProps: GetStaticProps = async context => {
-//   const { address } = context.params!
-//   const provider = getDefaultProvider()
-//   if ((address as string).endsWith('.eth')) {
-//     const ethAddress = await provider.resolveName(address as string)
-//     const ens = address
-//     console.log(ethAddress)
-//     console.log(ens)
-//     return {
-//       props: {
-//         address: ethAddress,
-//         ens,
-//       },
-//     }
-//   }
-//   const ens = await provider.lookupAddress(address as string)
-//   return {
-//     props: {
-//       address,
-//       ens,
-//     },
-//   }
-// }
+  const router = useRouter();
+  const { address: param } = router.query;
+  const [tab, dispatch] = React.useReducer(tabsReducer, initialState);
 
-// export const getServerSideProps: GetServerSideProps = async context => {
-//   const { address } = context.params!
-//   const provider = getDefaultProvider('homestead', {
-//     etherscan: 'GQSKCRQW58UP42Q144XF9KT1ITWF2EIPZU',
-//   })
-//   if ((address as string).endsWith('.eth')) {
-//     const ethAddress = await provider.resolveName(address as string)
-//     const ens = address
-//     console.log(ethAddress)
-//     console.log(ens)
-//     return {
-//       props: {
-//         address: ethAddress,
-//         ens,
-//       },
-//     }
-//   }
-//   const ens = await provider.lookupAddress(address as string)
-//   return {
-//     props: {
-//       address,
-//       ens,
-//     },
-//   }
-// }
+  const [userAddress, name] = useQueryENS({
+    address: param as string,
+    name: param as string,
+    enabled: !!param,
+  });
+  //console.log(address);
+  // this is so if it's a contract address, useQueryENS will return empty address
+  //const userAddress = React.useMemo(() => address ?? param, []);
 
-const user = {
-  ethAddress: '0x983110309620D911731Ac0932219af06091b6744',
-  ens: 'brantly.eth',
-  balance: '0.62',
-  image: 'https://api.wrappedpunks.com/images/punks/2430.png',
-  followed: true,
-  loading: false,
-  followUser: () => {},
-  unfollowUser: () => {},
-  buttonText: 'follow',
-}
+  const [image] = useEnsImage(name as string);
+  const [{ data: balance }] = useBalance({ addressOrName: userAddress as string });
 
-const {
-  ethAddress,
-  ens,
-  balance,
-  image,
-  followed,
-  loading,
-  followUser,
-  unfollowUser,
-  buttonText,
-} = user
+  const [followers, followersCount] = useFollowers({ address: userAddress as string });
+  const [followings, followingCount] = useFollowings({ address: userAddress as string });
 
-//export default function User({ address }: { address: string }) {
-export default function User() {
-  const router = useRouter()
-  const {
-    query: { address },
-  } = router
+  const [isFollowed, isFollowedLoading] = useIsFollowed({
+    followeeAddress: userAddress as string,
+    followerAddress: myAddress as string,
+  });
 
-  const [loading, setLoading] = React.useState(false)
+  const [, setLoading] = React.useState(false);
 
-  const { library } = useWeb3React()
-  const { client } = useTextileContext()
-  //@ts-ignore
-  const { threadId } = client
-  const { url, ens, avatar, ethAddress, balance } = useEtherUser({
-    provider: library,
-    // @ts-ignore
-    address,
-  })
-
-  const image = useEnsImage(avatar as string)
-
-  const { data, isLoading, refetch, error } = useQuery(
-    ['user', ethAddress, threadId],
-    async (): Promise<Boolean | undefined> =>
-      await isFollowing({ client, threadId, address: ethAddress as string }),
+  const followMutation = useMutation(
+    () =>
+      follow({
+        address: myAddress as string,
+        addressToFollow: userAddress as string,
+      }),
     {
-      enabled: !!client && !!threadId && !!ethAddress,
-      //retry: false,
+      onMutate: async () => setLoading(true),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(['followings', userAddress]);
+        await queryClient.invalidateQueries(['followers', userAddress]);
+        await queryClient.invalidateQueries(['is-followed']);
+        setLoading(false);
+      },
+      //	onSettled: async data => console.log(data),
     }
-  )
-  console.log(isLoading)
+  );
 
-  const followed = data
-  const buttonText = followed ? 'Unfollow' : isLoading ? 'Loading...' : 'Follow'
+  const unfollowMutation = useMutation(
+    () =>
+      unfollow({
+        address: myAddress as string,
+        addressToUnfollow: userAddress as string,
+      }),
+    {
+      onMutate: async () => setLoading(true),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(['followings', userAddress]);
+        await queryClient.invalidateQueries(['followers', userAddress]);
+        await queryClient.invalidateQueries(['is-followed', userAddress]);
+        setLoading(false);
+      },
+      onSettled: async () => setLoading(false),
+    }
+  );
 
   const followUser = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    setLoading(true)
-    event.preventDefault()
-    if (!library) return
-    const response = await follow({
-      client,
-      threadId,
-      address: ethAddress as string,
-    })
-    await refetch()
-    setLoading(false)
-    return response
-  }
+    event.preventDefault();
+    return isFollowed ? unfollowMutation.mutate() : followMutation.mutate();
+  };
 
-  const unfollowUser = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    setLoading(true)
-    event.preventDefault()
-    if (!library) return
-    const response = await unfollow({
-      client,
-      threadId,
-      address: ethAddress as string,
-    })
-    await refetch()
-    setLoading(false)
-    return response
-  }
+  const [, copy] = useCopyToClipboard();
+
+  const { data: nftsQueryResponse } = useQuery(
+    ['nfts-query', userAddress],
+    async () => {
+      const { continuation, nfts } = await retrieveNftsByAddress({
+        address: userAddress as string,
+      });
+      return nfts;
+    },
+    {
+      enabled: (userAddress as string).startsWith('0x'),
+      notifyOnChangeProps: 'tracked',
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    }
+  );
+
+  const followingTab = React.useCallback(() => dispatch({ type: 'FOLLOWING' }), []);
+  const followersTab = React.useCallback(() => dispatch({ type: 'FOLLOWERS' }), []);
 
   return (
-    <div
-      className={tw(
-        `items-center w-full px-4 md:mt-1 card sm:card-side flex justify-center sm:gap-x-20`,
-        !ethAddress && `animate-pulse`
-      )}
-    >
-      <div className="mb-6 card card-bordered bg-[#292a37] text-neutral-content">
-        <div className="py-6 px-3 self-center sm:w-96">
-          <img
-            src={image ?? '/assets/images/pulse-placeholder.png'}
-            className={tw(
-              `rounded-lg shadow-lg`,
-              !image && 'animate-pulse blur-sm'
-            )}
-          />
-        </div>
-        <div className="max-w-lg md:w-[400px] card-body pt-0 md:justify-between md:self-center">
-          <div>
-            <h2 className={tw(`card-title flex justify-between`)}>
-              <span className={tw(`link no-underline hover:underline`)}>
-                {ens ?? ''}
-              </span>
-              <span className={tw(`me-auto`)}>{balance ?? ''}</span>
-            </h2>
-            <button className={tw(`btn btn-ghost pl-0`)}>
-              {ethAddress && shortenAddress({ address: ethAddress, chars: 12 })}
-            </button>
-          </div>
-          <div className="card-actions">
-            <button
-              className={tw(
-                `btn btn-block btn-primary hover:btn-ghost rounded-sm`,
-                loading && `loading`
-              )}
-              onClick={followed ? unfollowUser : followUser}
-              disabled={loading}
-            >
-              {buttonText}
-            </button>
-          </div>
-        </div>
-      </div>
-      <div className={tw('space-y-8')}>
-        <div className="card lg:card-side card-bordered align-top">
-          <div className="card-body">
-            <h2 className="card-title">No Images</h2>
-            <p>
-              Rerum reiciendis beatae tenetur excepturi aut pariatur est eos.
-              Sit
-            </p>
-            <div className="card-actions">
-              <button className="btn btn-primary">Get Started</button>
-              <button className="btn btn-ghost">More info</button>
-            </div>
+    <main className={clsx(`grid h-fit grid-cols-1 justify-center gap-2 px-6`, `md:grid-cols-3`)}>
+      <section className={clsx(`col-span-1`)}>
+        <div className={clsx(`flex w-full justify-center`)}>
+          <div
+            className={clsx(
+              `mb-3 flex w-full flex-col items-center justify-items-center rounded-lg bg-white bg-no-repeat p-2 text-center align-middle shadow sm:p-4 xl:p-6`,
+              `dark:bg-gray-800`
+            )}>
+            <img
+              className="mb-2 rounded-lg"
+              src={image ?? '/images/placeholder.png'}
+              alt="Jese portrait"
+            />
+            <ul className="scale-85 mt-3 flex w-full max-w-[420px] flex-col justify-center space-y-2">
+              <li className="flex justify-between font-bold dark:text-white">
+                <a onClick={() => copy(`${name}`)} className="hover:cursor-pointer hover:underline">
+                  {name}
+                </a>
+                <span>{balance && `${balance.formatted.slice(0, 4)}Ξ`}</span>
+              </li>
+              <li className="truncate text-gray-500 dark:text-gray-400">
+                <a
+                  onClick={() => copy(`${userAddress}`)}
+                  className="hover:cursor-pointer hover:underline">
+                  {userAddress}
+                </a>
+              </li>
+              <li className="w-full pt-1">
+                <button
+                  onClick={followUser}
+                  type="button"
+                  className={clsx(
+                    `group relative mb-2 inline-flex w-full items-center justify-center overflow-hidden rounded-lg p-0.5 text-sm font-medium text-gray-900 hover:text-white dark:text-white`,
+
+                    `bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 shadow-lg shadow-cyan-500/50 hover:bg-gradient-to-br focus:ring-4 focus:ring-cyan-300 dark:shadow-lg dark:shadow-cyan-800/80 dark:focus:ring-cyan-800`,
+                    isFollowed && `bg-cyan-400`
+                  )}>
+                  <span
+                    className={clsx(
+                      `relative flex w-full items-center justify-center rounded-md bg-white px-5 py-2.5 align-middle transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900`,
+                      isFollowed && `dark:bg-opacity-10`
+                    )}>
+                    {isFollowed ? 'UNFOLLOW' : isFollowedLoading ? 'LOADING...' : 'FOLLOW'}
+                  </span>
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
-        <div className="card lg:card-side card-bordered align-top">
-          <div className="card-body">
-            <h2 className="card-title">No Images</h2>
-            <p>
-              Rerum reiciendis beatae tenetur excepturi aut pariatur est eos.
-              Sit
-            </p>
-            <div className="card-actions">
-              <button className="btn btn-primary">Get Started</button>
-              <button className="btn btn-ghost">More info</button>
-            </div>
+
+        <div className={clsx(`mb-4 w-full rounded-xl bg-white pb-6 shadow dark:bg-gray-800`)}>
+          <div className="flow-root">
+            <ul className="flex divide-x divide-gray-200 rounded-sm shadow dark:divide-gray-700 sm:flex">
+              <li className="w-full">
+                <button
+                  className={clsx(
+                    `relative inline-block w-full rounded-l-lg py-4 px-4 text-center text-sm font-medium focus:z-20 focus:ring-4 dark:text-white`,
+                    tab['FOLLOWERS']
+                      ? `active bg-gray-100 text-gray-900  focus:ring-blue-300 dark:bg-gray-700`
+                      : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white`
+                  )}
+                  onClick={followersTab}>
+                  FOLLOWERS
+                </button>
+              </li>
+
+              <li className="w-full">
+                <button
+                  className={clsx(
+                    `relative inline-block w-full rounded-r-lg py-4 px-4 text-center text-sm font-medium focus:z-20 focus:ring-4 dark:text-white`,
+                    tab['FOLLOWING']
+                      ? `active bg-gray-100 text-gray-900  focus:ring-blue-300 dark:bg-gray-700`
+                      : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white`
+                  )}
+                  onClick={followingTab}>
+                  FOLLOWING
+                </button>
+              </li>
+            </ul>
+            <ul role="list" className="divide-y divide-gray-200 p-5 px-6 dark:divide-gray-700">
+              {tab['FOLLOWERS'] &&
+                followers.map((address, idx) => (
+                  <li className="py-3 hover:cursor-pointer sm:py-4" key={idx}>
+                    <Row address={address} />
+                  </li>
+                ))}
+              {tab['FOLLOWING'] &&
+                followings.map((address, idx) => (
+                  <li className="py-3 sm:py-4" key={idx}>
+                    <Row address={address} />
+                  </li>
+                ))}
+              <p className="text-white">
+                {tab['FOLLOWERS'] && followersCount === 0 && `No one is following ${name} yet.`}
+                {tab['FOLLOWING'] && followingCount === 0 && `${name} is not following anyone.`}
+              </p>
+            </ul>
           </div>
+
+          {/* <a
+            href="#"
+            className="inline-flex items-center p-2 text-xs font-medium text-blue-700 uppercase rounded-lg sm:text-sm hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700">
+            SEE ALL
+            <svg
+              className="w-4 h-4 ml-1 sm:w-5 sm:h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a> */}
         </div>
-      </div>
-    </div>
-  )
-}
+      </section>
+
+      <section className="col-span-2">
+        <div className="mb-4 w-full rounded-lg bg-white bg-no-repeat p-4 shadow dark:bg-gray-800 sm:p-6 xl:p-8">
+          <Gallery nfts={nftsQueryResponse ?? []} />
+        </div>
+      </section>
+    </main>
+  );
+};
+
+export default User;

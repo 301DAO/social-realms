@@ -1,41 +1,71 @@
-declare const window: any
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { utils, Wallet } from 'ethers'
-import { networks } from './constants'
+import { utils } from 'ethers';
+import { defaultProvider } from '@/wallet';
 
-const newCredentials = async () => {
-  const menemonic = ''
-  const wallet = Wallet.createRandom({
-    extraEntropy: utils.randomBytes(32),
-  })
+const ETHEREUM_CHAIN_ID = '0x1';
 
-  //const key = await window.ethereum.eth.accounts.create('test')
-  return {
-    address: wallet.address,
-    privateKey: wallet.privateKey,
-    mnemonic: wallet.mnemonic,
-    publicKey: wallet.publicKey,
-  }
-}
+const addEthereumChain = async () => {
+  if (typeof window.ethereum === 'undefined') return;
+  return await window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: ETHEREUM_CHAIN_ID,
+        chainName: 'Ethereum',
+        rpcUrls: [`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_PROJECT_ID}`],
+      },
+    ],
+  });
+};
 
-// console.log(utils.keccak256('0x983110309620D911731Ac0932219af06091b6744'))
-// console.log(utils.hashMessage('0x983110309620D911731Ac0932219af06091b6744'))
-// console.log(utils.id('0x983110309620D911731Ac0932219af06091b6744'))
-
-// checksum address
-export const checksumAddress = (address: string) => {
+export const switchNetwork = async (chainId: string) => {
+  if (typeof window.ethereum === 'undefined') return;
   try {
-    return utils.getAddress(address.toLowerCase())
-  } catch {
-    return false
+    return await window?.ethereum?.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId }],
+    });
+  } catch (error) {
+    if ((error as any).code !== 4902) return;
+    await addEthereumChain();
   }
-}
+  return false;
+};
+
+export const switchOnChainChange = async ({
+  switchToChainId,
+  onChainChange,
+  onChainChangeSettled,
+}: {
+  switchToChainId: string;
+  onChainChange: () => Promise<string>;
+  onChainChangeSettled: () => Promise<void>;
+}) => {
+  if (typeof window.ethereum?.on === 'undefined') return;
+
+  return window.ethereum.on('chainChanged', (chainId: string) => {
+    console.log(`chain changed to ${chainId}`);
+
+    if (chainId !== switchToChainId) {
+      switchNetwork(switchToChainId);
+      onChainChange();
+      // import('@/components/switch-network-toast').then(({ switchNetworkToast }) => {
+      //   switchNetworkToast();
+      // });
+    } else {
+      onChainChangeSettled();
+      // import('react-hot-toast').then(({ default: toast }) => {
+      //   toast.remove();
+      // });
+    }
+  });
+};
+
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
   try {
-    return utils.getAddress(value)
+    return utils.getAddress(value);
   } catch {
-    return false
+    return false;
   }
 }
 
@@ -44,97 +74,75 @@ export function shortenAddress({
   address,
   chars = 4,
 }: {
-  address: string
-  chars?: number
+  address: string;
+  chars?: number;
 }): string {
-  const parsed = isAddress(address)
+  const parsed = isAddress(address);
   if (!parsed) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
+    throw Error(`Invalid address parameter: ${address}.`);
   }
-  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
+  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`;
 }
 
-// account is not optional
-function getSigner(library: Web3Provider, account: string): JsonRpcSigner {
-  return library.getSigner(account).connectUnchecked()
-}
-
-const ENS_NAME_REGEX = /^(([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\.)+)eth(\/.*)?$/
-export function parseENSAddress(
-  ensAddress: string
-): { ensName: string; ensPath: string | undefined } | undefined {
-  const match = ensAddress.match(ENS_NAME_REGEX)
-  if (!match) return undefined
-  return { ensName: `${match[1].toLowerCase()}eth`, ensPath: match[4] }
-}
+// checksum address
+export const checksumAddress = (address: string) => {
+  try {
+    return utils.getAddress(address.toLowerCase());
+  } catch {
+    return false;
+  }
+};
 
 /**
  * by default it switches to Ethereum. Update parameters for bsc or add more chainIds and rpcUrls for other networks.
  * chainid has to be a hex string
  */
 
-export const switchNetwork = async () => {
-  if (typeof window.ethereum === 'undefined') return
-  try {
-    await window?.ethereum?.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: networks.ethereum.chainId }],
-    })
-  } catch (error) {
-    if ((error as any).code !== 4902) return
-    try {
-      await window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [
-          {
-            chainId: networks.ethereum.chainId,
-            rpcUrl: networks.ethereum.rpcUrl,
-          },
-        ],
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-}
+// const addEthereumChain = async () => {
+//   if (typeof window.ethereum === 'undefined') return;
+//   return await window.ethereum.request({
+//     method: 'wallet_addEthereumChain',
+//     params: [
+//       {
+//         chainId: networks.ethereum.chainId,
+//         //@ts-ignore
+//         rpcUrl: networks.ethereum.rpcUrl,
+//       },
+//     ],
+//   });
+// };
 
-export const signMessage = async (message: string) => {
-  if (typeof window.ethereum === 'undefined') return
+// export const switchNetwork = async () => {
+//   if (typeof window.ethereum === 'undefined') return;
+//   try {
+//     await window?.ethereum?.request({
+//       method: 'wallet_switchEthereumChain',
+//       params: [{ chainId: networks.ethereum.chainId }],
+//     });
+//   } catch (error) {
+//     if ((error as any).code !== 4902) return;
+//     await addEthereumChain();
+//   }
+// };
+
+export const signMetamaskMessage = async (message: string) => {
+  if (typeof window.ethereum === 'undefined') return;
   try {
     const address = await (
       await window.ethereum.request({
         method: 'eth_requestAccounts',
       })
-    )[0]
+    )[0];
     const signature = await window.ethereum.request({
       method: 'personal_sign',
       params: [address, message],
-    })
-    return signature
+    });
+    return signature;
   } catch (error) {
     if ((error as any).code === 4001) {
-      console.log('User denied request')
+      console.log('User denied request');
     }
-    console.error(JSON.stringify(error))
+    console.error(JSON.stringify(error));
+    return null;
   }
-}
-
-export const userAddress = async () => {
-  if (!window || !window.ethereum) return
-  try {
-    const address = await (
-      await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      })
-    )[0]
-    return address.toLowerCase()
-  } catch (error: any) {
-    throw new Error(error)
-  }
-}
-
-// TODO: workout a way to gen deterministic secert
-export const newUserPassword = () => {
-  if (typeof window.ethereum === 'undefined') return
-  return window.ethereum.createRandom()
-}
+};
