@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useRouter } from 'next/router';
 import { useConnect, useAccount } from 'wagmi';
 import { SiweMessage } from 'siwe';
-import clsx from 'clsx';
 import { useUser } from '@/hooks';
 import { timeFromNow } from '@/utils';
 import { WalletIcon } from '@/components/icons';
@@ -50,7 +49,10 @@ const initialAuthState: AuthState = { status: 'DISCONNECTED', errorMessage: '' }
 const Signin: NextPage = () => {
   const router = useRouter();
 
-  const { authenticated } = useUser({ redirectTo: '/', redirectIfFound: true });
+  const { authenticated, status: authFetchStatus, isLoading } = useUser({
+    redirectTo: '/',
+    redirectIfFound: true,
+  });
 
   const [state, dispatch] = React.useReducer(authReducer, initialAuthState);
   const [modalOpen, setModalOpen] = React.useState(false);

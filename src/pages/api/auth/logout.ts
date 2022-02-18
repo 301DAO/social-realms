@@ -18,7 +18,7 @@ export default function logoutHandler(request: NextApiRequest, response: NextApi
     );
 
   } finally {
-    response.writeHead(302, { Location: '/login' });
+    response.writeHead(307, { Location: '/login' });
     response.end();
     return;
   }

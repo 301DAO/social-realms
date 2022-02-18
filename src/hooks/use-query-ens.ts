@@ -11,7 +11,7 @@ export const useQueryENS = ({
   address?: string;
   name?: string;
   enabled?: boolean;
-}): [address: string, name: string, loading: boolean] => {
+}) => {
   const param = address || name;
 
   const {
@@ -42,7 +42,7 @@ export const useQueryENS = ({
       queriedName: returnedItem?.name,
     };
   }, [ensQueryResult]);
-  const _address = queriedAddress || address;
-  const _name = !!queriedName ? queriedName : '';
-  return [_address, _name, isLoading];
+  const _address = queriedAddress;
+  const _name = !!queriedName ? queriedName : null;
+  return [_address, _name, isLoading, isError, refetch];
 };

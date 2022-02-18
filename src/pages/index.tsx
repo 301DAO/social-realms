@@ -1,9 +1,12 @@
 import type { NextPage } from 'next';
 import * as React from 'react';
 import { useUser } from '@/hooks';
+import { FullPageLoadingSpinner } from '@/components';
 
 const Index: NextPage = () => {
-  useUser({ redirectTo: '/login' });
+  const { status, user } = useUser({ redirectTo: '/login' });
+
+  if (status !== 'success' || !user) return <FullPageLoadingSpinner />;
 
   return (
     <main className="mt-40 flex flex-col items-center px-9 text-center align-middle">

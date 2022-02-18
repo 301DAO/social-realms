@@ -31,9 +31,7 @@ const navigation = [
 export const Header = () => {
   const { authenticated, error } = useUser({});
 
-  const [{ data: account }] = useAccount({
-    fetchEns: true,
-  });
+  const [{ data: account }] = useAccount({ fetchEns: true });
 
   const userInfo = React.useMemo(() => {
     return {
@@ -90,43 +88,37 @@ export const Header = () => {
               <div className="hidden lg:ml-4 lg:block">
                 <div className="flex items-center">
                   {/* Profile dropdown */}
-                  {authenticated && (
-                    <Menu
-                      as="div"
-                      className="relative ml-3 flex flex-shrink-0 items-center gap-x-6">
-                      <div>
-                        <Link href="/profile" passHref>
-                          <button className="flex rounded-sm text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
-                            <span className="sr-only">Open user menu</span>
-                            <img
-                              className="h-10 w-10 rounded-md"
-                              src={`${userInfo.avatar}`}
-                              alt=""
-                            />
-                          </button>
-                        </Link>
-                      </div>
-                      <div>
+                  <Menu as="div" className="relative ml-3 flex flex-shrink-0 items-center gap-x-6">
+                    {authenticated && (
+                      <>
+                        <div>
+                          <Link href="/profile" passHref>
+                            <button className="flex rounded-sm text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
+                              <span className="sr-only">Open user menu</span>
+                              <img
+                                className="h-10 w-10 rounded-md"
+                                src={`${userInfo.avatar}`}
+                                alt=""
+                              />
+                            </button>
+                          </Link>
+                        </div>
                         <a
                           className="flex rounded-sm text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
                           href="/api/auth/logout">
                           <span className="sr-only">Open user menu</span>
                           <LogoutIcon />
                         </a>
-                      </div>
-                      <div className="flex items-center">
-                        <span
-                          className={clsx(
-                            'h-3 w-3 rounded-full',
-                            authenticated
-                              ? 'bg-green-300'
-                              : !!error
-                              ? 'bg-red-400'
-                              : 'bg-orange-200'
-                          )}></span>
-                      </div>
-                    </Menu>
-                  )}
+                      </>
+                    )}
+                    <div className="flex items-center">
+                      <span
+                        className={clsx(
+                          'h-3 w-3 rounded-full',
+                          authenticated ? 'bg-green-300' : !!error ? 'bg-red-400' : 'bg-orange-200'
+                        )}></span>
+                    </div>
+                  </Menu>
                 </div>
               </div>
             </div>

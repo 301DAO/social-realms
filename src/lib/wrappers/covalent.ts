@@ -3,7 +3,7 @@ import { utils } from 'ethers';
 import axios from 'axios';
 
 const COVALENT_ENDPOINT = 'https://api.covalenthq.com/v1';
-const COVALENT_API_KEY = process.env.NEXT_PUBLIC_COVALENT_API_KEY || '';
+const COVALENT_API_KEY = process.env.NEXT_PUBLIC_COVALENT_API_KEY;
 // Ethereum's chain ID
 const CHAIN_ID = 1;
 

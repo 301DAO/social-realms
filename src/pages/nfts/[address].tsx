@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSidePropsContext } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useIntersectionObserver, useQueryENS, useCopyToClipboard } from '@/hooks';
@@ -9,8 +9,12 @@ import styles from '@/styles/gallery.module.css';
 import { NFT } from '@/types';
 import { MediaComponent } from '@/components';
 import { CopyIcon } from '@/components/icons';
-
 const LoadMoreButton = dynamic(() => import('@/components/load-more-button'));
+
+export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
+  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
+  return { props: {} };
+}
 
 const CopyButton = ({ buttonText }: { buttonText: string }) => {
   const [copyButtonText, setCopyButtonText] = React.useState(buttonText);
@@ -67,7 +71,7 @@ const Nfts: NextPage = () => {
       return nfts;
     },
     {
-      enabled: !!address || !(address as string).startsWith('0x'),
+      enabled: !!address || (address as string).startsWith('0x'),
       notifyOnChangeProps: 'tracked',
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,

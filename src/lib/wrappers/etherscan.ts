@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Docs: https://docs.nftport.xyz/docs
-const API_KEY = process.env.NEXT_PUBLIC_ETHERSCAN || '';
+const API_KEY = process.env.NEXT_PUBLIC_ETHERSCAN;
 const ENDPOINT = `https://api.etherscan.io/api`;
 
 const EtherscanRequest = async (queryParams: any) => {
