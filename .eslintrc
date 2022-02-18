@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "next",
+    "prettier",
+    "next/core-web-vitals",
+    "plugin:react/recommended",
+    "plugin:@next/next/recommended"
+  ],
+  "rules": {
+    "@next/next/no-img-element": "off",
+    "@next/next/no-title-in-document-head": "off"
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  }
+}

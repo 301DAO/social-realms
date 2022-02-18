@@ -1,0 +1,39 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedIndexes"]
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now()) @map("created_at")
+  publicAddress String   @unique @map("public_address")
+  nonce         String   @unique
+  lastLogin     DateTime @default(now()) @map("last_login")
+
+  @@map("users")
+}
+
+model Follower {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now()) @map(name: "created_at")
+  followeeAddress String   @map("followee_address")
+  followerAddress String   @map("follower_address")
+
+  @@unique([followerAddress, followeeAddress])
+  @@map("followers")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  likedBy   String   @map("liked_by")
+  hash      String
+
+  @@unique([hash, likedBy])
+  @@map("likes")
+}

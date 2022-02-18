@@ -1,19 +1,7 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/pages/*": ["src/pages/*"],
-      "@/components/*": ["src/components/*"],
-      "@/wallet/*": ["src/wallet/*"],
-      "@/styles/*": ["src/styles/*"],
-      "@/contexts/*": ["src/contexts/*"],
-      "@/hooks/*": ["src/hooks/*"],
-      "@/util/*": ["src/util/*"],
-      "@/store/*": ["src/store/*"],
-      "@/lib/*": ["src/lib/*"]
-    },
-    "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext", "es6", "es7"],
+    "target": "ES5",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -25,58 +13,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
-    // "plugins": [{ "name": "typescript-plugin-css-modules" }],
-    // "target": "es2016",
-    // "lib": ["dom", "dom.iterable", "esnext"],
-    // "allowJs": true,
-    // "skipLibCheck": true,
-    // "strict": true,
-    // "forceConsistentCasingInFileNames": true,
-    // "noEmit": true,
-    // "esModuleInterop": true,
-    // "module": "esnext",
-    // "moduleResolution": "node",
-    // "resolveJsonModule": true,
-    // "isolatedModules": true,
-    // "jsx": "preserve",
-    // "incremental": true
-    // "target": "es2016",
-    // "module": "commonjs",
-    // "esModuleInterop": true,
-    // "forceConsistentCasingInFileNames": true,
-    // "strict": true,
-    // "skipLibCheck": true,
-    // "lib": ["dom", "dom.iterable", "esnext"],
-    // "allowJs": true,
-    // "noEmit": true,
-    // "incremental": true,
-    // "moduleResolution": "node",
-    // "resolveJsonModule": true,
-    // "isolatedModules": true,
-    // "jsx": "preserve"
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": [
-    "node_modules",
-    "**/*.d.ts",
-    ".git",
-    ".app-cache",
-    ".npm",
-    ".npm-tmp",
-    "/dist",
-    "/dist*",
-    ".next",
-    "/node_modules",
-    "/out",
-    "/out*",
-    "/tmp",
-    "/tmp*",
-    "**/dist/*",
-    "**/node_modules/*",
-    "/package-lock.json",
-    "./.scratch",
-    "./next",
-    "./build"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".scratch/_error.tsx"],
+  "exclude": ["node_modules"]
 }
