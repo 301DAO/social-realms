@@ -16,7 +16,8 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
       autoConnect={authenticated}
       connectors={connectors}
       provider={provider}
-      webSocketProvider={webSocketProvider}>
+      webSocketProvider={webSocketProvider}
+    >
       {children}
     </Provider>
   );

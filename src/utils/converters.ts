@@ -1,7 +1,7 @@
 import { utils } from 'ethers';
 export function parseBigNumberToString({
   decimal,
-  bigNumber
+  bigNumber,
 }: {
   decimal: number;
   bigNumber: string;

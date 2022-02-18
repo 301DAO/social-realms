@@ -49,7 +49,11 @@ const initialAuthState: AuthState = { status: 'DISCONNECTED', errorMessage: '' }
 const Signin: NextPage = () => {
   const router = useRouter();
 
-  const { authenticated, status: authFetchStatus, isLoading } = useUser({
+  const {
+    authenticated,
+    status: authFetchStatus,
+    isLoading,
+  } = useUser({
     redirectTo: '/',
     redirectIfFound: true,
   });
@@ -170,7 +174,8 @@ const Web3ConnectButton = ({
       disabled={!connector.ready}
       key={connector.name}
       className="flex w-full flex-col items-center justify-end gap-y-2 pt-3 pb-4 text-xl font-normal tracking-wide antialiased hover:cursor-pointer hover:bg-[rgb(31,32,53)] hover:text-white focus:outline-none"
-      onClick={async () => await onButtonClick(connector)}>
+      onClick={async () => await onButtonClick(connector)}
+    >
       <WalletIcon name={connector.name} />
       {['metamask', 'injected'].includes(connector.name) ? 'MetaMask' : connector.name}
     </button>

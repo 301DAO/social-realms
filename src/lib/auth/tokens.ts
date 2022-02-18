@@ -6,13 +6,13 @@ import {
 } from '../../constants';
 import { serialize, parse } from 'cookie';
 import { sign } from 'jsonwebtoken';
-import type { User } from "@/types";
+import type { User } from '@/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const generateAccessToken = (user: User) => {
   return sign({ user }, ACCESS_TOKEN_SECRET!, {
     expiresIn: ACCESS_TOKEN_MAX_AGE,
-    algorithm: 'HS256'
+    algorithm: 'HS256',
   });
 };
 
@@ -23,7 +23,7 @@ export const setAccessToken = (res: NextApiResponse, accessToken: string) => {
     maxAge: ACCESS_TOKEN_MAX_AGE,
     expires: ACCESS_TOKEN_EXPIRY_DATE,
     path: `/`,
-    sameSite: `lax`
+    sameSite: `lax`,
   });
   res.setHeader('Set-Cookie', serialized);
 };
@@ -31,7 +31,7 @@ export const setAccessToken = (res: NextApiResponse, accessToken: string) => {
 export const clearAccessToken = (res: NextApiResponse) => {
   const serialized = serialize(ACCESS_TOKEN_NAME, '', {
     maxAge: -1,
-    path: '/'
+    path: '/',
   });
   res.setHeader('Set-Cookie', serialized);
 };

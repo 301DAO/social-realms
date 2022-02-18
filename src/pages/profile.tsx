@@ -61,7 +61,8 @@ const TabButton = ({
         ? `active bg-gray-100 text-gray-900  focus:ring-blue-300 dark:bg-gray-700`
         : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white`
     )}
-    onClick={onClick}>
+    onClick={onClick}
+  >
     {text} ({count})
   </button>
 );
@@ -87,9 +88,11 @@ const Profile: NextPage = () => {
 
   return (
     <main
-      className={clsx('flex flex-col items-center justify-center gap-y-12', 'dark:text-gray-50')}>
+      className={clsx('flex flex-col items-center justify-center gap-y-12', 'dark:text-gray-50')}
+    >
       <section
-        className={clsx(`m-auto flex w-40 flex-col items-center justify-center text-center`)}>
+        className={clsx(`m-auto flex w-40 flex-col items-center justify-center text-center`)}
+      >
         <img
           className="mb-4 h-36 w-36 rounded-xl sm:mb-0 xl:mb-4 2xl:mb-0"
           src={image ?? '/images/placeholder.png'}
@@ -99,12 +102,14 @@ const Profile: NextPage = () => {
           className={clsx(
             'group mt-8 inline-flex h-9 items-center whitespace-nowrap rounded-full bg-sky-50 p-5 text-lg text-sky-600 hover:cursor-pointer hover:bg-sky-100 hover:text-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-600',
             'dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500'
-          )}>
+          )}
+        >
           <a
             className={clsx(`flex items-center`, `hover:underline hover:decoration-dotted`)}
             href={`https://app.ens.domains/name/${name}`}
             rel="noopener noreferrer"
-            target="_blank">
+            target="_blank"
+          >
             <span>{name ?? `Get ENS name`}</span>
             {name && (
               <div data-tip="https://ens.domains" className={clsx('tooltip-bottom tooltip')}>
@@ -115,7 +120,8 @@ const Profile: NextPage = () => {
                     `dark:text-gray-500 dark:group-hover:text-gray-400`
                   )}
                   viewBox="0 0 20 20"
-                  fill="currentColor">
+                  fill="currentColor"
+                >
                   <path
                     fillRule="evenodd"
                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"

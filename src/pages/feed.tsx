@@ -102,16 +102,19 @@ const Feed: NextPage = () => {
         transactions.map((transaction: any, idx: any) => (
           <section
             key={idx}
-            className="max-w-lg rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-800">
+            className="max-w-lg rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-800"
+          >
             <a
               className="mt-3 block text-xl leading-snug text-black hover:underline dark:text-white"
-              href={`/user/${transaction.from}`}>
+              href={`/user/${transaction.from}`}
+            >
               {transaction.from}
             </a>
             <DownArrow />
             <a
               className="my-2 block text-xl leading-snug text-black hover:underline dark:text-white"
-              href={`/user/${transaction.from}`}>
+              href={`/user/${transaction.from}`}
+            >
               {transaction.to}
             </a>
             <div className="my-4 border border-b-0 border-gray-200 dark:border-gray-600"></div>
@@ -124,7 +127,8 @@ const Feed: NextPage = () => {
                       address: address as string,
                       hash: transaction.transactionHash,
                     })
-                  }>
+                  }
+                >
                   {favorites.includes(transaction.transactionHash) ? (
                     <RedHeart />
                   ) : (
@@ -150,7 +154,8 @@ const Feed: NextPage = () => {
                       className="w-4"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke="currentColor">
+                      stroke="currentColor"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -166,7 +171,8 @@ const Feed: NextPage = () => {
                       className="w-4"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke="currentColor">
+                      stroke="currentColor"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -181,7 +187,8 @@ const Feed: NextPage = () => {
                 className="flex w-[18%] items-center"
                 href={`https://etherscan.io/tx/${transaction.transactionHash}`}
                 rel="noopener noreferrer"
-                target="_blank">
+                target="_blank"
+              >
                 <span className="truncate rounded bg-blue-100 px-1.5 py-0.5 text-xs font-semibold text-blue-900 hover:cursor-pointer hover:bg-blue-200 hover:text-blue-400 hover:underline dark:bg-blue-200 dark:text-blue-900 dark:hover:bg-blue-300">
                   {transaction.transactionHash}
                 </span>

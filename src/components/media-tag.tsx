@@ -16,7 +16,7 @@ export const MediaComponent = ({ mediaUrl }: { mediaUrl: string }) => {
       enabled: !!mediaUrl && !isImage(mediaUrl),
     }
   );
-  
+
   if (!valueExists(mediaUrl)) return null;
   if (isImage(mediaUrl) || (!!mediaType && imageMediaTypes.includes(mediaType)))
     return <img src={mediaUrl} loading="lazy" className={style} alt="nft media" />;

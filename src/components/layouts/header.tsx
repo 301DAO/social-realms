@@ -70,7 +70,8 @@ export const Header = () => {
                 className={clsx(
                   `flex flex-1 justify-center px-2 lg:ml-6 lg:justify-end`,
                   !authenticated && `lg:justify-center`
-                )}>
+                )}
+              >
                 <SearchBar />
               </div>
 
@@ -105,7 +106,8 @@ export const Header = () => {
                         </div>
                         <a
                           className="flex rounded-sm text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
-                          href="/api/auth/logout">
+                          href="/api/auth/logout"
+                        >
                           <span className="sr-only">Open user menu</span>
                           <LogoutIcon />
                         </a>
@@ -116,7 +118,8 @@ export const Header = () => {
                         className={clsx(
                           'h-3 w-3 rounded-full',
                           authenticated ? 'bg-green-300' : !!error ? 'bg-red-400' : 'bg-orange-200'
-                        )}></span>
+                        )}
+                      ></span>
                     </div>
                   </Menu>
                 </div>
@@ -130,7 +133,8 @@ export const Header = () => {
                 <Link shallow={true} key={item.name} href={item.href} passHref>
                   <Disclosure.Button
                     as="a"
-                    className="block rounded-md py-2 px-3 text-base font-medium">
+                    className="block rounded-md py-2 px-3 text-base font-medium"
+                  >
                     {item.name}
                   </Disclosure.Button>
                 </Link>
@@ -150,7 +154,8 @@ export const Header = () => {
                 </div>
                 <button
                   type="button"
-                  className="ml-auto flex-shrink-0 rounded-full bg-gray-700 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
+                  className="ml-auto flex-shrink-0 rounded-full bg-gray-700 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
+                >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>

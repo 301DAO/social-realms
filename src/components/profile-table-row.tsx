@@ -78,7 +78,8 @@ export const ProfileRow = ({
           )}
           href={`https://app.ens.domains/name/${name}`}
           rel="noopener noreferrer"
-          target="_blank">
+          target="_blank"
+        >
           {name}
         </a>
       </div>
@@ -97,13 +98,15 @@ export const ProfileRow = ({
       <div className="ml-auto">
         <button
           onClick={followUser}
-          className="ml-auto items-center rounded-lg p-2 text-xs font-medium uppercase text-blue-700 hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700 sm:text-sm">
+          className="ml-auto items-center rounded-lg p-2 text-xs font-medium uppercase text-blue-700 hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700 sm:text-sm"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor">
+            stroke="currentColor"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

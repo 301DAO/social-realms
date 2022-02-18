@@ -136,7 +136,8 @@ const User: NextPage = () => {
             className={clsx(
               `mb-3 flex w-full flex-col items-center justify-items-center rounded-lg bg-white bg-no-repeat p-2 text-center align-middle shadow sm:p-4 xl:p-6`,
               `dark:bg-gray-800`
-            )}>
+            )}
+          >
             <img
               className="mb-2 rounded-lg"
               src={image ?? '/images/placeholder.png'}
@@ -152,7 +153,8 @@ const User: NextPage = () => {
               <li className="truncate text-gray-500 dark:text-gray-400">
                 <a
                   onClick={() => copy(`${userAddress}`)}
-                  className="hover:cursor-pointer hover:underline">
+                  className="hover:cursor-pointer hover:underline"
+                >
                   {userAddress}
                 </a>
               </li>
@@ -165,12 +167,14 @@ const User: NextPage = () => {
 
                     `bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 shadow-lg shadow-cyan-500/50 hover:bg-gradient-to-br focus:ring-4 focus:ring-cyan-300 dark:shadow-lg dark:shadow-cyan-800/80 dark:focus:ring-cyan-800`,
                     isFollowed && `bg-cyan-400`
-                  )}>
+                  )}
+                >
                   <span
                     className={clsx(
                       `relative flex w-full items-center justify-center rounded-md bg-white px-5 py-2.5 align-middle transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900`,
                       isFollowed && `dark:bg-opacity-10`
-                    )}>
+                    )}
+                  >
                     {isFollowed ? 'UNFOLLOW' : isFollowedLoading ? 'LOADING...' : 'FOLLOW'}
                   </span>
                 </button>
@@ -190,7 +194,8 @@ const User: NextPage = () => {
                       ? `active bg-gray-100 text-gray-900  focus:ring-blue-300 dark:bg-gray-700`
                       : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white`
                   )}
-                  onClick={followersTab}>
+                  onClick={followersTab}
+                >
                   FOLLOWERS
                 </button>
               </li>
@@ -203,7 +208,8 @@ const User: NextPage = () => {
                       ? `active bg-gray-100 text-gray-900  focus:ring-blue-300 dark:bg-gray-700`
                       : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white`
                   )}
-                  onClick={followingTab}>
+                  onClick={followingTab}
+                >
                   FOLLOWING
                 </button>
               </li>

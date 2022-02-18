@@ -12,8 +12,8 @@ const verifyAddress = (address: string) => {
       position: 'bottom-right',
       style: {
         background: '#f44336',
-        color: '#fff'
-      }
+        color: '#fff',
+      },
     });
   });
 };

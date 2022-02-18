@@ -13,5 +13,5 @@ export const TIME = {
   DAY,
   WEEK,
   MONTH,
-  YEAR
+  YEAR,
 };

@@ -3,7 +3,7 @@ import * as React from 'react';
 export const Twitter = ({
   w = 6,
   h = 6,
-  customStyle
+  customStyle,
 }: {
   w?: number;
   h?: number;
