@@ -1,14 +1,13 @@
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useUser } from '@/hooks';
+import { useUser, } from '@/hooks';
 import { SearchBar } from '@/components';
 import { LogoutIcon } from '@/components/icons';
 import * as React from 'react';
+import { useEnsLookup, useEnsAvatar } from 'wagmi';
 
 import { Disclosure, Menu } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
-
-import { useAccount } from 'wagmi';
 
 const navigation = [
   {
@@ -29,17 +28,10 @@ const navigation = [
 ];
 
 export const Header = () => {
-  const { authenticated, error } = useUser({});
+  const { authenticated, error, user } = useUser({});
 
-  const [{ data: account }] = useAccount({ fetchEns: true });
-
-  const userInfo = React.useMemo(() => {
-    return {
-      address: account?.address,
-      ens: account?.ens?.name,
-      avatar: account?.ens?.avatar ?? '/images/placeholder.png',
-    };
-  }, [account?.address, account?.ens?.avatar, account?.ens?.name]);
+  const [{ data: ens }] = useEnsLookup({ address: user?.publicAddress, skip: !user });
+  const [{ data: avatar }] = useEnsAvatar({ addressOrName: ens, skip: !authenticated || !ens });
 
   return (
     <Disclosure as="nav" className="border-opacity-25 bg-gray-800 lg:border-none">
@@ -70,8 +62,7 @@ export const Header = () => {
                 className={clsx(
                   `flex flex-1 justify-center px-2 lg:ml-6 lg:justify-end`,
                   !authenticated && `lg:justify-center`
-                )}
-              >
+                )}>
                 <SearchBar />
               </div>
 
@@ -98,7 +89,7 @@ export const Header = () => {
                               <span className="sr-only">Open user menu</span>
                               <img
                                 className="h-10 w-10 rounded-md"
-                                src={`${userInfo.avatar}`}
+                                src={avatar ?? '/images/placeholder.png'}
                                 alt=""
                               />
                             </button>
@@ -106,8 +97,7 @@ export const Header = () => {
                         </div>
                         <a
                           className="flex rounded-sm text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
-                          href="/api/auth/logout"
-                        >
+                          href="/api/auth/logout">
                           <span className="sr-only">Open user menu</span>
                           <LogoutIcon />
                         </a>
@@ -118,8 +108,7 @@ export const Header = () => {
                         className={clsx(
                           'h-3 w-3 rounded-full',
                           authenticated ? 'bg-green-300' : !!error ? 'bg-red-400' : 'bg-orange-200'
-                        )}
-                      ></span>
+                        )}></span>
                     </div>
                   </Menu>
                 </div>
@@ -133,8 +122,7 @@ export const Header = () => {
                 <Link shallow={true} key={item.name} href={item.href} passHref>
                   <Disclosure.Button
                     as="a"
-                    className="block rounded-md py-2 px-3 text-base font-medium"
-                  >
+                    className="block rounded-md py-2 px-3 text-base font-medium">
                     {item.name}
                   </Disclosure.Button>
                 </Link>
@@ -144,18 +132,21 @@ export const Header = () => {
               <div className="flex items-center px-5">
                 <div className="flex-shrink-0">
                   <Link href="/profile" passHref prefetch>
-                    <img className="h-20 w-10 rounded-sm" src={`${userInfo.avatar}`} alt="" />
+                    <img
+                      className="h-10 w-10 rounded-sm"
+                      src={avatar ?? '/images/placeholder.png'}
+                      alt=""
+                    />
                   </Link>
                 </div>
 
                 <div className="ml-3">
-                  <div className="text-base font-medium text-white">{userInfo.ens}</div>
-                  <div className="text-sm font-medium text-gray-300">{userInfo.address}</div>
+                  <div className="text-base font-medium text-white">{ens}</div>
+                  <div className="text-sm font-medium text-gray-300">{user?.publicAddress}</div>
                 </div>
                 <button
                   type="button"
-                  className="ml-auto flex-shrink-0 rounded-full bg-gray-700 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
-                >
+                  className="ml-auto flex-shrink-0 rounded-full bg-gray-700 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
