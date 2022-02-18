@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const KEY = process.env.NEXT_PUBLIC_ALCHEMY_KEY || '';
+const KEY = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
 const BASE_URL = `https://eth-mainnet.g.alchemy.com/${KEY}/v1`;
 
 type Attribute = { value: string; trait_type: string };
@@ -49,7 +49,7 @@ export const nftMetadata = async ({
     tokenId,
     tokenType,
   });
-  
+
   try {
     const { data } = await axios.get(`${BASE_URL}/getNFTMetadata?` + queryParams.toString());
     return data;

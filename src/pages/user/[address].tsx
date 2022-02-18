@@ -51,7 +51,6 @@ const User: NextPage = () => {
     name: param as string,
     enabled: !!param,
   });
-  //console.log(address);
   // this is so if it's a contract address, useQueryENS will return empty address
   //const userAddress = React.useMemo(() => address ?? param, []);
 
@@ -82,7 +81,6 @@ const User: NextPage = () => {
         await queryClient.invalidateQueries(['is-followed']);
         setLoading(false);
       },
-      //	onSettled: async data => console.log(data),
     }
   );
 

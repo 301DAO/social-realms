@@ -10,7 +10,7 @@ import {
   useUser,
 } from '@/hooks';
 import { useAccount } from 'wagmi';
-import { ProfileRow } from '@/components/profile-page';
+import { ProfileRow } from '@/components';
 
 type TAB = 'FOLLOWING' | 'FOLLOWERS' | 'FAVORITES';
 const tabsReducer = (state: any, action: { type: TAB }) => {
@@ -67,12 +67,12 @@ const TabButton = ({
 );
 
 const Profile: NextPage = () => {
-  const { authenticated, user } = useUser({ redirectTo: '/login' });
+  const { user } = useUser({ redirectTo: '/login' });
 
   const [tab, dispatch] = React.useReducer(tabsReducer, initialState);
 
   const [{ data: account }] = useAccount();
-  const [address, name] = useQueryENS({ address: user?.publicAddress, enabled: !!authenticated });
+  const [address, name] = useQueryENS({ address: user?.publicAddress });
 
   const [image] = useEnsImage(name as string);
   // const [{ data: balance }] = useBalance({ addressOrName: address as string });

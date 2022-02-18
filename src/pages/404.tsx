@@ -1,15 +1,17 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import * as React from "react";
 import type { NextPage } from "next";
+import Head from "next/head";
 
 const FourOFour: NextPage = () => {
 	return (
 		<div>
-			{/* <Head>
+			<Head>
         <link
           href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@500&display=swap"
           rel="stylesheet"
         />
-      </Head> */}
+      </Head>
 			<main>
 				<style jsx>
 					{`

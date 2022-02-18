@@ -24,7 +24,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-export default App; // dynamic(() => Promise.resolve(App), { ssr: false });
+export default App;
 
 // Ucomment this for nextjs metrics
 // import { NextWebVitalsMetric } from 'next/app'

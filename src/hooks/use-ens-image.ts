@@ -24,7 +24,7 @@ export const useEnsImage = (name: string): [string | any, boolean, boolean] => {
   React.useEffect(() => {
     if (!provider) return;
     if (name) provider.resolveName(name).then(_ => setValidEns(!!_));
-  }, [name]);
+  }, [name, provider]);
 
   const { data, isLoading, isError } = useQuery(
     ['ens-avatar', name],
