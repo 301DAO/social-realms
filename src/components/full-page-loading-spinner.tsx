@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-
 export const FullPageLoadingSpinner = () => (
   <div className="flex min-h-screen items-center justify-center">
     <style jsx>

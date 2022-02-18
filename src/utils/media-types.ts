@@ -18,7 +18,7 @@ export const imageMediaTypes = [
   'image/x-tga',
   'image/x-xbitmap',
   'image/x-xpixmap',
-  'image/x-xwindowdump'
+  'image/x-xwindowdump',
 ];
 
 export const videoMediaTypes = [
@@ -28,5 +28,5 @@ export const videoMediaTypes = [
   'video/ogg',
   'video/x-matroska',
   'video/x-ms-wmv',
-  'video/x-flv'
+  'video/x-flv',
 ];

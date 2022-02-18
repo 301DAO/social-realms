@@ -6,7 +6,7 @@ export const useIntersectionObserver = ({
   onIntersect,
   threshold = 1.0,
   rootMargin = '0px',
-  enabled = true
+  enabled = true,
 }: {
   root?: any;
   target?: React.RefObject<HTMLElement>;
@@ -22,7 +22,7 @@ export const useIntersectionObserver = ({
       {
         root: root && root.current,
         rootMargin,
-        threshold
+        threshold,
       }
     );
     const element = target && target.current;

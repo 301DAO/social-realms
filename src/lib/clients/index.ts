@@ -1,2 +1,2 @@
-export * from "./react-query";
-export * from "./prisma";
+export * from './react-query';
+export * from './prisma';

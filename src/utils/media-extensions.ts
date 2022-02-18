@@ -16,7 +16,7 @@ export const imageExtensions = [
   'tga',
   'xbm',
   'xpm',
-  'xwd'
+  'xwd',
 ];
 
 export const videoExtensions = [
@@ -29,5 +29,5 @@ export const videoExtensions = [
   'mkv',
   'wmv',
   'flv',
-  'avi'
+  'avi',
 ];

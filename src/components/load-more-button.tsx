@@ -5,14 +5,13 @@ const LoadMoreButton = ({
   disabled,
   loading,
   onLoadMoreClick,
-  loadMoreRef
+  loadMoreRef,
 }: {
   disabled?: boolean;
   loading?: boolean;
   onLoadMoreClick: () => Promise<any>;
   loadMoreRef: React.RefObject<HTMLButtonElement>;
 }) => (
-  
   <button
     disabled={disabled}
     ref={loadMoreRef}

@@ -21,7 +21,8 @@ export const ConnectWalletModal = ({
             enterTo="opacity-100"
             leave="ease-in duration-200"
             leaveFrom="opacity-100"
-            leaveTo="opacity-0">
+            leaveTo="opacity-0"
+          >
             <Dialog.Overlay className="fixed inset-0 bg-[rgba(18,19,23,0.7)]" />
           </Transition.Child>
           <span className="inline-block h-screen align-middle" aria-hidden="true">
@@ -34,11 +35,13 @@ export const ConnectWalletModal = ({
             enterTo="opacity-100 scale-100"
             leave="ease-in duration-200"
             leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95">
+            leaveTo="opacity-0 scale-95"
+          >
             <div className="inline-block w-full max-w-[18rem] origin-top-right divide-gray-100 rounded-md border bg-[rgb(18,18,24)] p-[0.1rem] font-semibold leading-6 text-gray-300 shadow-[0_4px_30px_rgba(0,0,0,0.1)] ring-1 ring-black ring-opacity-5 backdrop-blur-md focus:outline-none md:max-w-[30rem]">
               <Dialog.Title
                 as="h3"
-                className="pt-6 text-lg font-semibold leading-7 tracking-wide text-gray-200 antialiased">
+                className="pt-6 text-lg font-semibold leading-7 tracking-wide text-gray-200 antialiased"
+              >
                 CONNECTION METHOD
               </Dialog.Title>
               <div className="flex h-full w-full justify-between divide-x pt-6 pb-5">

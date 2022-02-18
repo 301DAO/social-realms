@@ -10,13 +10,11 @@ export default function logoutHandler(request: NextApiRequest, response: NextApi
   try {
     const cookie = serialize(ACCESS_TOKEN_NAME, '', { maxAge: -1, path: '/' });
     response.setHeader('Set-Cookie', cookie);
-
   } catch (error) {
     console.error(
       `Error occured in /api/auth/logout.ts: `,
       error instanceof Error ? error.message : error
     );
-
   } finally {
     response.writeHead(307, { Location: '/login' });
     response.end();

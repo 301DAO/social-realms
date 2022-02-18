@@ -11,7 +11,7 @@
  */
 export const timeFromNow = ({
   unit,
-  value
+  value,
 }: {
   unit: 'SECONDS' | 'MINUTES' | 'HOURS' | 'DAYS' | 'MONTHS' | 'YEARS';
   value: number;
@@ -43,5 +43,5 @@ export const TIME = {
   DAY,
   WEEK,
   MONTH,
-  YEAR
+  YEAR,
 };

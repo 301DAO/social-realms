@@ -7,6 +7,6 @@ export const parseEnsAvatar = (avatarAddress: string) => {
     type,
     contract: ensAddress,
     tokenId: ensTokenId || tokenId,
-    chainId: chainId || '1'
+    chainId: chainId || '1',
   };
 };
