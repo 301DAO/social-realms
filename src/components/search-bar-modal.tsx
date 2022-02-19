@@ -1,4 +1,4 @@
-import { isValidEthAddress } from '@/utils/string-validators';
+import { isValidEthAddress } from '@/utils';
 import { Dialog, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';

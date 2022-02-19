@@ -1,21 +1,18 @@
-import { isValidEthAddress } from '@/utils/string-validators';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { SearchIcon } from '@heroicons/react/solid';
-import { useUser } from '@/hooks';
+import { useProvider, useUser } from '@/hooks';
+import { toast } from 'react-hot-toast';
+import { utils } from 'ethers';
 
-// TODO: add ENS support
-const verifyAddress = (address: string) => {
-  if (isValidEthAddress(address) || address.endsWith('.eth')) return true;
-  import('react-hot-toast').then(({ toast }) => {
-    toast('Invalid Ethereum address / ENS name', {
-      position: 'bottom-right',
-      style: {
-        background: '#f44336',
-        color: '#fff',
-      },
-    });
+const toastEm = () => {
+  return toast('Invalid Ethereum address / ENS name', {
+    position: 'bottom-right',
+    style: {
+      background: '#f44336',
+      color: '#fff',
+    },
   });
 };
 
@@ -23,35 +20,46 @@ export const SearchBar = () => {
   const router = useRouter();
   const { authenticated } = useUser();
 
+  const provider = useProvider();
+
   const searchText = React.useRef<HTMLInputElement>(null);
 
-  const onSearchClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
-      const search = searchText?.current?.value.trim();
-      if (!search || !verifyAddress(search)) return;
-      if (authenticated) {
-        router.push(`/user/${search}`);
-      } else {
-        router.push(`/nfts/${search}`);
-      }
+  const validateEnsName = React.useCallback(
+    async search => {
+      const address = await provider?.resolveName(search);
+      if (address) return true;
+      return false;
     },
-    [router, authenticated]
+    [provider]
   );
+
+  const validateAddress = (address: string) => {
+    try {
+      return Boolean(utils.getAddress(address));
+    } catch (error) {
+      return false;
+    }
+  };
 
   const onEnter = React.useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key !== 'Enter') return;
       event.preventDefault();
-      const search = searchText?.current?.value.trim();
-      if (!search || !verifyAddress(search)) return;
-      if (authenticated) {
-        router.push(`/user/${search}`);
-      } else {
-        router.push(`/nfts/${search}`);
+      const search = searchText?.current?.value.trim().toLowerCase();
+
+      if (!search) return toastEm();
+
+      if (search.startsWith('0x')) {
+        if (!validateAddress(search)) return toastEm();
+        return authenticated ? router.push(`/user/${search}`) : router.push(`/nfts/${search}`);
       }
+
+      return validateEnsName(search)?.then(valid => {
+        if (!valid) return toastEm();
+        authenticated ? router.push(`/user/${search}`) : router.push(`/nfts/${search}`);
+      });
     },
-    [router, authenticated]
+    [validateEnsName, authenticated, router]
   );
 
   return (
@@ -67,7 +75,7 @@ export const SearchBar = () => {
           ref={searchText}
           onKeyPress={onEnter}
           id="search"
-          className="block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 text-md leading-5 text-gray-900 placeholder-gray-500 focus:border-white focus:outline-none focus:ring-offset-2"
+          className="text-md block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 leading-5 text-gray-900 placeholder-gray-500 focus:border-white focus:outline-none focus:ring-offset-2"
           placeholder="Quick ENS / Address Search"
           type="search"
           name="search"

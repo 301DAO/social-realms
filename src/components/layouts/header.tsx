@@ -47,7 +47,7 @@ export const Header = () => {
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2">
-            <div className="relative flex h-20 items-center lg:border-opacity-25">
+            <div className="relative flex h-20 items-center lg:border-opacity-25 px-6">
               <div className="flex items-center px-2 lg:px-0">
                 <Link shallow={true} href="/">
                   <a className="flex-shrink-0">

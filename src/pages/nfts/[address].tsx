@@ -14,11 +14,6 @@ import { isImage, valueExists, isVideo, range } from '@/utils';
 import { Nft } from '@/components/layouts';
 const LoadMoreButton = dynamic(() => import('@/components/load-more-button'));
 
-export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
-  return { props: {} };
-}
-
 const CopyButton = ({ buttonText }: { buttonText: string }) => {
   const [copyButtonText, setCopyButtonText] = React.useState(buttonText);
 

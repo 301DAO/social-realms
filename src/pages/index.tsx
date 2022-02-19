@@ -1,14 +1,14 @@
 import type { NextPage } from 'next';
 import * as React from 'react';
-import { useUser, usePrevious } from '@/hooks';
+import { useUser } from '@/hooks';
 import { FullPageLoadingSpinner } from '@/components';
 import clsx from 'clsx';
 
 const Index: NextPage = () => {
   const { status, user } = useUser({ redirectTo: '/login' });
-  //const previousUser = usePrevious(user);
 
   if (status !== 'success' || !user) return <FullPageLoadingSpinner />;
+
   return (
     <main className="mt-40 flex flex-col items-center px-4 text-center align-middle">
       <p

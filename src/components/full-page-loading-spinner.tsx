@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export const FullPageLoadingSpinner = () => (
-  <div className="flex min-h-screen items-center justify-center">
+  <div className="flex justify-center md:mt-0 md:items-center md:pt-[100px]">
     <style jsx>
       {`
         /* KEYFRAMES */
@@ -178,21 +178,110 @@ export const FullPageLoadingSpinner = () => (
           border-radius: 50%;
           animation: spin 0.5s linear 0s infinite;
         }
+
+        @media (min-width: 468px) {
+          .solar-system {
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .orbit {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #fafbfc;
+            border-radius: 50%;
+          }
+
+          .earth-orbit {
+            width: 330px;
+            height: 330px;
+            -webkit-animation: spin 12s linear 0s infinite;
+          }
+
+          .venus-orbit {
+            width: 240px;
+            height: 240px;
+            -webkit-animation: spin 7.4s linear 0s infinite;
+          }
+
+          .mercury-orbit {
+            width: 180px;
+            height: 180px;
+            -webkit-animation: spin 3s linear 0s infinite;
+          }
+
+          .planet {
+            position: absolute;
+            top: -10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #3ff9dc;
+          }
+
+          .sun {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: #ffab91;
+          }
+
+          .leo {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+          }
+
+          .blue-orbit {
+            width: 330px;
+            height: 165px;
+            border: 1px solid #91daffa5;
+            -webkit-animation: spin3D 3s linear 0.2s infinite;
+          }
+
+          .green-orbit {
+            width: 240px;
+            height: 120px;
+            border: 1px solid #91ffbfa5;
+            -webkit-animation: spin3D 2s linear 0s infinite;
+          }
+
+          .red-orbit {
+            width: 240px;
+            height: 90px;
+            border: 1px solid #ffca91a5;
+            -webkit-animation: spin3D 1s linear 0s infinite;
+          }
+
+          .white-orbit {
+            width: 120px;
+            height: 120px;
+            border: 2px solid #ffffff;
+            -webkit-animation: spin3D 10s linear 0s infinite;
+          }
+        }
       `}
     </style>
-    <div className="spinner-box">
-      <div className="solar-system">
-        <div className="earth-orbit orbit">
-          <div className="planet earth"></div>
-          <div className="venus-orbit orbit">
-            <div className="planet venus"></div>
-            <div className="mercury-orbit orbit">
-              <div className="planet mercury"></div>
-              <div className="sun"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <span className="spinner-box">
+      <span className="solar-system">
+        <span className="earth-orbit orbit">
+          <span className="planet earth"></span>
+          <span className="venus-orbit orbit">
+            <span className="planet venus"></span>
+            <span className="mercury-orbit orbit">
+              <span className="planet mercury"></span>
+              <span className="sun"></span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </span>
   </div>
 );

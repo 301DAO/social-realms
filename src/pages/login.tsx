@@ -135,8 +135,9 @@ const Signin: NextPage = () => {
 
   const text =
     state.status === status.ERROR ? `${state.errorMessage}` : 'Login to access all features';
+
   return (
-    <main className="mx-auto mt-20 flex w-full max-w-2xl flex-col items-center justify-center gap-x-8 space-y-10">
+    <main className="mx-auto mt-8 flex w-full max-w-2xl flex-col items-center justify-center gap-x-8 space-y-10 md:mt-48">
       <div>
         <p className="mx-10 text-3xl font-bold">{text}</p>
       </div>

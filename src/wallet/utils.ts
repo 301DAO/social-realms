@@ -30,8 +30,6 @@ export const switchNetwork = async (chainId: string) => {
   return false;
 };
 
-
-
 export const switchOnChainChange = async ({
   switchToChainId,
   onChainChange,
@@ -45,8 +43,8 @@ export const switchOnChainChange = async ({
 
   return window.ethereum.on('chainChanged', (chainId: string) => {
     console.log(`chain changed to ${chainId}`);
-
-    if (chainId !== switchToChainId) {
+    
+    if (Number(chainId) !== Number(switchToChainId)) {
       switchNetwork(switchToChainId);
       onChainChange();
     } else {

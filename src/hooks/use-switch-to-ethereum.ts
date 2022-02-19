@@ -10,7 +10,7 @@ const switchNetworkOnLoad = async (switchToChainId: string) => {
   if (typeof window === 'undefined') return;
   try {
     return window?.ethereum?.request({ method: 'eth_chainId' }).then(async chainId => {
-      if (chainId !== switchToChainId) {
+      if (Number(chainId) !== Number(switchToChainId)) {
         await switchNetwork(switchToChainId);
         await switchNetworkToast();
       } else {

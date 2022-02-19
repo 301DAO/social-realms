@@ -1,6 +1,6 @@
 import * as React from 'react';
 import axios from 'axios';
-import { providers } from 'ethers';
+import { useProvider } from '@/hooks';
 
 const logout = async () =>
   axios
@@ -9,12 +9,12 @@ const logout = async () =>
     .catch(_ => console.log(_));
 
 export const useDetectAccountChange = () => {
+  const provider = useProvider();
   return React.useEffect(() => {
     if (typeof window.ethereum?.on === 'undefined') return;
-    const provider = new providers.Web3Provider(window.ethereum as any);
 
     provider
-      .getSigner()
+      ?.getSigner()
       .getAddress()
       .then(address => {
         (window.ethereum as any).on('accountsChanged', (accounts: string[]) => {
