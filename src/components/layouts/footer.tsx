@@ -1,16 +1,38 @@
-import { socialLinks } from '../social-items';
 import * as React from 'react';
 import clsx from 'clsx';
+import { Twitter, Discord, Github, LinkIcon } from '@/components/icons';
+
+const socialLinks = [
+  {
+    name: 'twitter',
+    link: 'https://twitter.com/404DAO',
+    icon: <Twitter />,
+  },
+  {
+    name: 'discord',
+    link: 'https://discord.gg/FTWBuS7E',
+    icon: <Discord />,
+  },
+  {
+    name: 'github',
+    link: 'https://github.com/404DAO',
+    icon: <Github />,
+  },
+  {
+    name: 'website',
+    link: 'https://404dao.com',
+    icon: <LinkIcon />,
+  },
+];
 
 export function Footer() {
   return (
     <footer
       className={clsx(
-        `text-gray-700 p-4 border-gray-700 border-solid border-t box-border flex items-center justify-center h-16 m-0 fixed bottom-0 left-0 w-full`,
-        `dark:text-gray-300 border-gray-600 dark:bg-[#1a1b22]`
-      )}
-    >
-      <div className={clsx(`flex p-2.5 gap-x-10 bg-gray-100 rounded-lg`, `dark:bg-transparent`)}>
+        `fixed bottom-0 left-0 m-0 box-border flex h-16 w-full items-center justify-center border-t border-solid border-gray-700 p-4 text-gray-700`,
+        `border-gray-600 dark:bg-[#14141b] dark:text-gray-300`
+      )}>
+      <div className={clsx(`flex gap-x-10 rounded-lg bg-gray-100 p-2.5`, `dark:bg-transparent`)}>
         {socialLinks.map(item => (
           <a key={item.name} href={item.link} target="_blank" rel="noopener noreferrer">
             {item.icon}

@@ -21,7 +21,7 @@ const verifyAddress = (address: string) => {
 
 export const SearchBar = () => {
   const router = useRouter();
-  const { authenticated } = useUser({});
+  const { authenticated } = useUser();
 
   const searchText = React.useRef<HTMLInputElement>(null);
 
@@ -55,7 +55,7 @@ export const SearchBar = () => {
   );
 
   return (
-    <div className={clsx('w-full max-w-lg lg:max-w-xs', !authenticated && 'lg:max-w-lg')}>
+    <div className={clsx('w-full max-w-lg lg:max-w-sm', !authenticated && 'lg:max-w-lg')}>
       <label htmlFor="search" className="sr-only">
         Search
       </label>
@@ -67,7 +67,7 @@ export const SearchBar = () => {
           ref={searchText}
           onKeyPress={onEnter}
           id="search"
-          className="block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 text-lg leading-5 text-gray-900 placeholder-gray-500 focus:border-white focus:outline-none focus:ring-offset-2 sm:text-sm"
+          className="block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 text-md leading-5 text-gray-900 placeholder-gray-500 focus:border-white focus:outline-none focus:ring-offset-2"
           placeholder="Quick ENS / Address Search"
           type="search"
           name="search"

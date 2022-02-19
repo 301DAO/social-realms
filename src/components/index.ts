@@ -9,4 +9,3 @@ export * from './media-tag';
 export * from './sign-in-with-eth';
 export * from './switch-network-toast';
 export * from './full-page-loading-spinner';
-export * from './profile-table-row';

@@ -1,30 +1,66 @@
-import dynamic from 'next/dynamic';
 import * as React from 'react';
 import type { NFT } from '@/types';
 import { MediaComponent } from '@/components';
+import clsx from 'clsx';
+import { isImage, isVideo, range } from '@/utils';
 
+const Nft = ({
+  children,
+  contract_address,
+  token_id,
+}: {
+  children: React.ReactNode;
+  contract_address: string;
+  token_id: string;
+}) => (
+  <a
+    href={`https://opensea.io/assets/${contract_address}/${token_id}`}
+    target="_blank"
+    rel="noreferrer"
+    className="group">
+    <div className="aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8 w-full overflow-hidden rounded-lg bg-transparent">
+      {children}
+    </div>
+  </a>
+);
+
+const style = 'w-full h-full object-center object-cover group-hover:opacity-75';
 export const Gallery = ({ nfts }: { nfts: NFT[] }) => {
+  const count = nfts.length;
   return (
     <div className="bg-transparent">
       <div className="mx-auto max-w-2xl lg:max-w-7xl">
         <h2 className="sr-only">NFTs</h2>
 
-        <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-4">
-          {nfts.map((nft, idx) => {
+        <div
+          id="nfts"
+          className={clsx(
+            `grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-4`,
+            !!count && range(1, 4).includes(count) && `xl:grid-cols-2`,
+            !!count && count > 9 && `grid-cols-4`
+          )}>
+          {nfts.map(({ cached_file_url, contract_address, token_id, name, description }, idx) => {
+            const url = cached_file_url;
+            if (!url) return null;
+            if (isImage(url)) {
+              return (
+                <Nft key={idx} contract_address={contract_address} token_id={token_id}>
+                  <img key={idx} src={url} alt={`${name} - ${description}`} className={style} />
+                </Nft>
+              );
+            }
+            if (isVideo(url)) {
+              return (
+                <Nft key={idx} contract_address={contract_address} token_id={token_id}>
+                  <video key={idx} controls src={url} autoPlay loop className={style} />
+                </Nft>
+              );
+            }
+            console.log(`Unknown media type: ${url}`);
             return (
-              <a
-                key={idx}
-                href={`https://opensea.io/assets/${nft.contract_address}/${nft.token_id}`}
-                target="_blank"
-                rel="noreferrer"
-                className="group"
-              >
-                <div className="aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8 w-full overflow-hidden rounded-lg bg-gray-200">
-                  <MediaComponent mediaUrl={nft.file_url} />
-                </div>
-                {/* <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
-              <p className="mt-1 text-lg font-medium text-gray-900">{product.price}</p> */}
-              </a>
+              <Nft key={idx} contract_address={contract_address} token_id={token_id}>
+                <MediaComponent mediaUrl={url} />
+              </Nft>
             );
           })}
         </div>

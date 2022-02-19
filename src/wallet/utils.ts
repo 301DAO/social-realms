@@ -48,14 +48,8 @@ export const switchOnChainChange = async ({
     if (chainId !== switchToChainId) {
       switchNetwork(switchToChainId);
       onChainChange();
-      // import('@/components/switch-network-toast').then(({ switchNetworkToast }) => {
-      //   switchNetworkToast();
-      // });
     } else {
       onChainChangeSettled();
-      // import('react-hot-toast').then(({ default: toast }) => {
-      //   toast.remove();
-      // });
     }
   });
 };

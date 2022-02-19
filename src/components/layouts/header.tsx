@@ -1,13 +1,13 @@
+import * as React from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { useUser, } from '@/hooks';
-import { SearchBar } from '@/components';
-import { LogoutIcon } from '@/components/icons';
-import * as React from 'react';
-import { useEnsLookup, useEnsAvatar } from 'wagmi';
-
 import { Disclosure, Menu } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
+import { useEnsLookup, useEnsAvatar } from 'wagmi';
+
+import { useUser } from '@/hooks';
+import { SearchBar } from '@/components';
+import { LogoutIcon } from '@/components/icons';
 
 const navigation = [
   {
@@ -28,17 +28,24 @@ const navigation = [
 ];
 
 export const Header = () => {
-  const { authenticated, error, user } = useUser({});
-
+  const { authenticated, error, user, status, isError } = useUser({});
   const [{ data: ens }] = useEnsLookup({ address: user?.publicAddress, skip: !user });
   const [{ data: avatar }] = useEnsAvatar({ addressOrName: ens, skip: !authenticated || !ens });
 
+  // not showing header when loading helps visually with full page loader component
+  //if (typeof user === undefined || typeof user === null) return <></>;
+  if (status !== 'success') return <></>;
   return (
-    <Disclosure as="nav" className="border-opacity-25 bg-gray-800 lg:border-none">
+    <Disclosure
+      as="nav"
+      className={clsx(
+        `border-opacity-25 bg-gray-800 lg:border-none`,
+        `border-gray-600 dark:bg-[#14141b]`
+      )}>
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2">
-            <div className="relative flex h-16 items-center justify-between  lg:border-opacity-25">
+            <div className="relative flex h-20 items-center lg:border-opacity-25">
               <div className="flex items-center px-2 lg:px-0">
                 <Link shallow={true} href="/">
                   <a className="flex-shrink-0">
@@ -95,12 +102,12 @@ export const Header = () => {
                             </button>
                           </Link>
                         </div>
-                        <a
-                          className="flex rounded-sm text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
-                          href="/api/auth/logout">
-                          <span className="sr-only">Open user menu</span>
-                          <LogoutIcon />
-                        </a>
+                        <Link href="/api/auth/logout" passHref>
+                          <button className="flex rounded-sm text-sm text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
+                            <span className="sr-only">Open user menu</span>
+                            <LogoutIcon />
+                          </button>
+                        </Link>
                       </>
                     )}
                     <div className="flex items-center">
@@ -140,16 +147,13 @@ export const Header = () => {
                   </Link>
                 </div>
 
-                <div className="ml-3">
+                <div className="ml-auto">
                   <div className="text-base font-medium text-white">{ens}</div>
-                  <div className="text-sm font-medium text-gray-300">{user?.publicAddress}</div>
+                  <div className="w-[200px] truncate text-sm font-medium text-gray-300">
+                    {user?.publicAddress}
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  className="ml-auto flex-shrink-0 rounded-full bg-gray-700 p-1 text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                <p className="ml-auto pl-8"></p>
               </div>
             </div>
           </Disclosure.Panel>

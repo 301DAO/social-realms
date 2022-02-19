@@ -17,7 +17,7 @@ export const ProfileRow = ({
   userAddress: string;
   type: 'FOLLOWER' | 'FOLLOWING';
 }) => {
-  //const [, name] = useQueryENS({ address: userAddress, name: userAddress });
+  
   const [, setLoading] = React.useState(false);
 
   const [{ data: name }] = useEnsLookup({ address: userAddress });
@@ -62,8 +62,9 @@ export const ProfileRow = ({
     event.preventDefault();
     return type === 'FOLLOWING' ? unfollowMutation.mutate() : followMutation.mutate();
   };
+
   return (
-    <div className="w-fuuserAddressll flex items-center space-x-4 md:space-x-8">
+    <div className="flex w-full items-center justify-between space-x-4 md:space-x-8">
       <img
         className="h-8 w-8 rounded-full"
         src={image ?? `/images/placeholder.png`}
@@ -73,40 +74,34 @@ export const ProfileRow = ({
       <div className="mr-auto">
         <a
           className={clsx(
-            `truncate text-sm font-medium text-gray-900`,
+            `truncate text-sm font-medium text-gray-900 md:text-lg`,
             `hover:decoration-solid dark:text-white dark:hover:text-gray-200`
           )}
           href={`https://app.ens.domains/name/${name}`}
           rel="noopener noreferrer"
-          target="_blank"
-        >
+          target="_blank">
           {name}
         </a>
       </div>
-      <div className="w-full"></div>
+      <div className="hidden md:w-full"></div>
 
-      <div className="mr-auto">
-        <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
-          {utils.getAddress(userAddress)}
-        </p>
-      </div>
-
-      <div className="w-full"></div>
+      <p className="mr-auto truncate text-sm font-medium text-gray-900 dark:text-white md:whitespace-normal md:text-lg">
+        {utils.getAddress(userAddress)}
+      </p>
+      <div className="hidden md:w-full"></div>
       {/* <button>
 				<Twitter />
 			</button> */}
       <div className="ml-auto">
         <button
           onClick={followUser}
-          className="ml-auto items-center rounded-lg p-2 text-xs font-medium uppercase text-blue-700 hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700 sm:text-sm"
-        >
+          className="ml-auto flex items-center rounded-lg px-0 text-sm font-medium uppercase text-blue-700 hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700 sm:text-sm md:px-2 md:text-lg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
+            className="h-5 w-5 md:h-6 md:w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+            stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

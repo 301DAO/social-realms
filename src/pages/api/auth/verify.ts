@@ -23,20 +23,14 @@ export default async function verifyHandlerHandler(req: NextApiRequest, res: Nex
     });
 
     if (!user) throw new Error('User not found');
-    // {
-    // 	return res.status(401).json({
-    // 		success: false,
-    // 		message: `user with address: ${address} doesn't exist`,
-    // 	});
-    // }
+
     const siweMessage = new SiweMessage(message);
     const fields = await siweMessage.validate(signature);
     const verified = !!fields;
 
-    if (!verified) throw new Error('Could not verify signature');
-    // {
-    //   return res.status(401).json({ success: false, message: 'signature is not valid' });
-    // }
+    if (!verified) {
+      return res.status(401).json({ success: false, message: 'signature is not valid' });
+    }
 
     // if verified, update nonce, create tokens, and send tokens
     const updateNonce = await prisma.user.update({
@@ -47,19 +41,15 @@ export default async function verifyHandlerHandler(req: NextApiRequest, res: Nex
     const accessToken = generateAccessToken(updateNonce);
     setAccessToken(res, accessToken);
 
-    return res.status(200).json({
-      success: true,
-      message: 'successfully verified',
-      user: updateNonce,
-    });
+    return res
+      .status(200)
+      .json({ success: true, message: 'successfully verified', user: updateNonce });
+      
   } catch (error) {
     console.error(
       'Error occured in /api/auth/verify.ts: ',
       error instanceof Error ? error.message : error
     );
   }
-  res.status(401).json({
-    success: false,
-    message: `Could not verify user`,
-  });
+  res.status(401).json({ msuccess: false, message: `Could not verify user` });
 }

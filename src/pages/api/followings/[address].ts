@@ -17,8 +17,10 @@ export default async function followingsHandler(req: NextApiRequest, res: NextAp
       where: {
         followerAddress: utils.getAddress(address as string),
       },
+      select: { followeeAddress: true },
     });
-    const addresses = followings.map(({ followeeAddress }) => followeeAddress);
+    const addresses = followings.map(_ => _.followeeAddress);
+
     return res.status(200).json({ success: true, addresses });
   } catch (error) {
     console.error(

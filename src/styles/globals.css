@@ -2,9 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+* CSS variables have to be defined in the global css file.
+* define your variables here then use them anywhere in the project.
+*/
+:root {
+  --avatar-height: 65vh;
+  --avatar-width: calc(var(--avatar-height) / 1.5);
+}
+
 html,
 body {
-  h: 100vh;
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,

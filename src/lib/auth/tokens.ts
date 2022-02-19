@@ -1,13 +1,14 @@
+import { sign } from 'jsonwebtoken';
+import { serialize, parse } from 'cookie';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import {
   ACCESS_TOKEN_NAME,
   ACCESS_TOKEN_SECRET,
   ACCESS_TOKEN_MAX_AGE,
   ACCESS_TOKEN_EXPIRY_DATE,
-} from '../../constants';
-import { serialize, parse } from 'cookie';
-import { sign } from 'jsonwebtoken';
+} from '@/constants';
 import type { User } from '@/types';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const generateAccessToken = (user: User) => {
   return sign({ user }, ACCESS_TOKEN_SECRET!, {

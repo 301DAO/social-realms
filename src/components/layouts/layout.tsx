@@ -2,12 +2,14 @@ import * as React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Header } from './header';
 import { Footer } from './footer';
+import { useDetectAccountChange } from '@/hooks';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
+  useDetectAccountChange();
   return (
-    <div className="text-center` dark m-auto h-screen max-w-screen-2xl self-center bg-[#171821]">
+    <div className="dark m-auto h-screen max-w-screen-2xl bg-[#1a1c26] text-center">
       <Header />
-      <div className="mb-8 flex flex-col items-center rounded-xl pt-5">{children}</div>
+      <div className="rounded-4xl mb-8 flex flex-col pt-5">{children}</div>
       <Footer />
       <Toaster />
     </div>

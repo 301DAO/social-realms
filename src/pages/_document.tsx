@@ -52,11 +52,7 @@ export default class Doc extends Document<DocumentProps> {
             type="image/png"
           />
           <link color="#4a9885" href="/static/favicons/safari-pinned-tab.svg" rel="mask-icon" />
-          <meta content="#ffffff" name="theme-color" />
-          <meta content="#ffffff" name="msapplication-TileColor" />
-          <meta content="/static/favicons/browserconfig.xml" name="msapplication-config" />
-          <meta content="14d2e73487fa6c71" name="yandex-verification" />
-          <meta content="" name="google-site-verification" /> */}
+          */}
         </Head>
         <body className="text-white dark:bg-black dark:text-black">
           <Main />

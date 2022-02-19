@@ -13,14 +13,14 @@ export default async function followersHandler(req: NextApiRequest, res: NextApi
     if (!address || !isValidEthAddress(address as string)) {
       return res.status(400).json({ success: false, message: 'valid address is required' });
     }
-    const followings = await prisma.follower.findMany({
+    const followers = await prisma.follower.findMany({
       where: {
         followeeAddress: utils.getAddress(address as string),
       },
+      select: { followerAddress: true },
     });
-    const addresses = followings.map(
-      ({ followerAddress }: { followerAddress: string }) => followerAddress
-    );
+    const addresses = followers.map(_ => _.followerAddress);
+    
     return res.status(200).json({ success: true, addresses });
   } catch (error) {
     console.error(

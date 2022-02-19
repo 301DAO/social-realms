@@ -140,7 +140,7 @@ const Signin: NextPage = () => {
       <div>
         <p className="mx-10 text-3xl font-bold">{text}</p>
       </div>
-      <section className="w-full max-w-sm rounded-lg bg-white p-4 shadow-md dark:bg-transparent sm:p-6 lg:p-4">
+      <section className="w-full max-w-sm rounded-lg bg-transparent p-4 sm:p-6 lg:p-4">
         <SignInWithEthereum
           onButtonClick={toggleModal}
           disabled={authenticated}
@@ -174,8 +174,7 @@ const Web3ConnectButton = ({
       disabled={!connector.ready}
       key={connector.name}
       className="flex w-full flex-col items-center justify-end gap-y-2 pt-3 pb-4 text-xl font-normal tracking-wide antialiased hover:cursor-pointer hover:bg-[rgb(31,32,53)] hover:text-white focus:outline-none"
-      onClick={async () => await onButtonClick(connector)}
-    >
+      onClick={async () => await onButtonClick(connector)}>
       <WalletIcon name={connector.name} />
       {['metamask', 'injected'].includes(connector.name) ? 'MetaMask' : connector.name}
     </button>
