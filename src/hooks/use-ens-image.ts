@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useQuery } from 'react-query';
 import { TIME } from '@/constants';
-import { useProvider } from '@/hooks';
+import { wagmiProvider } from '@/wallet';
 
 export const useEnsImage = (name: string): [string | any, boolean, boolean] => {
-  const provider = useProvider();
+  const provider = wagmiProvider();
 
   const [validEns, setValidEns] = React.useState(false);
   React.useEffect(() => {

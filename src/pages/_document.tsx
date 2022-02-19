@@ -24,35 +24,6 @@ export default class Doc extends Document<DocumentProps> {
             rel="icon"
             href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐦</text></svg>"
           />
-          {/* <link
-            rel="preload"
-            href="/fonts/ibm-plex-sans-var.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link href="/static/favicons/favicon.ico" rel="shortcut icon" />
-          <link href="/static/favicons/site.webmanifest" rel="manifest" />
-          <link rel="preconnect" href="https://cdn.usefathom.com" crossOrigin="" />
-          <link
-            href="/static/favicons/apple-touch-icon.png"
-            rel="apple-touch-icon"
-            sizes="180x180"
-          />
-          <link
-            href="/static/favicons/favicon-32x32.png"
-            rel="icon"
-            sizes="32x32"
-            type="image/png"
-          />
-          <link
-            href="/static/favicons/favicon-16x16.png"
-            rel="icon"
-            sizes="16x16"
-            type="image/png"
-          />
-          <link color="#4a9885" href="/static/favicons/safari-pinned-tab.svg" rel="mask-icon" />
-          */}
         </Head>
         <body className="text-white dark:bg-black dark:text-black">
           <Main />

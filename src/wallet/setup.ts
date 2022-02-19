@@ -1,4 +1,4 @@
-import { Connector, chain, defaultChains, defaultL2Chains } from 'wagmi';
+import { Connector, chain, defaultChains } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { providers } from 'ethers';
@@ -9,36 +9,33 @@ const infuraId = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
 
 export const defaultProvider = new providers.InfuraProvider(undefined, infuraId);
 
-// Pick chains
-const chains = defaultChains;
-const defaultChain = chain.mainnet;
-
 // Set up connectors
 type ConnectorsConfig = { chainId?: number };
-export const connectors = ({ chainId }: ConnectorsConfig) => {
-  const rpcUrl = chains.find(x => x.id === chainId)?.rpcUrls?.[0] ?? defaultChain.rpcUrls[0];
-  return [
-    new InjectedConnector({ chains }),
-    new WalletConnectConnector({
-      chains,
-      options: {
-        infuraId,
-        qrcode: true,
-      },
-    }),
-  ];
-};
+
+export const connectors = [
+  new InjectedConnector({
+    chains: defaultChains,
+    options: { shimDisconnect: false },
+  }),
+  new WalletConnectConnector({
+    chains: defaultChains,
+    options: { infuraId, qrcode: true },
+  }),
+];
 
 // Set up providers
 type ProviderConfig = { chainId?: number; connector?: Connector };
-const isChainSupported = (chainId?: number) => chains.some(x => x.id === chainId);
 
-// Set up providers
-export const provider = ({ chainId }: ProviderConfig) =>
-  providers.getDefaultProvider(isChainSupported(chainId) ? chainId : defaultChain.id, {
-    alchemy,
-    etherscan,
-    infuraId,
-  });
-export const webSocketProvider = ({ chainId }: ConnectorsConfig) =>
-  isChainSupported(chainId) ? new providers.InfuraWebSocketProvider(chainId, infuraId) : undefined;
+const isChainSupported = (chainId?: number) => defaultChains.some(x => x.id === chainId);
+
+export const wagmiProvider = ({ chainId = 1 }: ProviderConfig = {}) =>
+  new providers.AlchemyProvider(chainId, alchemy) ||
+  new providers.InfuraProvider(chainId, infuraId) ||
+  new providers.EtherscanProvider(chainId, etherscan) ||
+  new providers.FallbackProvider([defaultProvider]) ||
+  new providers.CloudflareProvider();
+
+export const wagmiWebSocketProvider = ({ chainId = 1 }: ProviderConfig = {}) =>
+  new providers.AlchemyWebSocketProvider(chainId, alchemy) ||
+  new providers.InfuraWebSocketProvider(chainId, infuraId) ||
+  new providers.WebSocketProvider('homestead');

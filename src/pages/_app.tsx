@@ -1,11 +1,12 @@
 //import '../../scripts/wdyr';
 import Head from 'next/head';
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import type { AppProps } from 'next/app';
 
 import '@/styles/globals.css';
 import { Layout } from '@/components/layouts';
-import { ReactQueryProvider, Web3Provider } from '@/providers';
+import { ReactQueryProvider, WagmiProvider } from '@/providers';
 import { useSwitchToEthereum, useDetectAccountChange } from '@/hooks';
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -18,9 +19,9 @@ const App = ({ Component, pageProps }: AppProps) => {
         <title>Social Realms</title>
       </Head>
       <ReactQueryProvider dehydrateState={pageProps.dehydrateState}>
-        <Web3Provider>
+        <WagmiProvider>
           <Layout>{Component.name != 'PageNotFound' && <Component {...pageProps} />}</Layout>
-        </Web3Provider>
+        </WagmiProvider>
       </ReactQueryProvider>
     </>
   );

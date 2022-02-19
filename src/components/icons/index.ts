@@ -12,3 +12,4 @@ export * from './red-heart';
 export * from './transparent-heart';
 export * from './hashtag';
 export * from './copy-icon';
+export * from './search';

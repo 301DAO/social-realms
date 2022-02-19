@@ -1,18 +1,23 @@
-import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import * as React from 'react';
-import { SearchIcon } from '@heroicons/react/solid';
-import { useProvider, useUser } from '@/hooks';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 import { utils } from 'ethers';
+import clsx from 'clsx';
 
-const toastEm = () => {
-  return toast('Invalid Ethereum address / ENS name', {
-    position: 'bottom-right',
+import { SearchIcon } from '@/components/icons';
+import { useUser } from '@/hooks';
+import { TIME } from '@/constants';
+
+import { wagmiProvider } from '@/wallet';
+
+const toastEm = (text = 'invalid input') => {
+  return toast(text, {
+    position: 'top-center',
     style: {
-      background: '#f44336',
-      color: '#fff',
+      background: '#db7a7f',
+      color: '#ffffff',
     },
+    duration: TIME.SECOND * 2,
   });
 };
 
@@ -20,56 +25,42 @@ export const SearchBar = () => {
   const router = useRouter();
   const { authenticated } = useUser();
 
-  const provider = useProvider();
+  const provider = wagmiProvider();
 
   const searchText = React.useRef<HTMLInputElement>(null);
 
-  const validateEnsName = React.useCallback(
-    async search => {
-      const address = await provider?.resolveName(search);
-      if (address) return true;
-      return false;
-    },
-    [provider]
-  );
+  const directToRoute = (input: string) =>
+    authenticated ? router.push(`/user/${input}`) : router.push(`/nfts/${input}`);
 
-  const validateAddress = (address: string) => {
-    try {
-      return Boolean(utils.getAddress(address));
-    } catch (error) {
-      return false;
+  const onEnter = React.useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    const search = searchText?.current?.value.trim().toLowerCase();
+
+    if (!search) return;
+
+    if (search.startsWith('0x')) {
+      return utils.isAddress(search) ? directToRoute(search) : toastEm('Invalid Ethereum address');
     }
-  };
 
-  const onEnter = React.useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
-      if (event.key !== 'Enter') return;
-      event.preventDefault();
-      const search = searchText?.current?.value.trim().toLowerCase();
-
-      if (!search) return toastEm();
-
-      if (search.startsWith('0x')) {
-        if (!validateAddress(search)) return toastEm();
-        return authenticated ? router.push(`/user/${search}`) : router.push(`/nfts/${search}`);
-      }
-
-      return validateEnsName(search)?.then(valid => {
-        if (!valid) return toastEm();
-        authenticated ? router.push(`/user/${search}`) : router.push(`/nfts/${search}`);
+    if (search.endsWith('.eth')) {
+      return provider?.resolveName(search).then(address => {
+        utils.isAddress(address!) ? directToRoute(address!) : toastEm('Invalid ENS name');
       });
-    },
-    [validateEnsName, authenticated, router]
-  );
+    }
+
+    return toastEm('Invalid Ethereum address / ENS name');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <div className={clsx('w-full max-w-lg lg:max-w-sm', !authenticated && 'lg:max-w-lg')}>
+    <div className={clsx('w-full max-w-lg lg:max-w-lg', !authenticated && 'lg:max-w-lg')}>
       <label htmlFor="search" className="sr-only">
         Search
       </label>
       <div className="relative text-gray-400 focus-within:text-gray-600">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <SearchIcon className="h-5 w-5" aria-hidden="true" />
+          <SearchIcon />
         </div>
         <input
           ref={searchText}

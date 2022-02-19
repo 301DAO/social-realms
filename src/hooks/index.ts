@@ -11,5 +11,5 @@ export * from './use-favorites';
 export * from './use-followers';
 export * from './use-detect-account-change';
 export * from './use-previous';
-export * from './use-ethers-provider';
+export * from './use-provider';
 export * from './use-async';

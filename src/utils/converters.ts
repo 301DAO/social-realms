@@ -1,4 +1,11 @@
 import { utils } from 'ethers';
+import type { BigNumber } from 'ethers';
+
+export function gweify(gweiHex: BigNumber): string {
+  const gweified = utils.formatUnits(gweiHex, 'gwei');
+  return Number(gweified).toFixed(2);
+}
+
 export function parseBigNumberToString({
   decimal,
   bigNumber,

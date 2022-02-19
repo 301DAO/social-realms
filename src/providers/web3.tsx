@@ -1,23 +1,22 @@
-import { connectors, webSocketProvider, provider } from '@/wallet';
 import * as React from 'react';
 import { Provider } from 'wagmi';
 import { useUser } from '@/hooks';
+import { FullPageLoadingSpinner } from '@/components';
+import { connectors, wagmiWebSocketProvider, wagmiProvider } from '@/wallet';
 
-export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
-  const { authenticated } = useUser();
+export const WagmiProvider = ({ children }: { children: React.ReactNode }) => {
+  const { authenticated, status } = useUser();
 
-  // TODO: add nice spinner / loader when loading
-  if (typeof authenticated === 'undefined') {
-    return <div>LOADING . . .</div>;
-  }
+  if (status !== 'success') return <FullPageLoadingSpinner />;
 
   return (
     <Provider
       autoConnect={authenticated}
       connectors={connectors}
-      provider={provider}
-      webSocketProvider={webSocketProvider}
-    >
+      provider={wagmiProvider}
+      webSocketProvider={wagmiWebSocketProvider}
+      connectorStorageKey=""
+      >
       {children}
     </Provider>
   );

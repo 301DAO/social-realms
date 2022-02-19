@@ -1,6 +1,8 @@
 import * as React from 'react';
 import axios from 'axios';
-import { useProvider } from '@/hooks';
+import { useSigningProvider } from '@/hooks';
+
+declare const window: any;
 
 const logout = async () =>
   axios
@@ -9,20 +11,18 @@ const logout = async () =>
     .catch(_ => console.log(_));
 
 export const useDetectAccountChange = () => {
-  const provider = useProvider();
+  const provider = useSigningProvider();
+
   return React.useEffect(() => {
     if (typeof window.ethereum?.on === 'undefined') return;
 
-    provider
-      ?.getSigner()
-      .getAddress()
-      .then(address => {
-        (window.ethereum as any).on('accountsChanged', (accounts: string[]) => {
-          const [, newAddress] = accounts;
-          if (newAddress !== address) {
-            logout();
-          }
-        });
-      });
-  }, []);
+    const getOldAddress = provider.getSigner().getAddress();
+
+    window.ethereum.on('accountsChanged', (accounts: string[]) => {
+      const [newAddress] = accounts;
+      getOldAddress.then(oldAddress =>
+        Number(oldAddress) !== Number(newAddress) ? logout() : null
+      );
+    });
+  }, [provider]);
 };

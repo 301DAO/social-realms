@@ -1,14 +1,25 @@
 import * as React from 'react';
 import type { NextPage } from 'next';
+import type {
+  TransactionReceipt,
+  InfuraProvider,
+  AlchemyProvider,
+  CloudflareProvider,
+  FallbackProvider,
+} from '@ethersproject/providers';
+import { useMutation, useQuery } from 'react-query';
+
+import { gweify } from '@/utils';
+import { wagmiProvider } from '@/wallet';
 import { favorite } from '@/lib/mutations';
 import { queryClient } from '@/lib/clients';
 import { LoadingTransaction } from '@/components';
-import { useMutation, useQuery } from 'react-query';
 import { getTransactionsForAddress } from '@/lib/wrappers';
 import { DownArrow, RedHeart, TransparentHeart } from '@/components/icons';
 import { useIsMounted, useFollowings, useFavorites, useUser } from '@/hooks';
 
-const KEY = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
+type Provider = InfuraProvider | AlchemyProvider | FallbackProvider | CloudflareProvider;
+
 /**
  * this will get past transactions for followed addresses
  * to help populate the feed on load
@@ -42,12 +53,9 @@ const getPastTransactions = async (addresses: string[]) => {
 /**
  * this will get live transactions for followed addresses using websocket
  */
-const getLiveTransactions = async (addresses: string[]) => {
-  //import { createAlchemyWeb3 } from '@alch/alchemy-web3';
-  const { createAlchemyWeb3 } = await import('@alch/alchemy-web3');
-  const alchemyWSS = createAlchemyWeb3(`wss://eth-mainnet.ws.alchemyapi.io/ws/${KEY}`);
-  const { transactions } = await alchemyWSS.eth.getBlock('latest');
-  const receipts = transactions.map(async tx => await alchemyWSS.eth.getTransactionReceipt(tx));
+const getLiveTransactions = async (provider: Provider, addresses: string[]) => {
+  const { transactions } = await provider.getBlock('latest');
+  const receipts = transactions.map(async tx => await provider.getTransactionReceipt(tx));
   const filter = (x: any) => addresses.includes(x.from) || !addresses.includes(x.to);
   return await Promise.all(receipts.filter(filter).map(x => x.then(x => x)));
 };
@@ -57,6 +65,8 @@ const Feed: NextPage = () => {
 
   const { user } = useUser({ redirectTo: '/login' });
   const address = user?.publicAddress;
+
+  const provider = wagmiProvider();
 
   const [favorites] = useFavorites({ address: address as string });
   const [followings] = useFollowings({ address: address as string });
@@ -80,8 +90,8 @@ const Feed: NextPage = () => {
 
   const { data: transactions } = useQuery(
     ['feed', address],
-    async () => getLiveTransactions(followings),
-    { enabled: !!address, initialData: [] }
+    async () => getLiveTransactions(provider!, followings),
+    { enabled: !!address && Boolean(provider), initialData: [] }
   );
 
   // show 5 fake loading cards while waiting for data
@@ -99,22 +109,21 @@ const Feed: NextPage = () => {
   return (
     <main className="mx-auto mt-12 flex w-full flex-col items-center justify-items-start gap-y-8 align-top text-white">
       {transactions &&
-        transactions.map((transaction: any, idx: any) => (
+        transactions.length > 0 &&
+        !!transactions[0].from &&
+        transactions.map((transaction: TransactionReceipt, idx: any) => (
           <section
             key={idx}
-            className="max-w-lg rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-800"
-          >
+            className="max-w-xl rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-800">
             <a
               className="mt-3 block text-xl leading-snug text-black hover:underline dark:text-white"
-              href={`/user/${transaction.from}`}
-            >
+              href={`/user/${transaction.from}`}>
               {transaction.from}
             </a>
             <DownArrow />
             <a
               className="my-2 block text-xl leading-snug text-black hover:underline dark:text-white"
-              href={`/user/${transaction.from}`}
-            >
+              href={`/user/${transaction.from}`}>
               {transaction.to}
             </a>
             <div className="my-4 border border-b-0 border-gray-200 dark:border-gray-600"></div>
@@ -127,8 +136,7 @@ const Feed: NextPage = () => {
                       address: address as string,
                       hash: transaction.transactionHash,
                     })
-                  }
-                >
+                  }>
                   {favorites.includes(transaction.transactionHash) ? (
                     <RedHeart />
                   ) : (
@@ -143,7 +151,7 @@ const Feed: NextPage = () => {
               </div>
               <div className="flex flex-row items-center">
                 <span className="rounded bg-gray-100 px-2 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                  ⛽️&nbsp;&nbsp;&nbsp;{transaction.gasUsed}
+                  ⛽️&nbsp;&nbsp;&nbsp;{gweify(transaction.effectiveGasPrice)}
                 </span>
               </div>
               <div className="flex flex-row items-center">
@@ -154,8 +162,7 @@ const Feed: NextPage = () => {
                       className="w-4"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
+                      stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -171,8 +178,7 @@ const Feed: NextPage = () => {
                       className="w-4"
                       fill="none"
                       viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
+                      stroke="currentColor">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -187,8 +193,7 @@ const Feed: NextPage = () => {
                 className="flex w-[18%] items-center"
                 href={`https://etherscan.io/tx/${transaction.transactionHash}`}
                 rel="noopener noreferrer"
-                target="_blank"
-              >
+                target="_blank">
                 <span className="truncate rounded bg-blue-100 px-1.5 py-0.5 text-xs font-semibold text-blue-900 hover:cursor-pointer hover:bg-blue-200 hover:text-blue-400 hover:underline dark:bg-blue-200 dark:text-blue-900 dark:hover:bg-blue-300">
                   {transaction.transactionHash}
                 </span>

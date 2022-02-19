@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import type { NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import { useEnsLookup, useEnsAvatar } from 'wagmi';
 
 import {
@@ -190,4 +191,4 @@ const Profile: NextPage = () => {
   );
 };
 
-export default Profile;
+export default dynamic

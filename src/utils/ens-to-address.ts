@@ -1,6 +1,6 @@
-import { getDefaultProvider } from 'ethers';
+import { wagmiProvider } from "@/wallet";
 
 export const ensToAddress = async (name: string) => {
-  const provider = getDefaultProvider();
+  const provider = wagmiProvider();
   return await provider.resolveName(name);
 };
