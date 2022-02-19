@@ -4,7 +4,7 @@ import { MediaComponent } from '@/components';
 import clsx from 'clsx';
 import { isImage, isVideo, range } from '@/utils';
 
-const Nft = ({
+export const Nft = ({
   children,
   contract_address,
   token_id,

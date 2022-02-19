@@ -98,7 +98,7 @@ const User: NextPage = () => {
         await queryClient.invalidateQueries(['is-followed', userAddress]);
         setLoading(false);
       },
-      onSettled: async () => setLoading(false),
+      onSettled: async () => setLoading(false)
     }
   );
 

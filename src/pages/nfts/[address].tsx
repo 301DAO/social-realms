@@ -9,6 +9,9 @@ import styles from '@/styles/gallery.module.css';
 import { NFT } from '@/types';
 import { MediaComponent } from '@/components';
 import { CopyIcon } from '@/components/icons';
+import { isImage, valueExists, isVideo, range } from '@/utils';
+
+import { Nft } from '@/components/layouts';
 const LoadMoreButton = dynamic(() => import('@/components/load-more-button'));
 
 export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
@@ -33,9 +36,8 @@ const CopyButton = ({ buttonText }: { buttonText: string }) => {
   return (
     <button
       type="button"
-      className="text-md mr-2 mb-2 flex space-x-2 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-gradient-to-bl focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
-      onClick={copyToClipboard}
-    >
+      className="text-md mb-2 flex space-x-2 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-gradient-to-bl focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
+      onClick={copyToClipboard}>
       <span>{copyButtonText}</span>
       <span>
         <CopyIcon />
@@ -72,7 +74,7 @@ const Nfts: NextPage = () => {
       return nfts;
     },
     {
-      enabled: !!address || (address as string).startsWith('0x'),
+      enabled: valueExists(address) && (address as string).startsWith('0x'),
       notifyOnChangeProps: 'tracked',
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
@@ -99,11 +101,39 @@ const Nfts: NextPage = () => {
       <div className={styles.gallery}>
         {infiniteQueryResponse?.pages.map((page: any, idx: number) => (
           <React.Fragment key={idx}>
-            {page?.map((nft: NFT, idx: number) => (
-              <div className="m-2" key={idx}>
-                <MediaComponent mediaUrl={nft.file_url} key={idx} />
-              </div>
-            ))}
+            {page?.map((nft: NFT, idx: number) => {
+              const { cached_file_url, contract_address, token_id, name, description } = nft;
+              const url = cached_file_url;
+              if (!url) return null;
+              const style = 'w-full object-center object-cover group-hover:opacity-75';
+
+              if (isImage(url)) {
+                return (
+                  <div className="m-2" key={idx}>
+                    <Nft key={idx} contract_address={contract_address} token_id={token_id}>
+                      <img key={idx} src={url} alt={`${name} - ${description}`} className={style} />
+                    </Nft>
+                  </div>
+                );
+              }
+              if (isVideo(url)) {
+                return (
+                  <div className="m-2" key={idx}>
+                    <Nft key={idx} contract_address={contract_address} token_id={token_id}>
+                      <video key={idx} controls src={url} autoPlay loop className={style} />
+                    </Nft>
+                  </div>
+                );
+              }
+              console.log(`Unknown media type: ${url}`);
+              return (
+                <div className="m-2" key={idx}>
+                  <Nft contract_address={contract_address} token_id={token_id}>
+                    <MediaComponent mediaUrl={url} />
+                  </Nft>
+                </div>
+              );
+            })}
           </React.Fragment>
         ))}
       </div>
