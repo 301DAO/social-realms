@@ -27,6 +27,8 @@ const navigation = [
   },
 ];
 
+// TODO: This needs more work. Too many hacky things.
+
 export const Header = () => {
   const { authenticated, error, user, status, isError } = useUser({});
   const [{ data: ens }] = useEnsLookup({ address: user?.publicAddress, skip: !user });
@@ -72,18 +74,19 @@ export const Header = () => {
                 )}>
                 <SearchBar />
               </div>
-
-              <div className="flex lg:hidden">
-                {/* Mobile menu button */}
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-700 p-2 text-gray-200 hover:bg-gray-500 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <MenuIcon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
-              </div>
+              {authenticated && (
+                <div className="flex lg:hidden">
+                  {/* Mobile menu button */}
+                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-gray-700 p-2 text-gray-200 hover:bg-gray-500 hover:bg-opacity-75 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
+                    <span className="sr-only">Open main menu</span>
+                    {open ? (
+                      <XIcon className="block h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <MenuIcon className="block h-6 w-6" aria-hidden="true" />
+                    )}
+                  </Disclosure.Button>
+                </div>
+              )}
               <div className="hidden lg:ml-4 lg:block">
                 <div className="flex items-center">
                   {/* Profile dropdown */}
@@ -123,40 +126,42 @@ export const Header = () => {
             </div>
           </div>
 
-          <Disclosure.Panel className="lg:hidden">
-            <div className="space-y-1 px-2 pt-2 pb-3">
-              {navigation.map(item => (
-                <Link shallow={true} key={item.name} href={item.href} passHref>
-                  <Disclosure.Button
-                    as="a"
-                    className="block rounded-md py-2 px-3 text-base font-medium">
-                    {item.name}
-                  </Disclosure.Button>
-                </Link>
-              ))}
-            </div>
-            <div className="border-t pt-4 pb-3">
-              <div className="flex items-center px-5">
-                <div className="flex-shrink-0">
-                  <Link href="/profile" passHref prefetch>
-                    <img
-                      className="h-10 w-10 rounded-sm"
-                      src={avatar ?? '/images/placeholder.png'}
-                      alt=""
-                    />
+          {authenticated && (
+            <Disclosure.Panel className="lg:hidden">
+              <div className="space-y-1 px-2 pt-2 pb-3">
+                {navigation.map(item => (
+                  <Link shallow={true} key={item.name} href={item.href} passHref>
+                    <Disclosure.Button
+                      as="a"
+                      className="block rounded-md py-2 px-3 text-base font-medium">
+                      {item.name}
+                    </Disclosure.Button>
                   </Link>
-                </div>
-
-                <div className="ml-auto">
-                  <div className="text-base font-medium text-white">{ens}</div>
-                  <div className="w-[200px] truncate text-sm font-medium text-gray-300">
-                    {user?.publicAddress}
-                  </div>
-                </div>
-                <p className="ml-auto pl-8"></p>
+                ))}
               </div>
-            </div>
-          </Disclosure.Panel>
+              <div className="border-t pt-4 pb-3">
+                <div className="flex items-center px-5">
+                  <div className="flex-shrink-0">
+                    <Link href="/profile" passHref prefetch>
+                      <img
+                        className="h-10 w-10 rounded-sm"
+                        src={avatar ?? '/images/placeholder.png'}
+                        alt=""
+                      />
+                    </Link>
+                  </div>
+
+                  <div className="ml-auto">
+                    <div className="text-base font-medium text-white">{ens}</div>
+                    <div className="w-[200px] truncate text-sm font-medium text-gray-300">
+                      {user?.publicAddress}
+                    </div>
+                  </div>
+                  <p className="ml-auto pl-8"></p>
+                </div>
+              </div>
+            </Disclosure.Panel>
+          )}
         </>
       )}
     </Disclosure>

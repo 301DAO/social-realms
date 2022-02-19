@@ -1,5 +1,4 @@
 import { utils } from 'ethers';
-import { defaultProvider } from '@/wallet';
 
 const ETHEREUM_CHAIN_ID = '0x1';
 
@@ -30,6 +29,8 @@ export const switchNetwork = async (chainId: string) => {
   }
   return false;
 };
+
+
 
 export const switchOnChainChange = async ({
   switchToChainId,
@@ -86,38 +87,6 @@ export const checksumAddress = (address: string) => {
     return false;
   }
 };
-
-/**
- * by default it switches to Ethereum. Update parameters for bsc or add more chainIds and rpcUrls for other networks.
- * chainid has to be a hex string
- */
-
-// const addEthereumChain = async () => {
-//   if (typeof window.ethereum === 'undefined') return;
-//   return await window.ethereum.request({
-//     method: 'wallet_addEthereumChain',
-//     params: [
-//       {
-//         chainId: networks.ethereum.chainId,
-//         //@ts-ignore
-//         rpcUrl: networks.ethereum.rpcUrl,
-//       },
-//     ],
-//   });
-// };
-
-// export const switchNetwork = async () => {
-//   if (typeof window.ethereum === 'undefined') return;
-//   try {
-//     await window?.ethereum?.request({
-//       method: 'wallet_switchEthereumChain',
-//       params: [{ chainId: networks.ethereum.chainId }],
-//     });
-//   } catch (error) {
-//     if ((error as any).code !== 4902) return;
-//     await addEthereumChain();
-//   }
-// };
 
 export const signMetamaskMessage = async (message: string) => {
   if (typeof window.ethereum === 'undefined') return;

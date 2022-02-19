@@ -2,12 +2,14 @@
 import Head from 'next/head';
 import * as React from 'react';
 import type { AppProps } from 'next/app';
-import { useSwitchToEthereum } from '@/hooks';
-import { Layout } from '@/components/layouts';
+
 import '@/styles/globals.css';
+import { Layout } from '@/components/layouts';
 import { ReactQueryProvider, Web3Provider } from '@/providers';
+import { useSwitchToEthereum, useDetectAccountChange } from '@/hooks';
 
 const App = ({ Component, pageProps }: AppProps) => {
+  useDetectAccountChange();
   useSwitchToEthereum();
 
   return (

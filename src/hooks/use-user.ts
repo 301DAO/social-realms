@@ -9,8 +9,9 @@ type userHookRedirects = {
   redirectIfFound?: boolean;
 };
 
-export function useUser({ redirectTo, redirectIfFound }: userHookRedirects = {}) {
+export const useUser = ({ redirectTo, redirectIfFound }: userHookRedirects = {}) => {
   const isMounted = useIsMounted();
+  // TODO: don't call this until wallet is connected
   const {
     data,
     error,
@@ -24,12 +25,12 @@ export function useUser({ redirectTo, redirectIfFound }: userHookRedirects = {})
     status,
   } = useQuery(['user'], fetchUser, {
     retry: 0,
+
     enabled: isMounted,
   });
 
   const authenticated = data?.authenticated ?? false;
   const user = data?.user;
-  const hasUser = Boolean(user);
 
   React.useEffect(() => {
     if (!redirectTo || !isFetched) return;
@@ -49,4 +50,4 @@ export function useUser({ redirectTo, redirectIfFound }: userHookRedirects = {})
     isSuccess,
     isError,
   };
-}
+};
