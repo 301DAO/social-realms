@@ -1,16 +1,13 @@
 import type { NextPage } from 'next';
 import * as React from 'react';
 import { useUser } from '@/hooks';
-import { FullPageLoadingSpinner } from '@/components';
 import clsx from 'clsx';
 
 const Index: NextPage = () => {
-  const { status, user } = useUser({ redirectTo: '/login' });
-
-  if (status !== 'success' || !user) return <FullPageLoadingSpinner />;
+  useUser({ redirectTo: '/login' });
 
   return (
-    <main className="mt-40 flex flex-col items-center px-4 text-center align-middle">
+    <main className="flex flex-col items-center px-4 mt-40 text-center align-middle">
       <p
         className={clsx(
           `text-7xl sm:text-8xl md:text-9xl`,
@@ -18,7 +15,7 @@ const Index: NextPage = () => {
         )}>
         Social Realms.
       </p>
-      <section className="mt-10 flex w-8/12 max-w-xs flex-col items-center gap-y-8 px-9 text-center"></section>
+      <section className="flex flex-col items-center w-8/12 max-w-xs mt-10 text-center gap-y-8 px-9"></section>
     </main>
   );
 };

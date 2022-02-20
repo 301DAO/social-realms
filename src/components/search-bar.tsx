@@ -4,52 +4,82 @@ import { useRouter } from 'next/router';
 import { utils } from 'ethers';
 import clsx from 'clsx';
 
-import { SearchIcon } from '@/components/icons';
-import { useUser } from '@/hooks';
 import { TIME } from '@/constants';
+import { SearchIcon } from '@/components/icons';
+import { useInjectedProvider, useUser } from '@/hooks';
+import { passEnsRegex, parseUnitByDecimal, passAddressRegex } from '@/utils';
 
-import { wagmiProvider } from '@/wallet';
+import { useProvider } from 'wagmi';
 
-const toastEm = (text = 'invalid input') => {
-  return toast(text, {
-    position: 'top-center',
-    style: {
-      background: '#db7a7f',
-      color: '#ffffff',
-    },
+const InvalidEnsToast = () => (
+  <p className="w-full leading-normal text-md">
+    Unable to verify ENS name.{'\n'}Check here:{' '}
+    <a href="https://app.ens.domains/" className="underline hover:font-bold">
+      app.ens.domains
+    </a>
+  </p>
+);
+
+const InvalidAddressToast = () => (
+  <p>
+    Invalid address{'\n'}
+    <a
+      target="_blank"
+      href="https://metamask.zendesk.com/hc/en-us/articles/360015289512"
+      rel="noreferrer"
+      className="underline">
+      Where can I find my address?
+    </a>
+  </p>
+);
+
+const toastEm = ({ content = 'Invalid input' }: { content: string | JSX.Element }) => {
+  return toast.error(content, {
+    position: 'top-right',
+    style: {},
     duration: TIME.SECOND * 2,
   });
 };
 
 export const SearchBar = () => {
   const router = useRouter();
-  const { authenticated } = useUser();
+  const { authenticated, status } = useUser();
 
-  const provider = wagmiProvider();
+  const provider = useInjectedProvider();
 
   const searchText = React.useRef<HTMLInputElement>(null);
 
-  const directToRoute = (input: string) =>
-    authenticated ? router.push(`/user/${input}`) : router.push(`/nfts/${input}`);
-
   const onEnter = React.useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter') return;
+    if (event.key !== 'Enter' || status !== 'success') return;
     event.preventDefault();
     const search = searchText?.current?.value.trim().toLowerCase();
 
     if (!search) return;
 
+    const directToRoute = (input: string) =>
+      authenticated
+        ? router.push(`/user/${input}`, undefined, { shallow: true })
+        : router.push(`/nfts/${input}`, undefined, { shallow: true });
+
     if (search.startsWith('0x')) {
-      return utils.isAddress(search) ? directToRoute(search) : toastEm('Invalid Ethereum address');
+      if (!passAddressRegex(search)) {
+        return toastEm({ content: <InvalidAddressToast /> });
+      }
+      return utils.isAddress(search)
+        ? directToRoute(search)
+        : toastEm({ content: <InvalidAddressToast /> });
     }
 
     if (search.endsWith('.eth')) {
+      if (!passEnsRegex(search)) return toastEm({ content: <InvalidEnsToast /> });
       return provider?.resolveName(search).then(address => {
-        utils.isAddress(address!) ? directToRoute(address!) : toastEm('Invalid ENS name');
+        utils.isAddress(address!)
+          ? directToRoute(address!)
+          : toastEm({ content: <InvalidEnsToast /> });
       });
     }
 
-    return toastEm('Invalid Ethereum address / ENS name');
+    return toastEm({ content: 'Invalid Ethereum address / ENS name' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -58,15 +88,15 @@ export const SearchBar = () => {
       <label htmlFor="search" className="sr-only">
         Search
       </label>
-      <div className="relative text-gray-400 focus-within:text-gray-600">
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+      <div className="relative text-gray-300 focus-within:text-gray-600">
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <SearchIcon />
         </div>
         <input
           ref={searchText}
           onKeyPress={onEnter}
           id="search"
-          className="text-md block w-full rounded-md border border-transparent bg-white py-2 pl-10 pr-3 leading-5 text-gray-900 placeholder-gray-500 focus:border-white focus:outline-none focus:ring-offset-2"
+          className="block h-12 w-full rounded-md border border-transparent bg-[#212330] py-2 pl-10 pr-3 text-lg leading-5 tracking-wider text-gray-200 placeholder-gray-500 placeholder:text-[#b9bbc2] focus:border-[#373b50] focus:placeholder-transparent focus:outline-none focus:ring-transparent focus:ring-offset-[0.3px]"
           placeholder="Quick ENS / Address Search"
           type="search"
           name="search"

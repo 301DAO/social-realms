@@ -15,6 +15,7 @@ export default class Doc extends Document<DocumentProps> {
     return { ...initialProps };
   }
 
+  // TODO: add metatags, twitter stuff, etc.
   render(): React.ReactElement {
     return (
       <Html lang="en">

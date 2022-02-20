@@ -4,15 +4,25 @@
     "prettier",
     "next/core-web-vitals",
     "plugin:react/recommended",
-    "plugin:@next/next/recommended"
+    "plugin:jsx-a11y/recommended",
+    "plugin:@next/next/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "rules": {
     "@next/next/no-img-element": "off",
-    "@next/next/no-title-in-document-head": "off"
-  },
-  "env": {
-    "es6": true,
-    "node": true,
-    "browser": true
+    "@next/next/no-title-in-document-head": "off",
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["hrefLeft", "hrefRight"],
+        "aspects": ["invalidHref", "preferButton"]
+      }
+    ]
   }
+  // "env": {
+  //   "es6": true,
+  //   "node": true,
+  //   "browser": true
+  // }
 }

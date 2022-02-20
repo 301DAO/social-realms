@@ -52,7 +52,11 @@ export const Gallery = ({ nfts }: { nfts: NFT[] }) => {
             if (isVideo(url)) {
               return (
                 <Nft key={idx} contract_address={contract_address} token_id={token_id}>
-                  <video key={idx} controls src={url} autoPlay loop className={style} />
+                  <video key={idx} controls src={url} autoPlay loop className={style}>
+                    <track kind="captions" srcLang="en">
+                      Your browser doesn{"'"}t support embedded videos :\
+                    </track>
+                  </video>
                 </Nft>
               );
             }

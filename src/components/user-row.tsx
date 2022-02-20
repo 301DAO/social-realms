@@ -12,7 +12,7 @@ export const Row = ({ address }: { address: string }) => {
           <img
             className="h-8 w-8 rounded-full"
             src={image ?? `/images/placeholder.png`}
-            alt="Neil image"
+            alt="User avatar"
           />
         </div>
         <div className="flex-shrink-0">

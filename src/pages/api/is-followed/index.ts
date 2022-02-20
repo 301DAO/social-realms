@@ -1,4 +1,4 @@
-import { isValidEthAddress } from '@/utils';
+import { passAddressRegex } from '@/utils';
 import { prisma } from '@/lib/clients';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { utils } from 'ethers';
@@ -12,8 +12,8 @@ export default async function isUserFollowedHandler(req: NextApiRequest, res: Ne
     if (
       !followeeAddress ||
       !followerAddress ||
-      !isValidEthAddress(followeeAddress as string) ||
-      !isValidEthAddress(followerAddress as string)
+      !passAddressRegex(followeeAddress as string) ||
+      !passAddressRegex(followerAddress as string)
     ) {
       return res.status(400).json({ success: false, message: 'valid address is required' });
     }

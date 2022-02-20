@@ -137,11 +137,11 @@ const Signin: NextPage = () => {
     state.status === status.ERROR ? `${state.errorMessage}` : 'Login to access all features';
 
   return (
-    <main className="mx-auto mt-8 flex w-full max-w-2xl flex-col items-center justify-center gap-x-8 space-y-10 md:mt-48">
+    <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto mt-8 space-y-10 gap-x-8 md:mt-48">
       <div>
-        <p className="mx-10 text-3xl font-bold">{text}</p>
+        <p className="mx-10 text-[1.65rem] font-bold">{text}</p>
       </div>
-      <section className="w-full max-w-sm rounded-lg bg-transparent p-4 sm:p-6 lg:p-4">
+      <section className="w-full max-w-sm p-4 bg-transparent rounded-lg sm:p-6 lg:p-4">
         <SignInWithEthereum
           onButtonClick={toggleModal}
           disabled={authenticated}
@@ -174,7 +174,7 @@ const Web3ConnectButton = ({
     <button
       disabled={!connector.ready}
       key={connector.name}
-      className="flex w-full flex-col items-center justify-end gap-y-2 pt-3 pb-4 text-xl font-normal tracking-wide antialiased hover:cursor-pointer hover:bg-[rgb(31,32,53)] hover:text-white focus:outline-none"
+      className="flex w-full flex-col items-center justify-end gap-y-2 pt-3 pb-4 font-normal tracking-wide antialiased hover:cursor-pointer hover:bg-[rgb(31,32,53)] hover:text-white focus:outline-none md:text-xl"
       onClick={async () => await onButtonClick(connector)}>
       <WalletIcon name={connector.name} />
       {['metamask', 'injected'].includes(connector.name) ? 'MetaMask' : connector.name}

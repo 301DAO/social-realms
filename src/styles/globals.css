@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
 /**
 * CSS variables have to be defined in the global css file.
 * define your variables here then use them anywhere in the project.
@@ -28,8 +33,4 @@ body::-webkit-scrollbar {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
 }

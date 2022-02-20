@@ -1,4 +1,4 @@
-import { isValidEthAddress } from '@/utils';
+import { passAddressRegex } from '@/utils';
 import { prisma } from '@/lib/clients';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { utils } from 'ethers';
@@ -9,7 +9,7 @@ export default async function followingsHandler(req: NextApiRequest, res: NextAp
 
   try {
     const { address } = req.query;
-    if (!address || !isValidEthAddress(address as string)) {
+    if (!address || !passAddressRegex(address as string)) {
       return res.status(400).json({ success: false, message: 'valid address is required' });
     }
 

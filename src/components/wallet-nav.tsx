@@ -23,11 +23,11 @@ const WalletNav = () => {
       return shortened;
     }
     return '';
-  }, [address]);
+  }, [accountData, address]);
 
   React.useEffect(() => {
     if (isMounted && address) setButtonText(shortAddress);
-  }, [address, isMounted]);
+  }, [address, isMounted, shortAddress]);
 
   const copyToClipboard = React.useCallback(async () => {
     if (!address) return;
@@ -36,7 +36,7 @@ const WalletNav = () => {
     setTimeout(() => {
       setButtonText(shortAddress);
     }, 300);
-  }, [address, isMounted, shortAddress]);
+  }, [address, shortAddress]);
 
   const connectWallet = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();

@@ -1,15 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import type { NextPage } from 'next';
-import dynamic from 'next/dynamic';
+
 import { useEnsLookup, useEnsAvatar } from 'wagmi';
 
-import {
-  useFavorites,
-  useFollowers,
-  useFollowings,
-  useUser,
-} from '@/hooks';
+import { useFavorites, useFollowers, useFollowings, useUser } from '@/hooks';
 import { ProfileRow, Avatar } from '@/components/profile';
 
 type TAB = 'FOLLOWING' | 'FOLLOWERS' | 'FAVORITES';
@@ -153,7 +148,7 @@ const Profile: NextPage = () => {
             />
           </li>
         </ul>
-        <ul role="list" className="divide-y divide-gray-200 px-4 py-3 dark:divide-gray-700 md:px-6">
+        <ul className="px-4 py-3 divide-y divide-gray-200 dark:divide-gray-700 md:px-6">
           {tab['FOLLOWERS'] &&
             followers.map((address, idx) => (
               <li className="w-full py-3 sm:py-4" key={idx}>
@@ -191,4 +186,4 @@ const Profile: NextPage = () => {
   );
 };
 
-export default dynamic
+export default Profile;

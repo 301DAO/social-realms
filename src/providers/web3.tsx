@@ -15,8 +15,7 @@ export const WagmiProvider = ({ children }: { children: React.ReactNode }) => {
       connectors={connectors}
       provider={wagmiProvider}
       webSocketProvider={wagmiWebSocketProvider}
-      connectorStorageKey=""
-      >
+      connectorStorageKey={`${Date.now()}`}>
       {children}
     </Provider>
   );

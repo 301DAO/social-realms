@@ -10,7 +10,7 @@ export const useJsonRpcProvider = () =>
 export const useWssJsonRpcProvider = () =>
   new providers.InfuraWebSocketProvider(undefined, process.env.NEXT_PUBLIC_ALCHEMY_KEY);
 
-export const useSigningProvider = () =>
+export const useInjectedProvider = () =>
   hasMetaMask
     ? new providers.Web3Provider(window.ethereum as any)
     : new providers.JsonRpcProvider(process.env.NEXT_PUBLIC_ALCHEMY);

@@ -3,7 +3,7 @@ import * as React from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 
-const FourOFour: NextPage = () => {
+const NotFound: NextPage = () => {
   return (
     <div>
       <Head>
@@ -93,4 +93,4 @@ const FourOFour: NextPage = () => {
   );
 };
 
-export default FourOFour;
+export default NotFound;

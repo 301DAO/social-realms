@@ -24,7 +24,13 @@ export const MediaComponent = ({ mediaUrl }: { mediaUrl: string }) => {
   }
 
   if (isVideo(mediaUrl) || (!!mediaType && isVideoContentType(mediaType)))
-    return <video controls src={mediaUrl} autoPlay loop className={style} />;
+    return (
+      <video controls src={mediaUrl} autoPlay loop className={style}>
+        <track kind="captions" srcLang="en">
+          Your browser doesn{"'"}t support embedded videos :\
+        </track>
+      </video>
+    );
 
   return null;
 };

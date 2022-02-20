@@ -1,13 +1,14 @@
-//import '../../scripts/wdyr';
 import Head from 'next/head';
 import * as React from 'react';
-import dynamic from 'next/dynamic';
 import type { AppProps } from 'next/app';
 
 import '@/styles/globals.css';
 import { Layout } from '@/components/layouts';
 import { ReactQueryProvider, WagmiProvider } from '@/providers';
 import { useSwitchToEthereum, useDetectAccountChange } from '@/hooks';
+
+// uncomment this import in dev if you want to know 'why did you render'
+//import '../../scripts/wdyr';
 
 const App = ({ Component, pageProps }: AppProps) => {
   useDetectAccountChange();

@@ -1,4 +1,4 @@
-import { isValidEthAddress } from '@/utils';
+import { passAddressRegex } from '@/utils';
 import { prisma } from '@/lib/clients';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { utils } from 'ethers';
@@ -10,7 +10,7 @@ export default async function followersHandler(req: NextApiRequest, res: NextApi
   try {
     const { address } = req.query;
 
-    if (!address || !isValidEthAddress(address as string)) {
+    if (!address || !passAddressRegex(address as string)) {
       return res.status(400).json({ success: false, message: 'valid address is required' });
     }
     const followers = await prisma.follower.findMany({
@@ -20,7 +20,7 @@ export default async function followersHandler(req: NextApiRequest, res: NextApi
       select: { followerAddress: true },
     });
     const addresses = followers.map(_ => _.followerAddress);
-    
+
     return res.status(200).json({ success: true, addresses });
   } catch (error) {
     console.error(

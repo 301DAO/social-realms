@@ -1,6 +1,6 @@
 import * as React from 'react';
 import axios from 'axios';
-import { useSigningProvider } from '@/hooks';
+import { useInjectedProvider } from '@/hooks';
 
 declare const window: any;
 
@@ -11,7 +11,7 @@ const logout = async () =>
     .catch(_ => console.log(_));
 
 export const useDetectAccountChange = () => {
-  const provider = useSigningProvider();
+  const provider = useInjectedProvider();
 
   return React.useEffect(() => {
     if (typeof window.ethereum?.on === 'undefined') return;

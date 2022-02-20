@@ -17,7 +17,6 @@ export const ProfileRow = ({
   userAddress: string;
   type: 'FOLLOWER' | 'FOLLOWING';
 }) => {
-  
   const [, setLoading] = React.useState(false);
 
   const [{ data: name }] = useEnsLookup({ address: userAddress });
@@ -64,11 +63,11 @@ export const ProfileRow = ({
   };
 
   return (
-    <div className="flex w-full items-center justify-between space-x-4 md:space-x-8">
+    <div className="flex items-center justify-between w-full space-x-4 md:space-x-8">
       <img
-        className="h-8 w-8 rounded-full"
+        className="w-8 h-8 rounded-full"
         src={image ?? `/images/placeholder.png`}
-        alt="ens image"
+        alt="ens avatar"
       />
 
       <div className="mr-auto">
@@ -85,7 +84,7 @@ export const ProfileRow = ({
       </div>
       <div className="hidden md:w-full"></div>
 
-      <p className="mr-auto truncate text-sm font-medium text-gray-900 dark:text-white md:whitespace-normal md:text-lg">
+      <p className="mr-auto text-sm font-medium text-gray-900 truncate dark:text-white md:whitespace-normal md:text-lg">
         {utils.getAddress(userAddress)}
       </p>
       <div className="hidden md:w-full"></div>
@@ -95,10 +94,10 @@ export const ProfileRow = ({
       <div className="ml-auto">
         <button
           onClick={followUser}
-          className="ml-auto flex items-center rounded-lg px-0 text-sm font-medium uppercase text-blue-700 hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700 sm:text-sm md:px-2 md:text-lg">
+          className="flex items-center px-0 ml-auto text-sm font-medium text-blue-700 uppercase rounded-lg hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700 sm:text-sm md:px-2 md:text-lg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 md:h-6 md:w-6"
+            className="w-5 h-5 md:h-6 md:w-6"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor">

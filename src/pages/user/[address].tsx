@@ -56,7 +56,6 @@ const User: NextPage = () => {
   const [image] = useEnsImage(name as string);
   const [{ data: balance }] = useBalance({ addressOrName: userAddress as string });
 
-
   const [followers, followersCount] = useFollowers({ address: userAddress as string });
   const [followings, followingCount] = useFollowings({ address: userAddress as string });
 
@@ -98,7 +97,7 @@ const User: NextPage = () => {
         await queryClient.invalidateQueries(['is-followed', userAddress]);
         setLoading(false);
       },
-      onSettled: async () => setLoading(false)
+      onSettled: async () => setLoading(false),
     }
   );
 
@@ -144,17 +143,19 @@ const User: NextPage = () => {
             />
             <ul className="scale-85 mt-3 flex w-full max-w-[420px] flex-col justify-center space-y-2">
               <li className="flex justify-between font-bold dark:text-white">
-                <a onClick={() => copy(`${name}`)} className="hover:cursor-pointer hover:underline">
+                <button
+                  onClick={() => copy(`${name}`)}
+                  className="hover:cursor-pointer hover:underline">
                   {name}
-                </a>
+                </button>
                 <span>{balance && `${balance.formatted.slice(0, 4)}Ξ`}</span>
               </li>
               <li className="truncate text-gray-500 dark:text-gray-400">
-                <a
+                <button
                   onClick={() => copy(`${userAddress}`)}
                   className="hover:cursor-pointer hover:underline">
                   {userAddress}
-                </a>
+                </button>
               </li>
               <li className="w-full pt-1">
                 <button
@@ -208,7 +209,7 @@ const User: NextPage = () => {
                 </button>
               </li>
             </ul>
-            <ul role="list" className="divide-y divide-gray-200 p-5 px-6 dark:divide-gray-700">
+            <ul className="divide-y divide-gray-200 p-5 px-6 dark:divide-gray-700">
               {tab['FOLLOWERS'] &&
                 followers.map((address, idx) => (
                   <li className="py-3 hover:cursor-pointer sm:py-4" key={idx}>

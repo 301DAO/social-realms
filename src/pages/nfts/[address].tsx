@@ -1,17 +1,19 @@
 import * as React from 'react';
-import type { NextPage, GetServerSidePropsContext } from 'next';
+import { utils } from 'ethers';
+import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useIntersectionObserver, useQueryENS, useCopyToClipboard } from '@/hooks';
-import { retrieveNftsByAddress } from '@/lib/wrappers';
 import { useInfiniteQuery } from 'react-query';
-import styles from '@/styles/gallery.module.css';
+import { useEnsResolveName, useEnsLookup } from 'wagmi';
 import { NFT } from '@/types';
+import { Nft } from '@/components/layouts';
 import { MediaComponent } from '@/components';
 import { CopyIcon } from '@/components/icons';
-import { isImage, valueExists, isVideo, range } from '@/utils';
+import styles from '@/styles/gallery.module.css';
+import { retrieveNftsByAddress } from '@/lib/wrappers';
+import { useIntersectionObserver, useCopyToClipboard } from '@/hooks';
+import { isImage, valueExists, isVideo, passEnsRegex, passAddressRegex } from '@/utils';
 
-import { Nft } from '@/components/layouts';
 const LoadMoreButton = dynamic(() => import('@/components/load-more-button'));
 
 const CopyButton = ({ buttonText }: { buttonText: string }) => {
@@ -43,13 +45,24 @@ const CopyButton = ({ buttonText }: { buttonText: string }) => {
 
 const Nfts: NextPage = () => {
   const router = useRouter();
-  const { address: param } = router.query;
+  const { address: _param } = router.query;
+  const param = _param as string;
+  console.log('param', param);
 
-  const [address] = useQueryENS({
+  const [{ data: _name }] = useEnsLookup({
     address: param as string,
-    name: param as string,
-    enabled: !!param,
+    // if param is not an address, it means it's an ens, so skip fetch
+    skip: !utils.isAddress(param),
   });
+
+  const name = param && param.endsWith('.eth') ? param : Boolean(_name) ? _name : '';
+
+  const [{ data: _address }] = useEnsResolveName({
+    name: param,
+    skip: !passEnsRegex(param) || passAddressRegex(param),
+  });
+
+  const address = param && ((param.startsWith('0x') ? param : _address) as string);
 
   const [continuationToken, setContinuationToken] = React.useState('');
   const {
@@ -62,7 +75,7 @@ const Nfts: NextPage = () => {
     ['infiniteQueryResponse', param],
     async () => {
       const { continuation, nfts } = await retrieveNftsByAddress({
-        address: address as string,
+        address: address,
         continuationToken,
       });
       setContinuationToken(continuation);
@@ -87,9 +100,10 @@ const Nfts: NextPage = () => {
     return fetchNextPage({ pageParam: continuationToken });
   }, [fetchNextPage, continuationToken]);
 
+  console.log(JSON.stringify({ address, name }, null, 2));
   return (
-    <main className="mt-4 flex min-h-screen flex-grow flex-col items-center justify-start px-0 pb-8">
-      <p className="mb-4 text-3xl font-black dark:text-white">{param}</p>
+    <main className="flex flex-col items-center justify-start flex-grow min-h-screen px-0 pb-8 mt-4">
+      <p className="mb-4 text-3xl font-black dark:text-white">{name ?? address}</p>
 
       {!!infiniteQueryResponse && <CopyButton buttonText="Copy profile link" />}
 
@@ -115,7 +129,11 @@ const Nfts: NextPage = () => {
                 return (
                   <div className="m-2" key={idx}>
                     <Nft key={idx} contract_address={contract_address} token_id={token_id}>
-                      <video key={idx} controls src={url} autoPlay loop className={style} />
+                      <video key={idx} controls src={url} autoPlay loop className={style}>
+                        <track kind="captions" srcLang="en">
+                          Your browser doesn{"'"}t support embedded videos :\
+                        </track>
+                      </video>
                     </Nft>
                   </div>
                 );

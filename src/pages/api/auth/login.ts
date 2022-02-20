@@ -29,7 +29,7 @@ export default async function loginHandlerHandler(req: NextApiRequest, res: Next
     return res.status(200).json({ success: true, message: null, user });
   } catch (error) {
     console.error(
-      'Error occured in /api/authlogin.ts: ',
+      'Error occured in /api/auth/login.ts: ',
       error instanceof Error ? error.message : error
     );
   }
