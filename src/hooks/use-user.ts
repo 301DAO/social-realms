@@ -1,36 +1,30 @@
-import { useIsMounted } from '@/hooks';
 import * as React from 'react';
-import { useQuery } from 'react-query';
 import Router from 'next/router';
+import { useQuery } from 'react-query';
+import { useIsMounted } from '@/hooks';
 import { fetchUser } from '@/lib/auth';
 
-type userHookRedirects = {
+type UserHookRedirects = {
   redirectTo?: string;
   redirectIfFound?: boolean;
 };
 
-export const useUser = ({ redirectTo, redirectIfFound }: userHookRedirects = {}) => {
+type Status = 'loading' | 'success';
+
+export const useUser = ({ redirectTo, redirectIfFound }: UserHookRedirects = {}) => {
   const isMounted = useIsMounted();
-  // TODO: don't call this until wallet is connected
-  const {
-    data,
-    error,
-    isIdle,
-    isFetched,
-    isError,
-    isLoading,
-    isStale,
-    isSuccess,
-    isFetching,
-    status,
-  } = useQuery(['user'], fetchUser, {
-    retry: 0,
 
-    enabled: isMounted,
-  });
+  // TODO: only fetch when wallet is connected
+  const { data, error, isIdle, isFetched, isError, isLoading, isStale, isSuccess, isFetching } =
+    useQuery(['user'], fetchUser, {
+      retry: 0,
 
-  const authenticated = data?.authenticated ?? false;
+      enabled: isMounted,
+    });
+
   const user = data?.user;
+  const authenticated = data?.authenticated ?? false;
+  const status: Status = typeof data?.authenticated === 'boolean' ? 'success' : 'loading';
 
   React.useEffect(() => {
     if (!redirectTo || !isFetched) return;

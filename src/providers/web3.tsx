@@ -5,6 +5,7 @@ import { FullPageLoadingSpinner } from '@/components';
 import { connectors, wagmiWebSocketProvider, wagmiProvider } from '@/wallet';
 
 export const WagmiProvider = ({ children }: { children: React.ReactNode }) => {
+
   const { authenticated, status } = useUser();
 
   if (status !== 'success') return <FullPageLoadingSpinner />;

@@ -17,7 +17,7 @@ const InvalidInput: NextPage = () => {
   return (
     <main className="mt-20">
       <section>
-        <p className="text-2xl ">{value} is not valid</p>
+        <p className="text-2xl">{value} is not a valid ENS name / Ethereum address</p>
       </section>
     </main>
   );

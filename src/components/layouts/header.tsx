@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { Disclosure, Menu } from '@headlessui/react';
-import { useEnsLookup, useEnsAvatar } from 'wagmi';
+import { useEnsLookup, useEnsAvatar, useAccount } from 'wagmi';
 
 import { useUser } from '@/hooks';
 import { SearchBar } from '@/components';
@@ -26,14 +26,15 @@ const navigation = [
   },
 ];
 
-// TODO: This needs more work. Too many hacky things.
-
 export const Header = () => {
-  const { authenticated, error, user, status, isError } = useUser({});
+  const { authenticated, error, user, status } = useUser();
+
+  const [, disconnect] = useAccount();
   const [{ data: ens }] = useEnsLookup({ address: user?.publicAddress, skip: !user });
   const [{ data: avatar }] = useEnsAvatar({ addressOrName: ens, skip: !authenticated || !ens });
 
   if (status !== 'success') return <></>;
+
   return (
     <Disclosure
       as="nav"
@@ -184,7 +185,9 @@ export const Header = () => {
                   <p className="pl-8 ml-auto"></p>
 
                   <Link href="/api/auth/logout" passHref>
-                    <button className="text-sm text-white rounded-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
+                    <button
+                      onClick={disconnect}
+                      className="text-sm text-white rounded-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600">
                       <span className="sr-only">Open user menu</span>
                       <LogoutIcon />
                     </button>

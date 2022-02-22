@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export const FullPageLoadingSpinner = () => (
-  <div className="flex justify-center md:mt-0 md:items-center md:pt-[100px]">
+  <div className="flex items-center justify-center min-w-full min-h-screen">
     <style jsx>
       {`
         /* KEYFRAMES */

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import { useInjectedProvider } from '@/hooks';
-
-declare const window: any;
+import { valueExists } from '@/utils';
 
 const logout = async () =>
   axios
@@ -16,13 +15,16 @@ export const useDetectAccountChange = () => {
   return React.useEffect(() => {
     if (typeof window.ethereum?.on === 'undefined') return;
 
-    const getOldAddress = provider.getSigner().getAddress();
-
-    window.ethereum.on('accountsChanged', (accounts: string[]) => {
+    return window.ethereum.on('accountsChanged', async (accounts: string[]) => {
       const [newAddress] = accounts;
-      getOldAddress.then(oldAddress =>
-        Number(oldAddress) !== Number(newAddress) ? logout() : null
-      );
+      return provider
+        .getSigner()
+        .getAddress()
+        .then(oldAddress => {
+          if (!valueExists(oldAddress) || !valueExists(newAddress)) return;
+          return Number(oldAddress) !== Number(newAddress) ? logout() : null;
+        })
+        .catch(_ => console.log(_));
     });
   }, [provider]);
 };

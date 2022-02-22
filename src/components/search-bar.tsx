@@ -7,9 +7,7 @@ import clsx from 'clsx';
 import { TIME } from '@/constants';
 import { SearchIcon } from '@/components/icons';
 import { useInjectedProvider, useUser } from '@/hooks';
-import { passEnsRegex, parseUnitByDecimal, passAddressRegex } from '@/utils';
-
-import { useProvider } from 'wagmi';
+import { passEnsRegex, passAddressRegex } from '@/utils';
 
 const InvalidEnsToast = () => (
   <p className="w-full leading-normal text-md">
@@ -74,7 +72,7 @@ export const SearchBar = () => {
       if (!passEnsRegex(search)) return toastEm({ content: <InvalidEnsToast /> });
       return provider?.resolveName(search).then(address => {
         utils.isAddress(address!)
-          ? directToRoute(address!)
+          ? directToRoute(search)
           : toastEm({ content: <InvalidEnsToast /> });
       });
     }

@@ -8,7 +8,6 @@ type Params = {
   address: string;
 };
 
-// TODO: redirect to a page that gives nice feedback to the user instead of login page
 export async function middleware(req: NextRequest) {
   const { address: _addressOrName } = req.page.params as Params;
 
@@ -25,8 +24,6 @@ export async function middleware(req: NextRequest) {
   const endsWithEth = _addressOrName?.indexOf('.eth') !== -1;
 
   if (!valExists || (!startsWith0x && !endsWithEth)) {
-    // set header to "invalid-address"
-    rewriteResponse.headers.set(`invalid-param`, _addressOrName);
     return rewriteResponse;
   }
 
@@ -46,7 +43,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  rewriteResponse.headers.set(`invalid-param`, addressOrName);
   // sike, get out
   return rewriteResponse;
 }
