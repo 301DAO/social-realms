@@ -11,6 +11,7 @@
   "rules": {
     "@next/next/no-img-element": "off",
     "@next/next/no-title-in-document-head": "off",
+    "jsx-a11y/media-has-caption": "off",
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
@@ -20,9 +21,4 @@
       }
     ]
   }
-  // "env": {
-  //   "es6": true,
-  //   "node": true,
-  //   "browser": true
-  // }
 }

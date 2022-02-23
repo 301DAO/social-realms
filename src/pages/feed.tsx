@@ -1,16 +1,15 @@
 import * as React from 'react';
 import type { NextPage } from 'next';
 import type {
-  TransactionReceipt,
-  InfuraProvider,
-  AlchemyProvider,
-  CloudflareProvider,
-  FallbackProvider,
+  TransactionResponse,
+  WebSocketProvider,
+  AlchemyWebSocketProvider,
+  InfuraWebSocketProvider,
 } from '@ethersproject/providers';
+import { useToken, useWebSocketProvider } from 'wagmi';
 import { useMutation, useQuery } from 'react-query';
 
-import { gweify } from '@/utils';
-import { wagmiProvider } from '@/wallet';
+import { gweify, valueExists } from '@/utils';
 import { favorite } from '@/lib/mutations';
 import { queryClient } from '@/lib/clients';
 import { LoadingTransaction } from '@/components';
@@ -18,8 +17,7 @@ import { getTransactionsForAddress } from '@/lib/wrappers';
 import { DownArrow, RedHeart, TransparentHeart } from '@/components/icons';
 import { useIsMounted, useFollowings, useFavorites, useUser } from '@/hooks';
 
-type Provider = InfuraProvider | AlchemyProvider | FallbackProvider | CloudflareProvider;
-
+type Provider = WebSocketProvider | AlchemyWebSocketProvider | InfuraWebSocketProvider;
 /**
  * this will get past transactions for followed addresses
  * to help populate the feed on load
@@ -42,9 +40,10 @@ const getPastTransactions = async (addresses: string[]) => {
     return {
       from: tx.from_address,
       to: tx.to_address,
-      gasUsed: tx.gas_spent,
+      effectiveGasPrice: tx.gas_quote,
       transactionHash: tx.tx_hash,
       status: tx.successful,
+      blockNumber: tx.block_height,
     };
   };
   return allTransactionsMerged.map(filter);
@@ -54,19 +53,22 @@ const getPastTransactions = async (addresses: string[]) => {
  * this will get live transactions for followed addresses using websocket
  */
 const getLiveTransactions = async (provider: Provider, addresses: string[]) => {
-  const { transactions } = await provider.getBlock('latest');
-  const receipts = transactions.map(async tx => await provider.getTransactionReceipt(tx));
-  const filter = (x: any) => addresses.includes(x.from) || !addresses.includes(x.to);
-  return await Promise.all(receipts.filter(filter).map(x => x.then(x => x)));
+  const { transactions } = await provider.getBlockWithTransactions('latest');
+  const filter = (x: TransactionResponse) => addresses.includes(x.from) || addresses.includes(x.to);
+  return transactions.filter(filter);
 };
 
 const Feed: NextPage = () => {
+  // const [{ data }, getToken] = useToken({
+  //   address: '0x54c375c481f95ba43e2cecd6ef30631f55518f57',
+  // });
+  // console.log(JSON.stringify(data, null, 2));
   const isMounted = useIsMounted();
 
   const { user } = useUser({ redirectTo: '/login' });
   const address = user?.publicAddress;
 
-  const provider = wagmiProvider();
+  const provider = useWebSocketProvider(); // wagmiProvider();
 
   const [favorites] = useFavorites({ address: address as string });
   const [followings] = useFollowings({ address: address as string });
@@ -83,15 +85,20 @@ const Feed: NextPage = () => {
     async () => await getPastTransactions(followings),
     {
       enabled: !!address,
-      refetchOnWindowFocus: false,
-      refetchInterval: 1000 * 60 * 5,
+      //refetchOnWindowFocus: false,
+      //refetchInterval: 1000 * 60 * 5,
     }
   );
 
   const { data: transactions } = useQuery(
     ['feed', address],
     async () => getLiveTransactions(provider!, followings),
-    { enabled: !!address && Boolean(provider), initialData: [] }
+    {
+      enabled: !!address, //&& valueExists(provider),
+      retry: false,
+      initialData: [],
+      onSettled: data => console.log(`data ${data}, length: ${data?.length}`),
+    }
   );
 
   // show 5 fake loading cards while waiting for data
@@ -106,29 +113,31 @@ const Feed: NextPage = () => {
       </>
     );
   }
+
+  let readyTransactions = transactions?.length ? transactions : pastTransactions;
+
   return (
-    <main className="mx-auto mt-12 flex w-full flex-col items-center justify-items-start gap-y-8 align-top text-white">
-      {transactions &&
-        transactions.length > 0 &&
-        !!transactions[0].from &&
-        transactions.map((transaction: TransactionReceipt, idx: any) => (
+    <main className="flex flex-col items-center w-full mx-auto mt-12 text-white align-top justify-items-start gap-y-8">
+      {readyTransactions &&
+        readyTransactions.length > 0 &&
+        readyTransactions.map((transaction: TransactionResponse, idx: any) => (
           <section
             key={idx}
-            className="max-w-xl rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-800">
+            className="max-w-xl p-4 text-center bg-white border border-gray-200 rounded-xl dark:border-gray-800 dark:bg-gray-800">
             <a
-              className="mt-3 block text-xl leading-snug text-black hover:underline dark:text-white"
+              className="block mt-3 text-xl leading-snug text-black hover:underline dark:text-white"
               href={`/user/${transaction.from}`}>
               {transaction.from}
             </a>
             <DownArrow />
             <a
-              className="my-2 block text-xl leading-snug text-black hover:underline dark:text-white"
+              className="block my-2 text-xl leading-snug text-black hover:underline dark:text-white"
               href={`/user/${transaction.from}`}>
               {transaction.to}
             </a>
             <div className="my-4 border border-b-0 border-gray-200 dark:border-gray-600"></div>
 
-            <div className="mt-3 flex justify-between gap-x-8 text-gray-500 dark:text-gray-400">
+            <div className="flex justify-between mt-3 text-gray-500 gap-x-4 dark:text-gray-400">
               <div className="flex items-center">
                 <button
                   onClick={() =>
@@ -144,14 +153,22 @@ const Feed: NextPage = () => {
                   )}
                 </button>
               </div>
+              {/* <div className="flex items-center">
+                <span className="rounded bg-gray-100 px-1 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                  🧱&nbsp;&nbsp;{transaction.blockNumber}
+                </span>
+              </div> */}
               <div className="flex items-center">
-                <span className="rounded bg-gray-100 px-2 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                  🧱&nbsp;&nbsp;&nbsp;{transaction.blockNumber}
+                <span className="rounded bg-gray-100 px-1 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                  🧱&nbsp;&nbsp;{transaction.blockNumber}
                 </span>
               </div>
               <div className="flex flex-row items-center">
-                <span className="rounded bg-gray-100 px-2 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                  ⛽️&nbsp;&nbsp;&nbsp;{gweify(transaction.effectiveGasPrice)}
+                <span className="rounded bg-gray-100 px-1 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                  ⛽️&nbsp;&nbsp;
+                  {`${transaction.effectiveGasPrice}`.includes('.')
+                    ? transaction.effectiveGasPrice.toFixed(2)
+                    : gweify(transaction.effectiveGasPrice)}
                 </span>
               </div>
               <div className="flex flex-row items-center">

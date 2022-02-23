@@ -8,7 +8,7 @@ export const useJsonRpcProvider = () =>
   });
 
 export const useWssJsonRpcProvider = () =>
-  new providers.InfuraWebSocketProvider(undefined, process.env.NEXT_PUBLIC_ALCHEMY_KEY);
+  new providers.AlchemyWebSocketProvider(undefined, process.env.NEXT_PUBLIC_ALCHEMY_KEY);
 
 export const useInjectedProvider = () =>
   hasMetaMask

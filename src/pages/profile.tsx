@@ -7,45 +7,19 @@ import { useEnsLookup, useEnsAvatar } from 'wagmi';
 import { useFavorites, useFollowers, useFollowings, useUser } from '@/hooks';
 import { ProfileRow, Avatar } from '@/components/profile';
 
-type TAB = 'FOLLOWING' | 'FOLLOWERS' | 'FAVORITES';
-
-const tabsReducer = (state: any, action: { type: TAB }) => {
-  switch (action.type) {
-    case 'FOLLOWING':
-      return {
-        FOLLOWING: true,
-        FOLLOWERS: false,
-        FAVORITES: false,
-      };
-    case 'FOLLOWERS':
-      return {
-        FOLLOWING: false,
-        FOLLOWERS: true,
-        FAVORITES: false,
-      };
-    case 'FAVORITES':
-      return {
-        FOLLOWING: false,
-        FOLLOWERS: false,
-        FAVORITES: true,
-      };
-    default:
-      return state;
-  }
-};
-const initialState = {
-  FOLLOWING: true,
-  FOLLOWERS: false,
-  FAVORITES: false,
-};
+enum Tab {
+  FOLLOWING,
+  FOLLOWERS,
+  FAVORITES,
+}
 
 const TabButton = ({
-  tab,
+  active,
   onClick,
   text,
   count,
 }: {
-  tab: TAB;
+  active: boolean;
   onClick: () => void;
   text: string;
   count: number;
@@ -54,9 +28,9 @@ const TabButton = ({
     <button
       className={clsx(
         `relative flex w-full flex-col items-center py-4 px-2 text-center text-sm font-medium focus:z-20 focus:ring-4 dark:text-white md:px-4`,
-        tab === 'FOLLOWING' && `rounded-tl-lg`,
-        tab === 'FAVORITES' && `rounded-tr-lg`,
-        tab
+        text === 'FOLLOWING' && `md:rounded-tl-lg`,
+        text === 'FAVORITES' && `rounded-tr-lg`,
+        active
           ? `active bg-gray-100 text-gray-900  focus:ring-blue-300 dark:bg-gray-700`
           : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white`
       )}
@@ -68,7 +42,7 @@ const TabButton = ({
 };
 
 const Profile: NextPage = () => {
-  const [tab, dispatch] = React.useReducer(tabsReducer, initialState);
+  const [tab, setTab] = React.useState<Tab>(Tab.FOLLOWING);
 
   const { authenticated, error, user, status, isError } = useUser({ redirectTo: '/login' });
   const [{ data: name }] = useEnsLookup({ address: user?.publicAddress, skip: !user });
@@ -78,13 +52,16 @@ const Profile: NextPage = () => {
   const [followings, followingCount] = useFollowings({ address: user?.publicAddress as string });
   const [favorites, favoritesCount] = useFavorites({ address: user?.publicAddress as string });
 
-  const followingTab = React.useCallback(() => dispatch({ type: 'FOLLOWING' }), []);
-  const followersTab = React.useCallback(() => dispatch({ type: 'FOLLOWERS' }), []);
-  const favoritesTab = React.useCallback(() => dispatch({ type: 'FAVORITES' }), []);
+  const followingTab = React.useCallback(() => setTab(Tab.FOLLOWING), []);
+  const followersTab = React.useCallback(() => setTab(Tab.FOLLOWERS), []);
+  const favoritesTab = React.useCallback(() => setTab(Tab.FAVORITES), []);
 
   return (
     <main
-      className={clsx('flex flex-col items-center justify-center gap-y-12', 'dark:text-gray-50')}>
+      className={clsx(
+        'flex flex-col items-center justify-center gap-y-12 md:mt-10',
+        'dark:text-gray-50'
+      )}>
       <section
         className={clsx(`m-auto flex w-40 flex-col items-center justify-center text-center`)}>
         <Avatar imageUrl={avatar ?? '/images/placeholder.png'} />
@@ -121,11 +98,14 @@ const Profile: NextPage = () => {
         </div>
       </section>
 
-      <section className="mb-4 flow-root w-full rounded-xl bg-white pb-6 shadow dark:bg-gray-800 md:min-w-[600px] md:max-w-[865px]">
+      <section
+        className={clsx(
+          `mb-4 flow-root w-full bg-white pb-6 shadow dark:bg-gray-800 md:min-w-[600px] md:max-w-[865px] md:rounded-xl`
+        )}>
         <ul className="flex divide-x divide-gray-200 rounded-sm shadow dark:divide-gray-700 sm:flex">
           <li className="w-full">
             <TabButton
-              tab={tab['FOLLOWING']}
+              active={tab === Tab.FOLLOWING}
               onClick={followingTab}
               text="FOLLOWING"
               count={followingCount}
@@ -133,7 +113,7 @@ const Profile: NextPage = () => {
           </li>
           <li className="w-full">
             <TabButton
-              tab={tab['FOLLOWERS']}
+              active={tab === Tab.FOLLOWERS}
               onClick={followersTab}
               text="FOLLOWERS"
               count={followersCount}
@@ -141,15 +121,15 @@ const Profile: NextPage = () => {
           </li>
           <li className="w-full">
             <TabButton
-              tab={tab['FAVORITES']}
+              active={tab === Tab.FAVORITES}
               onClick={favoritesTab}
               text="FAVORITES"
               count={favoritesCount}
             />
           </li>
         </ul>
-        <ul className="px-4 py-3 divide-y divide-gray-200 dark:divide-gray-700 md:px-6">
-          {tab['FOLLOWERS'] &&
+        <ul className="px-1 pt-1 divide-y divide-gray-200 dark:divide-gray-700 md:px-6">
+          {tab === Tab['FOLLOWERS'] &&
             followers.map((address, idx) => (
               <li className="w-full py-3 sm:py-4" key={idx}>
                 <ProfileRow
@@ -159,7 +139,7 @@ const Profile: NextPage = () => {
                 />
               </li>
             ))}
-          {tab['FOLLOWING'] &&
+          {tab === Tab['FOLLOWING'] &&
             followings.map((address, idx) => (
               <li className="w-full py-3 sm:py-4" key={idx}>
                 <ProfileRow
@@ -169,16 +149,18 @@ const Profile: NextPage = () => {
                 />
               </li>
             ))}
-          {tab['FAVORITES'] &&
+          {tab === Tab['FAVORITES'] &&
             favorites.map((hash, idx) => (
               <li className="w-full p-3 hover:underline sm:py-4" key={idx}>
                 <a href={`https://etherscan.io/tx/${hash}`}>{hash}</a>
               </li>
             ))}
           <p className="text-white">
-            {tab['FOLLOWERS'] && followersCount === 0 && `No one is following you yet.`}
-            {tab['FOLLOWING'] && followingCount === 0 && `You are not following anyone.`}
-            {tab['FAVORITES'] && favoritesCount === 0 && `You don't have any favorites yet.`}
+            {tab === Tab['FOLLOWERS'] && followersCount === 0 && `No one is following you yet.`}
+            {tab === Tab['FOLLOWING'] && followingCount === 0 && `You are not following anyone.`}
+            {tab === Tab['FAVORITES'] &&
+              favoritesCount === 0 &&
+              `You don't have any favorites yet.`}
           </p>
         </ul>
       </section>

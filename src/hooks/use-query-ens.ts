@@ -11,7 +11,13 @@ export const useQueryENS = ({
   address?: string;
   name?: string;
   enabled?: boolean;
-}) => {
+}): [
+  address: string | undefined,
+  name: string | null,
+  loading: boolean,
+  isError: boolean,
+  refetch: () => void
+] => {
   const param = address || name;
 
   const {

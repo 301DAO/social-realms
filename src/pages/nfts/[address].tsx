@@ -84,12 +84,14 @@ const Nfts: NextPage = () => {
   );
 
   const loadMoreButtonRef = React.useRef<HTMLButtonElement | null>(null);
+
   useIntersectionObserver({
     target: loadMoreButtonRef,
     onIntersect: () => fetchNextPage({ pageParam: continuationToken }),
     enabled: !!continuationToken,
     rootMargin: '10px',
   });
+
   const loadMoreClickHandler = React.useCallback(() => {
     return fetchNextPage({ pageParam: continuationToken });
   }, [fetchNextPage, continuationToken]);

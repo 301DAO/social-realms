@@ -41,6 +41,7 @@ const toastEm = ({ content = 'Invalid input' }: { content: string | JSX.Element 
 
 export const SearchBar = () => {
   const router = useRouter();
+
   const { authenticated, status } = useUser();
 
   const provider = useInjectedProvider();

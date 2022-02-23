@@ -3,6 +3,7 @@ export * from './time';
 export * from './converters';
 
 export const passEnsRegex = (name: string) => {
+  if (!valueExists(name)) return false;
   const regex = /^[a-zA-Z]{3,}(.eth)$/;
   return regex.test(name);
 };
@@ -49,9 +50,6 @@ export const falsyValue = (value: any): boolean => {
 
 export const range = (start: number, end: number) =>
   Array.from({ length: end - start }, (v, k) => k + start);
-
-//(start: number, end: number, length = end - start + 1) =>
-//Array.from({ length }, (_, i) => start + i);
 
 export const isWindowLoaded = typeof window !== 'undefined';
 export const hasEthereum = typeof window !== 'undefined' && typeof window.ethereum !== 'undefined';

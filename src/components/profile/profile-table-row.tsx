@@ -1,12 +1,12 @@
 import * as React from 'react';
+import Link from 'next/link';
+import clsx from 'clsx';
 import { utils } from 'ethers';
 import { useMutation } from 'react-query';
+import { useEnsLookup, useEnsAvatar, useEnsResolver } from 'wagmi';
 import { follow, unfollow } from '@/lib';
 import { queryClient } from '@/lib/clients';
-import { useEnsImage } from '@/hooks';
-import clsx from 'clsx';
-
-import { useEnsLookup } from 'wagmi';
+import { Twitter } from '@/components/icons';
 
 export const ProfileRow = ({
   myAddress,
@@ -20,7 +20,17 @@ export const ProfileRow = ({
   const [, setLoading] = React.useState(false);
 
   const [{ data: name }] = useEnsLookup({ address: userAddress });
-  const [image] = useEnsImage(name as string);
+  const [{ data: image }] = useEnsAvatar({ addressOrName: name });
+  const [{ data: resolver }] = useEnsResolver({ name, skip: !name });
+
+  const [twitter, setTwitter] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if (!name || !resolver) return;
+    resolver.getText('com.twitter').then(twitter => {
+      if (!twitter) return;
+      setTwitter(twitter);
+    });
+  }, [name, resolver]);
 
   const followMutation = useMutation(
     () =>
@@ -71,16 +81,15 @@ export const ProfileRow = ({
       />
 
       <div className="mr-auto">
-        <a
-          className={clsx(
-            `truncate text-sm font-medium text-gray-900 md:text-lg`,
-            `hover:decoration-solid dark:text-white dark:hover:text-gray-200`
-          )}
-          href={`https://app.ens.domains/name/${name}`}
-          rel="noopener noreferrer"
-          target="_blank">
-          {name}
-        </a>
+        <Link href={`/user/${name}`} passHref>
+          <a
+            className={clsx(
+              `truncate text-sm font-medium text-gray-900 md:text-lg`,
+              `hover:decoration-solid dark:text-white dark:hover:text-gray-200`
+            )}>
+            {name}
+          </a>
+        </Link>
       </div>
       <div className="hidden md:w-full"></div>
 
@@ -88,9 +97,11 @@ export const ProfileRow = ({
         {utils.getAddress(userAddress)}
       </p>
       <div className="hidden md:w-full"></div>
-      {/* <button>
-				<Twitter />
-			</button> */}
+      {twitter ? (
+        <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noopener noreferrer">
+          <Twitter />
+        </a>
+      ) : null}
       <div className="ml-auto">
         <button
           onClick={followUser}

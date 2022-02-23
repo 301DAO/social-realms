@@ -23,14 +23,9 @@ export const MediaComponent = ({ mediaUrl }: { mediaUrl: string }) => {
     return <img src={mediaUrl} loading="lazy" className={style} alt="nft media" />;
   }
 
-  if (isVideo(mediaUrl) || (!!mediaType && isVideoContentType(mediaType)))
-    return (
-      <video controls src={mediaUrl} autoPlay loop className={style}>
-        <track kind="captions" srcLang="en">
-          Your browser doesn{"'"}t support embedded videos :\
-        </track>
-      </video>
-    );
+  if (isVideo(mediaUrl) || (!!mediaType && isVideoContentType(mediaType))) {
+    return <video controls src={mediaUrl} autoPlay loop className={style} />;
+  }
 
   return null;
 };
