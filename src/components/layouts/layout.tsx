@@ -5,9 +5,9 @@ import { Footer } from './footer';
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="dark m-auto h-full min-h-screen max-w-screen-2xl bg-[#1a1c26] text-center flex flex-col">
+    <div className="dark m-auto flex h-full min-h-screen max-w-screen-2xl flex-col bg-[#1a1c26] text-center">
       <Header />
-      <div className="rounded-4xl flex flex-col pt-5 pb-20">{children}</div>
+      <div className="flex flex-col h-full pt-5 pb-16 rounded-4xl">{children}</div>
       <Footer />
       <Toaster />
     </div>

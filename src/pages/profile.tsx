@@ -27,7 +27,7 @@ const TabButton = ({
   return (
     <button
       className={clsx(
-        `relative flex w-full flex-col items-center py-4 px-2 text-center text-sm font-medium focus:z-20 focus:ring-4 dark:text-white md:px-4`,
+        `relative flex w-full flex-col items-center py-2 md:py-4 px-2 text-center text-xs md:text-sm font-medium focus:z-20 focus:ring-4 dark:text-white md:px-4`,
         text === 'FOLLOWING' && `md:rounded-tl-lg`,
         text === 'FAVORITES' && `rounded-tr-lg`,
         active
@@ -35,7 +35,7 @@ const TabButton = ({
           : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white`
       )}
       onClick={onClick}>
-      <span className={clsx(`text-xl font-semibold`)}>{count}</span>
+      <span className={clsx(`text-lg md:text-xl font-semibold`)}>{count}</span>
       <span className="">{text}</span>
     </button>
   );
@@ -59,7 +59,7 @@ const Profile: NextPage = () => {
   return (
     <main
       className={clsx(
-        'flex flex-col items-center justify-center gap-y-12 md:mt-10',
+        'flex flex-col items-center justify-center gap-y-12 md:mt-10 mx-1.5',
         'dark:text-gray-50'
       )}>
       <section
@@ -100,7 +100,7 @@ const Profile: NextPage = () => {
 
       <section
         className={clsx(
-          `mb-4 flow-root w-full bg-white pb-6 shadow dark:bg-gray-800 md:min-w-[600px] md:max-w-[865px] md:rounded-xl`
+          `mb-4 flow-root w-full bg-white pb-4 shadow dark:bg-gray-800 md:min-w-[600px] md:max-w-[865px] md:rounded-xl rounded-md`
         )}>
         <ul className="flex divide-x divide-gray-200 rounded-sm shadow dark:divide-gray-700 sm:flex">
           <li className="w-full">
@@ -128,7 +128,7 @@ const Profile: NextPage = () => {
             />
           </li>
         </ul>
-        <ul className="px-1 pt-1 divide-y divide-gray-200 dark:divide-gray-700 md:px-6">
+        <ul className="px-3 pt-1 divide-y divide-gray-200 dark:divide-gray-700 md:px-6">
           {tab === Tab['FOLLOWERS'] &&
             followers.map((address, idx) => (
               <li className="w-full py-3 sm:py-4" key={idx}>

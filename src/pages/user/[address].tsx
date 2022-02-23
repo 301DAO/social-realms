@@ -119,7 +119,7 @@ const User: NextPage = () => {
         `md:grid-cols-3`
       )}>
       <section className="col-span-1">
-        <div className={clsx(`flex w-full justify-center`)}>
+        <div className={clsx(`flex w-full justify-center px-3`)}>
           <div
             className={clsx(
               `mb-3 flex w-full flex-col items-center justify-items-center rounded-lg bg-white bg-no-repeat py-4 text-center align-middle shadow xl:py-5`,
@@ -139,10 +139,10 @@ const User: NextPage = () => {
                 </button>
                 <span>{balance && `${balance.formatted.slice(0, 4)}Ξ`}</span>
               </li>
-              <li className="text-gray-500 truncate dark:text-gray-400">
+              <li className="text-gray-500 truncate dark:text-gray-400 text-ellipsis">
                 <button
                   onClick={() => copy(`${userAddress}`)}
-                  className="hover:cursor-pointer hover:underline">
+                  className="truncate hover:cursor-pointer hover:underline">
                   {userAddress}
                 </button>
               </li>

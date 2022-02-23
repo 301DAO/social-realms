@@ -1,14 +1,21 @@
 import * as React from 'react';
-import type { NextPage } from 'next';
+import type {
+  NextPage,
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  GetServerSidePropsResult,
+} from 'next';
 import type {
   TransactionResponse,
   WebSocketProvider,
   AlchemyWebSocketProvider,
   InfuraWebSocketProvider,
 } from '@ethersproject/providers';
+import dayjs from 'dayjs';
 import { useWebSocketProvider } from 'wagmi';
 import { useMutation, useQuery } from 'react-query';
-
+import { valueExists } from '@/utils';
+import { TIME } from '@/constants';
 import { favorite } from '@/lib/mutations';
 import { queryClient } from '@/lib/clients';
 import { LoadingTransaction } from '@/components';
@@ -35,6 +42,7 @@ const getPastTransactions = async (addresses: string[]) => {
   const allTransactionsMerged = successResponses.reduce((acc, curr) => {
     return [...acc, ...curr.data.items];
   }, []);
+  console.log('allTransactionsMerged', allTransactionsMerged[0]);
   const filter = (tx: any) => {
     return {
       from: tx.from_address,
@@ -43,6 +51,7 @@ const getPastTransactions = async (addresses: string[]) => {
       transactionHash: tx.tx_hash,
       status: tx.successful,
       blockNumber: tx.block_height,
+      timestamp: dayjs().format('M/DD HH:mm'),
     };
   };
   return allTransactionsMerged.map(filter);
@@ -51,10 +60,11 @@ const getPastTransactions = async (addresses: string[]) => {
 /**
  * this will get live transactions for followed addresses using websocket
  */
+// TODO
 const getLiveTransactions = async (provider: Provider, addresses: string[]) => {
   const { transactions } = await provider.getBlockWithTransactions('latest');
-  // const filter = (x: TransactionResponse) => addresses.includes(x.from) || addresses.includes(x.to);
-  // return transactions.filter(filter);
+  const filter = (x: TransactionResponse) => addresses.includes(x.from); // || addresses.includes(x.to);
+  return transactions.filter(filter);
 };
 
 const Feed: NextPage = () => {
@@ -80,8 +90,8 @@ const Feed: NextPage = () => {
     async () => await getPastTransactions(followings),
     {
       enabled: !!address,
-      //refetchOnWindowFocus: false,
-      //refetchInterval: 1000 * 60 * 5,
+      refetchOnWindowFocus: false,
+      refetchInterval: TIME.SECOND * 15,
     }
   );
 
@@ -89,10 +99,10 @@ const Feed: NextPage = () => {
     ['feed', address],
     async () => getLiveTransactions(provider!, followings),
     {
-      enabled: false, // !!address, //&& valueExists(provider),
+      enabled: false, // !!address && valueExists(provider),
       retry: false,
-      // initialData: [],
-      //onSettled: data => console.log(`data ${data}, length: ${data?.length}`),
+      initialData: [],
+      onSettled: data => console.log(`data ${data}, length: ${data?.length}`),
     }
   );
 
@@ -109,49 +119,53 @@ const Feed: NextPage = () => {
     );
   }
 
-  let readyTransactions = pastTransactions; // transactions?.length ? transactions : pastTransactions;
+  let readyTransactions = pastTransactions;
 
   return (
-    <main className="flex flex-col items-center w-full mx-auto mt-12 text-white align-top justify-items-start gap-y-8">
+    <main className="flex flex-col items-center w-full mx-auto mt-6 text-white align-top justify-items-start gap-y-4 md:mt-12">
       {readyTransactions &&
         readyTransactions.length > 0 &&
         readyTransactions.map((transaction: any, idx: any) => {
           return (
             <section
               key={idx}
-              className="max-w-xl p-4 text-center bg-white border border-gray-200 rounded-xl dark:border-gray-800 dark:bg-gray-800">
+              className="w-full max-w-xl p-4 text-center bg-white border border-gray-200 rounded-xl dark:border-gray-800 dark:bg-gray-800">
               <a
-                className="block mt-3 text-xl leading-snug text-black hover:underline dark:text-white"
+                className="block text-xl leading-snug text-black truncate hover:underline dark:text-white"
                 href={`/user/${transaction.from}`}>
                 {transaction.from}
               </a>
               <DownArrow />
               <a
-                className="block my-2 text-xl leading-snug text-black hover:underline dark:text-white"
+                className="block my-2 text-xl leading-snug text-black truncate hover:underline dark:text-white"
                 href={`/user/${transaction.from}`}>
                 {transaction.to}
               </a>
               <div className="my-4 border border-b-0 border-gray-200 dark:border-gray-600"></div>
 
-              <div className="flex justify-between mt-3 text-gray-500 gap-x-4 dark:text-gray-400">
+              <div className="flex items-center justify-around m-auto mt-3 text-center text-gray-500 dark:text-gray-400">
                 <div className="flex items-center">
                   <button
                     onClick={() =>
                       favoriteMutation.mutate({
                         address: address as string,
-                        hash: transaction.hash,
+                        hash: transaction.transactionHash,
                       })
                     }>
-                    {favorites.includes(transaction.hash) ? <RedHeart /> : <TransparentHeart />}
+                    {favorites.includes(transaction.transactionHash) ? (
+                      <RedHeart />
+                    ) : (
+                      <TransparentHeart />
+                    )}
                   </button>
                 </div>
-                {/* <div className="flex items-center">
-                <span className="rounded bg-gray-100 px-1 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                  🧱&nbsp;&nbsp;{transaction.blockNumber}
-                </span>
-              </div> */}
                 <div className="flex items-center">
-                  <span className="rounded bg-gray-100 px-1 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                  <span className="rounded bg-gray-100 px-1.5 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                    {transaction.timestamp}
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <span className="hidden rounded bg-gray-100 px-1.5 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300 md:block">
                     🧱&nbsp;&nbsp;{transaction.blockNumber}
                   </span>
                 </div>
@@ -163,7 +177,7 @@ const Feed: NextPage = () => {
                 </div>
                 <div className="flex flex-row items-center">
                   {transaction.status ? (
-                    <span className="mr-2 rounded bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-200 dark:text-green-900">
+                    <span className="m-0 rounded bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-200 dark:text-green-900 md:mr-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-4"
@@ -179,7 +193,7 @@ const Feed: NextPage = () => {
                       </svg>
                     </span>
                   ) : (
-                    <span className="mr-2 rounded bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-200 dark:text-red-900">
+                    <span className="m-0 rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-200 dark:text-red-900 md:mr-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-4"
@@ -197,7 +211,7 @@ const Feed: NextPage = () => {
                   )}
                 </div>
                 <a
-                  className="flex w-[18%] items-center"
+                  className="flex w-[25%] items-center"
                   href={`https://etherscan.io/tx/${transaction.transactionHash}`}
                   rel="noopener noreferrer"
                   target="_blank">
