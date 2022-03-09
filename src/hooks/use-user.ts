@@ -15,12 +15,22 @@ export const useUser = ({ redirectTo, redirectIfFound }: UserHookRedirects = {})
   const isMounted = useIsMounted();
 
   // TODO: only fetch when wallet is connected
-  const { data, error, isIdle, isFetched, isError, isLoading, isStale, isSuccess, isFetching } =
-    useQuery(['user'], fetchUser, {
-      retry: 0,
+  const {
+    data,
+    error,
+    isIdle,
+    isFetched,
+    isError,
+    isLoading,
+    isStale,
+    isSuccess,
+    isFetching,
+    refetch,
+  } = useQuery(['user'], fetchUser, {
+    retry: 0,
 
-      enabled: isMounted,
-    });
+    enabled: isMounted,
+  });
 
   const user = data?.user;
   const authenticated = data?.authenticated ?? false;
@@ -35,6 +45,7 @@ export const useUser = ({ redirectTo, redirectIfFound }: UserHookRedirects = {})
   return {
     authenticated,
     user,
+    refetch,
     error,
     isFetching,
     isLoading,

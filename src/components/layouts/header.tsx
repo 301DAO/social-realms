@@ -46,9 +46,9 @@ export const Header = () => {
         <>
           <div className="px-2 mx-auto max-w-8xl md:px-0">
             <div className="relative flex items-center h-20 md:border-opacity-25 md:px-6">
-              <div className="flex items-center px-2 md:px-0">
+              <div className="flex items-center md:px-0">
                 <Link shallow={true} href="/">
-                  <a className="flex-shrink-0">
+                  <a className="flex-shrink-0 hidden sm:block">
                     <img className="block w-8 invert" src="/images/bird.png" alt="Workflow" />
                   </a>
                 </Link>

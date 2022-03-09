@@ -10,7 +10,7 @@ import { useInjectedProvider, useUser } from '@/hooks';
 import { passEnsRegex, passAddressRegex } from '@/utils';
 
 const InvalidEnsToast = () => (
-  <p className="w-full leading-normal text-md">
+  <p className="text-md w-full leading-normal">
     Unable to verify ENS name.{'\n'}Check here:{' '}
     <a href="https://app.ens.domains/" className="underline hover:font-bold">
       app.ens.domains
@@ -39,6 +39,8 @@ const toastEm = ({ content = 'Invalid input' }: { content: string | JSX.Element 
   });
 };
 
+const possibleKeys = ['Enter', 'Return'];
+
 export const SearchBar = () => {
   const router = useRouter();
 
@@ -49,12 +51,10 @@ export const SearchBar = () => {
   const searchText = React.useRef<HTMLInputElement>(null);
 
   const onEnter = React.useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== 'Enter' || status !== 'success') return;
+    if (!possibleKeys.includes(event.key) || status !== 'success') return;
     event.preventDefault();
     const search = searchText?.current?.value.trim().toLowerCase();
-
     if (!search) return;
-
     const directToRoute = (input: string) =>
       authenticated
         ? router.push(`/user/${input}`, undefined, { shallow: true })
@@ -88,14 +88,14 @@ export const SearchBar = () => {
         Search
       </label>
       <div className="relative text-gray-300 focus-within:text-gray-600">
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <SearchIcon />
         </div>
         <input
           ref={searchText}
           onKeyPress={onEnter}
           id="search"
-          className="block h-12 w-full rounded-md border border-transparent bg-[#212330] py-2 pl-10 pr-3 text-lg leading-5 tracking-wider text-gray-200 placeholder-gray-500 placeholder:text-[#b9bbc2] focus:border-[#373b50] focus:placeholder-transparent focus:outline-none focus:ring-transparent focus:ring-offset-[0.3px]"
+          className="block h-12 w-full rounded-md border border-transparent bg-[#212330] py-2 pl-10 pr-3 text-sm lowercase leading-5 tracking-wider text-gray-200 placeholder-gray-500 placeholder:normal-case placeholder:text-[#b9bbc2] focus:border-[#373b50] focus:placeholder-transparent focus:outline-none focus:ring-transparent focus:ring-offset-[0.3px] sm:text-lg"
           placeholder="Quick ENS / Address Search"
           type="search"
           name="search"

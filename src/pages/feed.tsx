@@ -12,7 +12,7 @@ import type {
   InfuraWebSocketProvider,
 } from '@ethersproject/providers';
 import dayjs from 'dayjs';
-import { useWebSocketProvider } from 'wagmi';
+import { useWebSocketProvider, } from 'wagmi';
 import { useMutation, useQuery } from 'react-query';
 import { valueExists } from '@/utils';
 import { TIME } from '@/constants';

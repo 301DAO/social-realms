@@ -7,7 +7,7 @@ const Index: NextPage = () => {
   useUser({ redirectTo: '/login' });
 
   return (
-    <main className="flex flex-col items-center px-4 mt-40 text-center align-middle">
+    <main className="mt-20 flex flex-col items-center px-4 text-center align-middle md:mt-40">
       <p
         className={clsx(
           `text-7xl sm:text-8xl md:text-9xl`,
@@ -15,7 +15,7 @@ const Index: NextPage = () => {
         )}>
         Social Realms.
       </p>
-      <section className="flex flex-col items-center w-8/12 max-w-xs mt-10 text-center gap-y-8 px-9"></section>
+      <section className="mt-10 flex w-8/12 max-w-xs flex-col items-center gap-y-8 px-9 text-center"></section>
     </main>
   );
 };
