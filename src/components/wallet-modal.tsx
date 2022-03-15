@@ -18,7 +18,8 @@ export default function WalletModal() {
         className={clsx(
           `flex h-8 w-8 items-center justify-center text-gray-500 hover:text-gray-600`,
           `dark:text-gray-200`
-        )}>
+        )}
+      >
         <span className="sr-only">Navigation</span>
         <svg width="24" height="24" fill="none" aria-hidden="true">
           <path
@@ -26,13 +27,15 @@ export default function WalletModal() {
             stroke="currentColor"
             strokeWidth="1.5"
             strokeLinecap="round"
-            strokeLinejoin="round"></path>
+            strokeLinejoin="round"
+          ></path>
         </svg>
       </button>
       <Transition appear show={open} as={React.Fragment}>
         <Dialog
           onClose={hideModal}
-          className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-[1px]">
+          className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-[1px]"
+        >
           <div className="flex min-h-screen items-center justify-center">
             <Transition.Child
               as={React.Fragment}
@@ -41,7 +44,8 @@ export default function WalletModal() {
               enterTo="opacity-100"
               leave="ease-in duration-200"
               leaveFrom="opacity-100"
-              leaveTo="opacity-0">
+              leaveTo="opacity-0"
+            >
               <Dialog.Overlay className="fixed inset-0 bg-black opacity-10" />
             </Transition.Child>
             <Transition.Child
@@ -51,7 +55,8 @@ export default function WalletModal() {
               enterTo="opacity-100 scale-100"
               leave="ease-in duration-200"
               leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95">
+              leaveTo="opacity-0 scale-95"
+            >
               <div className="fixed top-14 right-6 w-full max-w-[14.8rem] rounded-lg bg-white text-base font-semibold text-gray-900 shadow-lg">
                 <Dialog.Title as="div" className="flex justify-evenly p-6">
                   <WalletNav />

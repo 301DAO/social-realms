@@ -61,7 +61,8 @@ const WalletNav = () => {
         className={clsx(
           'flex items-center space-x-4 text-sm font-semibold leading-6 text-gray-700 hover:text-black ',
           'dark:text-gray-200'
-        )}>
+        )}
+      >
         {/* Connect wallet button */}
         <li>
           <button
@@ -69,7 +70,8 @@ const WalletNav = () => {
             className={clsx(
               'flex h-11 w-[160px] items-center justify-center rounded-lg border bg-[#0c0c0c] px-5 font-semibold text-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-md hover:bg-black focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50',
               'dark:bg-gray-700 dark:hover:bg-gray-900 dark:focus:bg-gray-700 dark:focus:ring-2 dark:focus:ring-gray-900 dark:focus:ring-offset-2 dark:focus:ring-offset-gray-900'
-            )}>
+            )}
+          >
             {buttonText}
           </button>
         </li>
@@ -81,7 +83,8 @@ const WalletNav = () => {
                 className="w-7 dark:text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor">
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

@@ -1,4 +1,4 @@
-import { wagmiProvider } from "@/wallet";
+import { wagmiProvider } from '@/wallet';
 
 export const ensToAddress = async (name: string) => {
   const provider = wagmiProvider();

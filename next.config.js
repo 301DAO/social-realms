@@ -7,4 +7,12 @@ module.exports = {
     domains: ['live.staticflickr.com'],
   },
   poweredByHeader: false,
+  async rewrites() {
+    return [
+      {
+        source: '/feed/:address',
+        destination: '/feed',
+      },
+    ];
+  },
 };

@@ -34,7 +34,8 @@ const CopyButton = ({ buttonText, textToCopy }: { buttonText: string; textToCopy
     <button
       type="button"
       className="text-md mb-2 flex space-x-2 rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-gradient-to-bl focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
-      onClick={copyToClipboard}>
+      onClick={copyToClipboard}
+    >
       <span>{copyButtonText}</span>
       <span>
         <CopyIcon />
@@ -97,7 +98,7 @@ const Nfts: NextPage = () => {
   }, [fetchNextPage, continuationToken]);
 
   return (
-    <main className="flex flex-col items-center justify-start flex-grow min-h-screen px-0 pb-8 mt-4">
+    <main className="mt-4 flex min-h-screen flex-grow flex-col items-center justify-start px-0 pb-8">
       <p className="mb-4 text-3xl font-black dark:text-white">{name ?? address}</p>
 
       {!!infiniteQueryResponse && <CopyButton buttonText="Copy profile link" />}

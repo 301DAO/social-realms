@@ -44,7 +44,6 @@ export default async function verifyHandlerHandler(req: NextApiRequest, res: Nex
     return res
       .status(200)
       .json({ success: true, message: 'successfully verified', user: updateNonce });
-      
   } catch (error) {
     console.error(
       'Error occured in /api/auth/verify.ts: ',

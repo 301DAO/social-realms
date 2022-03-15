@@ -9,6 +9,7 @@ declare namespace NodeJS {
     NEXT_PUBLIC_ETHERSCAN_KEY: string;
     NEXT_PUBLIC_INFURA_PROJECT_ID: string;
     NEXT_PUBLIC_NFT_PORT_KEY: string;
-    NEXT_PUBLIC_COVALENT_API_KEY: string;
+    COVALENT_KEY: string;
+    NEXT_PUBLIC_COVALENT_KEY: string;
   }
 }

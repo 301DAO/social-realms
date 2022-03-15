@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export const LoadingTransaction = () => (
-  <div className="md:w-[400px] w-full mt-8">
+  <div className="mt-8 w-full md:w-[400px]">
     <div className="mx-auto rounded-md border border-blue-300 p-4 shadow">
       <div className="flex animate-pulse space-x-4">
         <div className="flex-1 space-y-6 py-1">

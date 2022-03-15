@@ -35,7 +35,7 @@ function WalletConnect() {
       height="185px"
       viewBox="0 0 300 185"
       version="1.1"
-      className="w-[4rem] h-[4rem] md:h-12 md:w-12"
+      className="h-[4rem] w-[4rem] md:h-12 md:w-12"
     >
       <defs></defs>
       <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -59,7 +59,8 @@ function Metamask() {
       x="0px"
       y="0px"
       viewBox="0 0 318.6 318.6"
-      className="h-[4rem] w-[4rem] md:h-12 md:w-12">
+      className="h-[4rem] w-[4rem] md:h-12 md:w-12"
+    >
       <style jsx>
         {`
           .st0 {
@@ -205,5 +206,5 @@ function Metamask() {
 }
 
 function Coinbase() {
-  return <img src="/assets/images/coinbase.png" className="w-12 h-12" alt="Coinbase" />;
+  return <img src="/assets/images/coinbase.png" className="h-12 w-12" alt="Coinbase" />;
 }

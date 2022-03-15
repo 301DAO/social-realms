@@ -50,7 +50,6 @@ a {
   text-decoration: none;
 }
 
-
 /* keep scrollbar but hide it since it's ugly */
 #liaddshapes::-webkit-scrollbar {
   width: 0 !important;

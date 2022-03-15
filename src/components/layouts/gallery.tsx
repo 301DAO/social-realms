@@ -17,8 +17,9 @@ export const Nft = ({
     href={`https://opensea.io/assets/${contract_address}/${token_id}`}
     target="_blank"
     rel="noreferrer"
-    className="group">
-    <div className="w-full overflow-hidden bg-transparent rounded-lg aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8">
+    className="group"
+  >
+    <div className="aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8 w-full overflow-hidden rounded-lg bg-transparent">
       {children}
     </div>
   </a>
@@ -29,7 +30,7 @@ export const Gallery = ({ nfts }: { nfts: NFT[] }) => {
   const count = nfts.length;
   return (
     <div className="bg-transparent">
-      <div className="max-w-2xl mx-auto lg:max-w-7xl">
+      <div className="mx-auto max-w-2xl lg:max-w-7xl">
         <h2 className="sr-only">NFTs</h2>
         <div
           id="nfts"
@@ -37,7 +38,8 @@ export const Gallery = ({ nfts }: { nfts: NFT[] }) => {
             `grid grid-cols-1 gap-y-2 gap-x-2 sm:grid-cols-2 md:gap-y-6 md:gap-x-6 lg:grid-cols-3 xl:gap-x-4`,
             !!count && range(1, 4).includes(count) && `xl:grid-cols-2`
             // !!count && count > 9 && `md:grid-cols-4`
-          )}>
+          )}
+        >
           {nfts.map(({ cached_file_url, contract_address, token_id, name, description }, idx) => {
             const url = cached_file_url;
             if (!url) return null;

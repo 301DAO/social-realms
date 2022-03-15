@@ -1,7 +1,7 @@
-import type { NextPage } from 'next';
 import * as React from 'react';
-import { useUser } from '@/hooks';
+import type { NextPage } from 'next';
 import clsx from 'clsx';
+import { useUser } from '@/hooks';
 
 const Index: NextPage = () => {
   useUser({ redirectTo: '/login' });

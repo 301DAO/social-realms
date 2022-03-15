@@ -1,82 +1,34 @@
 import * as React from 'react';
-import type {
-  NextPage,
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  GetServerSidePropsResult,
-} from 'next';
-import type {
-  TransactionResponse,
-  WebSocketProvider,
-  AlchemyWebSocketProvider,
-  InfuraWebSocketProvider,
-} from '@ethersproject/providers';
-import dayjs from 'dayjs';
-import { useWebSocketProvider, } from 'wagmi';
 import { useMutation, useQuery } from 'react-query';
-import { valueExists } from '@/utils';
+
 import { TIME } from '@/constants';
+import { valueExists } from '@/utils';
 import { favorite } from '@/lib/mutations';
 import { queryClient } from '@/lib/clients';
 import { LoadingTransaction } from '@/components';
-import { getTransactionsForAddress } from '@/lib/wrappers';
+import { alchemyGetAssetTransfers } from '@/lib/wrappers';
 import { DownArrow, RedHeart, TransparentHeart } from '@/components/icons';
 import { useIsMounted, useFollowings, useFavorites, useUser } from '@/hooks';
+import type { AlchemyGetAssetTransfersResponse } from '@/lib/wrappers/alchemy.types';
+import { Transfer } from '@/lib/wrappers/alchemy.types';
 
-type Provider = AlchemyWebSocketProvider | InfuraWebSocketProvider | WebSocketProvider;
-/**
- * this will get past transactions for followed addresses
- * to help populate the feed on load
- */
-const getPastTransactions = async (addresses: string[]) => {
-  const responses = await Promise.all(
-    addresses.map(async address => {
-      const transactions = await getTransactionsForAddress({
-        address,
-        limit: 3,
-      });
-      return transactions;
-    })
-  );
-  const successResponses = responses.filter(response => response.error === false);
-  const allTransactionsMerged = successResponses.reduce((acc, curr) => {
-    return [...acc, ...curr.data.items];
-  }, []);
-  console.log('allTransactionsMerged', allTransactionsMerged[0]);
-  const filter = (tx: any) => {
-    return {
-      from: tx.from_address,
-      to: tx.to_address,
-      gasPrice: tx.gas_quote,
-      transactionHash: tx.tx_hash,
-      status: tx.successful,
-      blockNumber: tx.block_height,
-      timestamp: dayjs().format('M/DD HH:mm'),
-    };
-  };
-  return allTransactionsMerged.map(filter);
-};
+type FullfilledResult = PromiseFulfilledResult<AlchemyGetAssetTransfersResponse>[];
+async function getAssetTransfers(address: string) {
+  const transfersTo = await alchemyGetAssetTransfers({ toAddress: address });
+  const transfersFrom = await alchemyGetAssetTransfers({ fromAddress: address });
+  const promise = await Promise.allSettled([transfersTo, transfersFrom]);
+  const fulfilled = promise.filter(({ status }) => status === 'fulfilled') as FullfilledResult;
+  return fulfilled.map(({ value }) => value.result?.transfers ?? []).flat();
+}
 
-/**
- * this will get live transactions for followed addresses using websocket
- */
-// TODO
-const getLiveTransactions = async (provider: Provider, addresses: string[]) => {
-  const { transactions } = await provider.getBlockWithTransactions('latest');
-  const filter = (x: TransactionResponse) => addresses.includes(x.from); // || addresses.includes(x.to);
-  return transactions.filter(filter);
-};
-
-const Feed: NextPage = () => {
+const Feed = () => {
   const isMounted = useIsMounted();
 
   const { user } = useUser({ redirectTo: '/login' });
-  const address = user?.publicAddress;
+  const address = user?.publicAddress as string;
 
-  const provider = useWebSocketProvider();
-
-  const [favorites] = useFavorites({ address: address as string });
-  const [followings] = useFollowings({ address: address as string });
+  const [favorites] = useFavorites({ address });
+  const [followings] = useFollowings({ address });
 
   const favoriteMutation = useMutation(
     ({ address, hash }: { address: string; hash: string }) => favorite({ address, hash }),
@@ -85,28 +37,29 @@ const Feed: NextPage = () => {
     }
   );
 
-  const { data: pastTransactions } = useQuery(
-    ['pastTransactions', address],
-    async () => await getPastTransactions(followings),
+  const {
+    data: transactions,
+    isLoading,
+    isError,
+  } = useQuery(
+    ['transfers', address],
+    async () => {
+      const promise = await Promise.allSettled(
+        followings.map(async following => await getAssetTransfers(following))
+      );
+      const fullfilled = promise.filter(
+        result => result.status === 'fulfilled' && result.value
+      ) as PromiseFulfilledResult<any>[];
+      console.log(fullfilled);
+      return fullfilled.map(({ value }) => value).flat();
+    },
     {
-      enabled: !!address,
-      refetchOnWindowFocus: false,
-      refetchInterval: TIME.SECOND * 15,
+      enabled: !!address && !!followings && isMounted,
+      refetchInterval: TIME.MINUTE * 3,
+      //refetchOnWindowFocus: false,
     }
   );
 
-  const { data: transactions } = useQuery(
-    ['feed', address],
-    async () => getLiveTransactions(provider!, followings),
-    {
-      enabled: false, // !!address && valueExists(provider),
-      retry: false,
-      initialData: [],
-      onSettled: data => console.log(`data ${data}, length: ${data?.length}`),
-    }
-  );
-
-  // show 5 fake loading cards while waiting for data
   if (!isMounted) {
     return (
       <>
@@ -119,104 +72,71 @@ const Feed: NextPage = () => {
     );
   }
 
-  let readyTransactions = pastTransactions;
+  let readyTransactions = transactions; //?? [];
 
   return (
-    <main className="flex flex-col items-center w-full mx-auto mt-6 text-white align-top justify-items-start gap-y-4 md:mt-12">
+    <main className="mx-auto mt-6 flex w-full flex-col items-center justify-items-start gap-y-4 align-top text-white md:mt-12">
       {readyTransactions &&
         readyTransactions.length > 0 &&
-        readyTransactions.map((transaction: any, idx: any) => {
+        readyTransactions.map((transaction: Transfer, idx: number) => {
           return (
             <section
               key={idx}
-              className="w-full max-w-xl p-4 text-center bg-white border border-gray-200 rounded-xl dark:border-gray-800 dark:bg-gray-800">
+              className="w-full max-w-xl rounded-xl border border-gray-200 bg-white p-4 text-center dark:border-gray-800 dark:bg-gray-800">
               <a
-                className="block text-xl leading-snug text-black truncate hover:underline dark:text-white"
+                className="block truncate text-xl leading-snug text-black hover:underline dark:text-white"
                 href={`/user/${transaction.from}`}>
                 {transaction.from}
               </a>
               <DownArrow />
               <a
-                className="block my-2 text-xl leading-snug text-black truncate hover:underline dark:text-white"
+                className="my-2 block truncate text-xl leading-snug text-black hover:underline dark:text-white"
                 href={`/user/${transaction.from}`}>
                 {transaction.to}
               </a>
               <div className="my-4 border border-b-0 border-gray-200 dark:border-gray-600"></div>
 
-              <div className="flex items-center justify-around m-auto mt-3 text-center text-gray-500 dark:text-gray-400">
+              <div className="m-auto mt-3 flex items-center justify-around text-center text-gray-500 dark:text-gray-400">
                 <div className="flex items-center">
                   <button
                     onClick={() =>
                       favoriteMutation.mutate({
                         address: address as string,
-                        hash: transaction.transactionHash,
+                        hash: transaction.hash,
                       })
                     }>
-                    {favorites.includes(transaction.transactionHash) ? (
-                      <RedHeart />
-                    ) : (
-                      <TransparentHeart />
-                    )}
+                    {favorites.includes(transaction.hash) ? <RedHeart /> : <TransparentHeart />}
                   </button>
                 </div>
                 <div className="flex items-center">
                   <span className="rounded bg-gray-100 px-1.5 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                    {transaction.timestamp}
+                    {transaction.asset}
                   </span>
                 </div>
+                {transaction?.value && (
+                  <div className="flex items-center">
+                    <span className="rounded bg-gray-100 px-1.5 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                      💰&nbsp;&nbsp;${transaction?.value?.toFixed(2)}
+                    </span>
+                  </div>
+                )}
                 <div className="flex items-center">
                   <span className="hidden rounded bg-gray-100 px-1.5 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300 md:block">
-                    🧱&nbsp;&nbsp;{transaction.blockNumber}
+                    🧱&nbsp;&nbsp;{transaction.blockNum}
                   </span>
                 </div>
                 <div className="flex flex-row items-center">
-                  <span className="rounded bg-gray-100 px-1 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                    ⛽️&nbsp;&nbsp;
-                    {Number(transaction.gasPrice).toFixed(2)}
+                  <span className="rounded bg-gray-100 py-0.5 px-2 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                    {transaction.category.toUpperCase()}
                   </span>
-                </div>
-                <div className="flex flex-row items-center">
-                  {transaction.status ? (
-                    <span className="m-0 rounded bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-200 dark:text-green-900 md:mr-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </span>
-                  ) : (
-                    <span className="m-0 rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800 dark:bg-red-200 dark:text-red-900 md:mr-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </span>
-                  )}
                 </div>
                 <a
                   className="flex w-[25%] items-center"
-                  href={`https://etherscan.io/tx/${transaction.transactionHash}`}
+                  href={`https://etherscan.io/tx/${transaction.hash}`}
                   rel="noopener noreferrer"
                   target="_blank">
                   <span className="truncate rounded bg-blue-100 px-1.5 py-0.5 text-xs font-semibold text-blue-900 hover:cursor-pointer hover:bg-blue-200 hover:text-blue-400 hover:underline dark:bg-blue-200 dark:text-blue-900 dark:hover:bg-blue-300">
-                    {transaction.transactionHash}
+                    {transaction.hash}
                   </span>
                 </a>
               </div>

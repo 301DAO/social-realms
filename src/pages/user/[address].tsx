@@ -117,14 +117,16 @@ const User: NextPage = () => {
       className={clsx(
         `grid h-fit w-full grid-cols-1 justify-center md:gap-4 md:px-4`,
         `md:grid-cols-3`
-      )}>
+      )}
+    >
       <section className="col-span-1">
         <div className={clsx(`flex w-full justify-center px-3`)}>
           <div
             className={clsx(
               `mb-3 flex w-full flex-col items-center justify-items-center rounded-lg bg-white bg-no-repeat py-4 text-center align-middle shadow xl:py-5`,
               `dark:bg-transparent`
-            )}>
+            )}
+          >
             <img
               className="mb-2 rounded-lg"
               src={image ?? '/images/placeholder.png'}
@@ -134,15 +136,17 @@ const User: NextPage = () => {
               <li className="flex justify-between font-bold dark:text-white">
                 <button
                   onClick={() => copy(`${name}`)}
-                  className="hover:cursor-pointer hover:underline">
+                  className="hover:cursor-pointer hover:underline"
+                >
                   {name}
                 </button>
                 <span>{balance && `${balance.formatted.slice(0, 4)}Ξ`}</span>
               </li>
-              <li className="text-gray-500 truncate dark:text-gray-400 text-ellipsis">
+              <li className="truncate text-ellipsis text-gray-500 dark:text-gray-400">
                 <button
                   onClick={() => copy(`${userAddress}`)}
-                  className="truncate hover:cursor-pointer hover:underline">
+                  className="truncate hover:cursor-pointer hover:underline"
+                >
                   {userAddress}
                 </button>
               </li>
@@ -157,12 +161,14 @@ const User: NextPage = () => {
                     `bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 shadow-lg shadow-cyan-500/50 hover:bg-gradient-to-br focus:ring-4 focus:ring-cyan-300 dark:shadow-lg dark:shadow-cyan-800/80 dark:focus:ring-cyan-800`,
                     isSelf && 'hidden',
                     isFollowed && `bg-cyan-400`
-                  )}>
+                  )}
+                >
                   <span
                     className={clsx(
                       `relative flex w-full items-center justify-center rounded-md bg-white px-5 py-2.5 align-middle transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-gray-900`,
                       isFollowed && `dark:bg-opacity-10`
-                    )}>
+                    )}
+                  >
                     {isFollowed ? 'UNFOLLOW' : isFollowedLoading ? 'LOADING...' : 'FOLLOW'}
                   </span>
                 </button>
@@ -174,7 +180,8 @@ const User: NextPage = () => {
         <div
           className={clsx(
             `mb-4 w-full rounded-xl bg-white shadow dark:border-2 dark:border-gray-600 dark:bg-transparent`
-          )}>
+          )}
+        >
           <ul className="flex divide-x divide-gray-200 rounded-sm shadow dark:divide-gray-700 sm:flex">
             <li className="w-full">
               <button
@@ -184,7 +191,8 @@ const User: NextPage = () => {
                     ? `active bg-gray-100 text-gray-700 focus:ring-blue-300 dark:bg-gray-800`
                     : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-transparent dark:hover:bg-gray-700 dark:hover:text-white`
                 )}
-                onClick={followersTab}>
+                onClick={followersTab}
+              >
                 FOLLOWERS
               </button>
             </li>
@@ -197,12 +205,13 @@ const User: NextPage = () => {
                     ? `active bg-gray-100 text-gray-700 focus:ring-blue-300 dark:bg-gray-800`
                     : `bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 focus:ring-blue-300 dark:bg-transparent dark:hover:bg-gray-700 dark:hover:text-white`
                 )}
-                onClick={followingTab}>
+                onClick={followingTab}
+              >
                 FOLLOWING
               </button>
             </li>
           </ul>
-          <ul className="px-6 py-4 divide-y divide-gray-200 rounded-b-xl dark:divide-gray-700 dark:bg-gray-800">
+          <ul className="divide-y divide-gray-200 rounded-b-xl px-6 py-4 dark:divide-gray-700 dark:bg-gray-800">
             {currentTab === tab.FOLLOWERS ? (
               followers.map((address, idx) => (
                 <li className="py-3 hover:cursor-pointer sm:py-4" key={idx}>
@@ -252,7 +261,7 @@ const User: NextPage = () => {
       </section>
 
       <section className="col-span-2">
-        <div className="w-full py-4 mb-4 bg-white bg-no-repeat rounded-lg shadow dark:bg-transparent">
+        <div className="mb-4 w-full rounded-lg bg-white bg-no-repeat py-4 shadow dark:bg-transparent">
           <Gallery nfts={nftsQueryResponse ?? []} />
         </div>
       </section>

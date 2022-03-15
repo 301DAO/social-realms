@@ -180,7 +180,8 @@ const Web3ConnectButton = ({
       onClick={async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         return await onButtonClick(connector);
-      }}>
+      }}
+    >
       <WalletIcon name={connector.name} />
       {['metamask', 'injected'].includes(connector.name) ? 'MetaMask' : connector.name}
     </button>

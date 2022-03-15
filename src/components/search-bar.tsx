@@ -25,7 +25,8 @@ const InvalidAddressToast = () => (
       target="_blank"
       href="https://metamask.zendesk.com/hc/en-us/articles/360015289512"
       rel="noreferrer"
-      className="underline">
+      className="underline"
+    >
       Where can I find my address?
     </a>
   </p>

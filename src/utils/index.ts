@@ -1,6 +1,10 @@
-export * from './nft-utils';
 export * from './time';
+export * from './nft-utils';
 export * from './converters';
+
+export const eNotationToDecimal = (value: number | string) => parseFloat(`${value}`).toFixed(10);
+
+export const to32BytesHash = (number: number) => `0x${number.toString(16).padStart(64, '0')}`;
 
 export const passEnsRegex = (name: string) => {
   if (!valueExists(name)) return false;

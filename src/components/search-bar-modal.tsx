@@ -87,7 +87,8 @@ const SearchBarModal = () => {
         className={clsx(
           `flex h-8 w-8 items-center justify-center text-gray-500 hover:text-gray-600`,
           `dark:text-gray-300`
-        )}>
+        )}
+      >
         <span className="sr-only">Navigation</span>
         <svg
           width="24"
@@ -97,7 +98,8 @@ const SearchBarModal = () => {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          aria-hidden="true">
+          aria-hidden="true"
+        >
           <path d="m19 19-3.5-3.5"></path>
           <circle cx="11" cy="11" r="6"></circle>
         </svg>
@@ -106,7 +108,8 @@ const SearchBarModal = () => {
         <Dialog
           onClose={hideModal}
           onKeyPress={onEnter}
-          className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-[1px]">
+          className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-[1px]"
+        >
           <div className="flex min-h-screen items-center justify-center">
             <Transition.Child
               as={React.Fragment}
@@ -115,7 +118,8 @@ const SearchBarModal = () => {
               enterTo="opacity-100"
               leave="ease-in duration-200"
               leaveFrom="opacity-100"
-              leaveTo="opacity-0">
+              leaveTo="opacity-0"
+            >
               <Dialog.Overlay className="fixed inset-0 bg-black opacity-70" />
             </Transition.Child>
             <Transition.Child
@@ -125,11 +129,13 @@ const SearchBarModal = () => {
               enterTo="opacity-100 scale-100"
               leave="ease-in duration-200"
               leaveFrom="opacity-100 scale-100"
-              leaveTo="opacity-0 scale-95">
+              leaveTo="opacity-0 scale-95"
+            >
               <div className="fixed top-[40%] w-full max-w-[30rem] rounded-lg bg-white text-base font-semibold text-gray-900 shadow-lg">
                 <Dialog.Title
                   as="div"
-                  className="ml-auto flex h-12 justify-evenly space-x-3 rounded-lg bg-white p-1 px-3 text-left text-gray-400 shadow-sm ring-[1px] ring-gray-900/10 ring-gray-400 hover:ring-gray-300 md:flex">
+                  className="ml-auto flex h-12 justify-evenly space-x-3 rounded-lg bg-white p-1 px-3 text-left text-gray-400 shadow-sm ring-[1px] ring-gray-900/10 ring-gray-400 hover:ring-gray-300 md:flex"
+                >
                   <button onClick={onSearchClick} className="outline-none">
                     <svg
                       width="24"
@@ -140,7 +146,8 @@ const SearchBarModal = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       className="flex-none text-gray-300"
-                      aria-hidden="true">
+                      aria-hidden="true"
+                    >
                       <path d="m19 19-3.5-3.5"></path>
                       <circle cx="11" cy="11" r="6"></circle>
                     </svg>

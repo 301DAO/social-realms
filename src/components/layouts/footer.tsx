@@ -37,7 +37,8 @@ export function Footer() {
       className={clsx(
         `fixed bottom-0 left-0 m-0 box-border flex h-10 w-full items-center justify-center p-4 text-gray-700`,
         ` dark:bg-[#14141b] dark:text-gray-300`
-      )}>
+      )}
+    >
       <div className={clsx(`flex gap-x-10 rounded-lg bg-gray-100 p-2.5`, `dark:bg-transparent`)}>
         {socialLinks.map(item => (
           <a key={item.name} href={item.url} target="_blank" rel="noopener noreferrer">

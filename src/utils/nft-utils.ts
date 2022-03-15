@@ -1,4 +1,3 @@
-
 export const isImage = (s: string) => imageExtensions.some(_ => s.endsWith(_));
 export const isVideo = (s: string) => videoExtensions.some(_ => s.endsWith(_));
 

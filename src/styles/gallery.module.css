@@ -5,7 +5,7 @@
   -moz-column-gap: 0px;
   column-count: 4;
   box-sizing: border-box;
-  @apply py-10 space-x-3 space-y-3 md:w-11/12;
+  @apply space-x-3 space-y-3 py-10 md:w-11/12;
 }
 
 @media (max-width: 1200px) {
