@@ -30,10 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ success: true, message: '', transfers: data.filter(Boolean) });
   } catch (error) {
-    console.warn(
-      'Error in api/asset-transfers.ts: ',
-      error instanceof Error ? error.message : error
-    );
+    console.warn('Error in api/asset-transfers.ts: ', error);
 
     return res.status(500).json({
       success: false,
