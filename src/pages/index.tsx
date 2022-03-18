@@ -13,10 +13,14 @@ const Index: NextPage = () => {
   React.useEffect(() => {
     // prefetching feed data on site first visit
     (async () =>
-      await queryClient.prefetchQuery(['asset-transfers'], () => fetchAssetTransfers(address), {
-        staleTime: Infinity,
-        cacheTime: Infinity,
-      }))();
+      await queryClient.prefetchQuery(
+        ['asset-transfers'],
+        () => fetchAssetTransfers(address),
+        {
+          staleTime: Infinity,
+          cacheTime: Infinity,
+        }
+      ))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

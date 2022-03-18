@@ -14,7 +14,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!address) {
       return res.status(400).json({ success: false, message: 'address is required' });
     }
-    const { addresses } = await fetchFollowings(address);
+    const { addresses, message, success } = await fetchFollowings(address);
+    console.log(addresses, message, success);
     if (!addresses) {
       return res
         .status(400)
