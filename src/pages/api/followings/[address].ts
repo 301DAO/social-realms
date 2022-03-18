@@ -21,7 +21,7 @@ export default async function followingsHandler(req: NextApiRequest, res: NextAp
     });
     const addresses = followings.map(_ => _.followeeAddress);
 
-    return res.status(200).json({ success: true, addresses });
+    return res.status(200).json({ success: true, addresses, message: 'success' });
   } catch (error) {
     console.error(
       'Error occured in /api/followings: ',

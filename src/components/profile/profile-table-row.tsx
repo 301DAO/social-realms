@@ -86,8 +86,7 @@ export const ProfileRow = ({
             className={clsx(
               `truncate text-sm font-medium text-gray-900 md:text-lg`,
               `hover:decoration-solid dark:text-white dark:hover:text-gray-200`
-            )}
-          >
+            )}>
             {name}
           </a>
         </Link>
@@ -102,19 +101,19 @@ export const ProfileRow = ({
         <a href={`https://twitter.com/${twitter}`} target="_blank" rel="noopener noreferrer">
           <Twitter />
         </a>
-      ) : null}
+      ) : (
+        <p className="w-[24px]"></p>
+      )}
       <div className="ml-auto">
         <button
           onClick={followUser}
-          className="ml-auto flex items-center rounded-lg px-0 text-sm font-medium uppercase text-blue-700 hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700 sm:text-sm md:px-2 md:text-lg"
-        >
+          className="ml-auto flex items-center rounded-lg px-0 text-sm font-medium uppercase text-blue-700 hover:bg-gray-100 dark:text-blue-500 dark:hover:bg-gray-700 sm:text-sm md:px-2 md:text-lg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5 md:h-6 md:w-6"
             fill="none"
             viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+            stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

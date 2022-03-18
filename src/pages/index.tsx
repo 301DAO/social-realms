@@ -1,10 +1,24 @@
 import * as React from 'react';
 import type { NextPage } from 'next';
 import clsx from 'clsx';
+
 import { useUser } from '@/hooks';
+import { queryClient } from '@/lib/clients';
+import { fetchAssetTransfers } from '@/lib';
 
 const Index: NextPage = () => {
-  useUser({ redirectTo: '/login' });
+  const { user } = useUser({ redirectTo: '/login' });
+  const address = user?.publicAddress as string;
+
+  React.useEffect(() => {
+    // prefetching feed data on site first visit
+    (async () =>
+      await queryClient.prefetchQuery(['asset-transfers'], () => fetchAssetTransfers(address), {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }))();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <main className="mt-20 flex flex-col items-center px-4 text-center align-middle md:mt-40">

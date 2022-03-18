@@ -75,7 +75,7 @@ export async function alchemyGetAssetTransfers({
   fromAddress,
   toAddress,
   contractAddresses = [],
-  maxCount = 10,
+  maxCount = 5,
   pageKey,
   excludeZeroValues = true,
   category = Object.values(AssetTransfersCategory),

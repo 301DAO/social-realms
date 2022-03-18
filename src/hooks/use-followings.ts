@@ -1,15 +1,17 @@
 import { useQuery } from 'react-query';
-import { TIME } from '@/constants';
 import axios from 'axios';
+import { TIME } from '@/constants';
+import { fetchFollowings } from '@/lib';
 
 export const useFollowings = ({ address }: { address: string }): [string[], number, boolean] => {
   const { data, isLoading: isFollowingsLoading } = useQuery<string[]>(
     ['followings', address],
     async () => {
       try {
-        const response = await axios.get(`/api/followings/${address}`);
-        const { success, addresses } = response.data;
-        return success ? addresses : [];
+        const response = await fetchFollowings(address);
+        const { addresses: followings } = response;
+        return !!followings ? followings : [];
+        //success ? followings : [];
       } catch (error) {
         console.error(`error in useFollowings: `, error instanceof Error ? error.message : error);
       }

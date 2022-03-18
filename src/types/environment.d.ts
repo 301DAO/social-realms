@@ -11,5 +11,6 @@ declare namespace NodeJS {
     NEXT_PUBLIC_NFT_PORT_KEY: string;
     COVALENT_KEY: string;
     NEXT_PUBLIC_COVALENT_KEY: string;
+    NEXT_PUBLIC_DEV_PORT: number;
   }
 }

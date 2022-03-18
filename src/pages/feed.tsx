@@ -1,25 +1,13 @@
 import * as React from 'react';
 import { useMutation, useQuery } from 'react-query';
 
-import { TIME } from '@/constants';
-import { valueExists } from '@/utils';
 import { favorite } from '@/lib/mutations';
+import { fetchAssetTransfers } from '@/lib';
 import { queryClient } from '@/lib/clients';
 import { LoadingTransaction } from '@/components';
-import { alchemyGetAssetTransfers } from '@/lib/wrappers';
-import { DownArrow, RedHeart, TransparentHeart } from '@/components/icons';
-import { useIsMounted, useFollowings, useFavorites, useUser } from '@/hooks';
-import type { AlchemyGetAssetTransfersResponse } from '@/lib/wrappers/alchemy.types';
 import { Transfer } from '@/lib/wrappers/alchemy.types';
-
-type FullfilledResult = PromiseFulfilledResult<AlchemyGetAssetTransfersResponse>[];
-async function getAssetTransfers(address: string) {
-  const transfersTo = await alchemyGetAssetTransfers({ toAddress: address });
-  const transfersFrom = await alchemyGetAssetTransfers({ fromAddress: address });
-  const promise = await Promise.allSettled([transfersTo, transfersFrom]);
-  const fulfilled = promise.filter(({ status }) => status === 'fulfilled') as FullfilledResult;
-  return fulfilled.map(({ value }) => value.result?.transfers ?? []).flat();
-}
+import { useIsMounted, useFavorites, useUser } from '@/hooks';
+import { DownArrow, RedHeart, TransparentHeart } from '@/components/icons';
 
 const Feed = () => {
   const isMounted = useIsMounted();
@@ -28,7 +16,6 @@ const Feed = () => {
   const address = user?.publicAddress as string;
 
   const [favorites] = useFavorites({ address });
-  const [followings] = useFollowings({ address });
 
   const favoriteMutation = useMutation(
     ({ address, hash }: { address: string; hash: string }) => favorite({ address, hash }),
@@ -37,28 +24,10 @@ const Feed = () => {
     }
   );
 
-  const {
-    data: transactions,
-    isLoading,
-    isError,
-  } = useQuery(
-    ['transfers', address],
-    async () => {
-      const promise = await Promise.allSettled(
-        followings.map(async following => await getAssetTransfers(following))
-      );
-      const fullfilled = promise.filter(
-        result => result.status === 'fulfilled' && result.value
-      ) as PromiseFulfilledResult<any>[];
-      console.log(fullfilled);
-      return fullfilled.map(({ value }) => value).flat();
-    },
-    {
-      enabled: !!address && !!followings && isMounted,
-      refetchInterval: TIME.MINUTE * 3,
-      //refetchOnWindowFocus: false,
-    }
-  );
+  const { data } = useQuery(['asset-transfers'], async () => await fetchAssetTransfers(address));
+  const { transfers } = data || {};
+
+  let readyTransactions = transfers ?? [];
 
   if (!isMounted) {
     return (
@@ -71,8 +40,6 @@ const Feed = () => {
       </>
     );
   }
-
-  let readyTransactions = transactions; //?? [];
 
   return (
     <main className="mx-auto mt-6 flex w-full flex-col items-center justify-items-start gap-y-4 align-top text-white md:mt-12">
