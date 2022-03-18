@@ -1,3 +1,5 @@
+import { utils } from 'ethers';
+import { prisma } from '@/lib/clients';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { fetchFollowings } from '@/lib';
@@ -14,8 +16,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!address) {
       return res.status(400).json({ success: false, message: 'address is required' });
     }
-    const { addresses, message, success } = await fetchFollowings(address);
-    console.log(addresses, message, success);
+
+    const followings = await prisma.follower.findMany({
+      where: { followerAddress: utils.getAddress(address) },
+      select: { followeeAddress: true },
+    });
+    const addresses = followings.map(_ => _.followeeAddress);
+
     if (!addresses) {
       return res
         .status(400)
