@@ -43,7 +43,7 @@ export const Gallery = ({ nfts }: { nfts: NFT[] }) => {
           {nfts.map(({ cached_file_url, contract_address, token_id, name, description }, idx) => {
             const url = cached_file_url;
             if (!url) return null;
-            console.log(url);
+         
             if (isImage(url)) {
               return (
                 <Nft key={idx} contract_address={contract_address} token_id={token_id}>

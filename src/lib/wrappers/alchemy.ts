@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 import type {
+  NFTMetadata,
+  NFTMetadataRequest,
   AlchemyGetBlockReceiptsRequest,
   AlchemyGetBlockReceiptsResponse,
   AlchemyBlockNumberResponse,
@@ -13,42 +15,6 @@ import { AssetTransfersCategory } from '@alch/alchemy-web3';
 import { to32BytesHash } from '@/utils';
 
 //const KEY = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
-
-type Attribute = { value: string; trait_type: string };
-type Metadata = { image: string; attributes: Attribute[] };
-type Uri = { gateway: string; raw: string };
-type Contract = { address: string };
-type Id = { id: string };
-
-export type AddressNFT = {
-  contract: Contract;
-  id: Id;
-  balance: string;
-};
-
-export type AddressNFTsResponse = {
-  ownedNfts: AddressNFT[];
-  blockHash: string;
-  pageKey: string;
-  totalCount: number;
-};
-
-type NFTMetadata = {
-  contract: Contract;
-  description: string;
-  id: Id;
-  media: Uri[];
-  metadata: Metadata;
-  timeLastUpdated: string;
-  title: string;
-  tokenUri: Uri;
-};
-
-type NFTMetadataRequest = {
-  contractAddress: string;
-  tokenId: string;
-  tokenType?: string;
-};
 
 const KEY = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
 const URL = `https://eth-mainnet.alchemyapi.io/v2/${KEY}`;

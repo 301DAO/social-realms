@@ -29,13 +29,14 @@ type ProviderConfig = { chainId?: number; connector?: Connector };
 const isChainSupported = (chainId?: number) => defaultChains.some(x => x.id === chainId);
 
 export const wagmiProvider = ({ chainId = 1 }: ProviderConfig = {}) =>
-  new providers.AlchemyProvider(chainId, alchemy) ||
-  new providers.InfuraProvider(chainId, infuraId) ||
-  new providers.EtherscanProvider(chainId, etherscan) ||
+  new providers.StaticJsonRpcProvider('https://mainnet.infura.io/v3/' + infuraId, undefined) ||
+  new providers.AlchemyProvider(undefined, alchemy) ||
+  new providers.InfuraProvider(undefined, infuraId) ||
+  new providers.EtherscanProvider(undefined, etherscan) ||
   new providers.FallbackProvider([defaultProvider]) ||
   new providers.CloudflareProvider();
 
 export const wagmiWebSocketProvider = ({ chainId = 1 }: ProviderConfig = {}) =>
-  new providers.AlchemyWebSocketProvider(chainId, alchemy) ||
-  new providers.InfuraWebSocketProvider(chainId, infuraId) ||
+  new providers.AlchemyWebSocketProvider(undefined, alchemy) ||
+  new providers.InfuraWebSocketProvider(undefined, infuraId) ||
   new providers.WebSocketProvider('homestead');

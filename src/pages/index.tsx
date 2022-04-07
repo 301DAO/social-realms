@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { useUser } from '@/hooks';
 import { queryClient } from '@/lib/clients';
-import { fetchAssetTransfers } from '@/lib';
+import { fetchAssetTransfers } from '@/lib'
 
 const Index: NextPage = () => {
   const { user } = useUser({ redirectTo: '/login' });
@@ -13,14 +13,10 @@ const Index: NextPage = () => {
   React.useEffect(() => {
     // prefetching feed data on site first visit
     (async () =>
-      await queryClient.prefetchQuery(
-        ['asset-transfers'],
-        () => fetchAssetTransfers(address),
-        {
-          staleTime: Infinity,
-          cacheTime: Infinity,
-        }
-      ))();
+      await queryClient.prefetchQuery(['asset-transfers'], () => fetchAssetTransfers(address), {
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      }))();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

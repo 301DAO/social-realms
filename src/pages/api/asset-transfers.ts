@@ -1,8 +1,6 @@
 import { utils } from 'ethers';
-import { prisma } from '@/lib/clients';
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-import { fetchFollowings } from '@/lib';
+import { prisma } from '@/lib/clients';
 import { alchemyGetAssetTransfers } from '@/lib/wrappers';
 import { AlchemyGetAssetTransfersResponse, Transfer } from '@/lib/wrappers/alchemy.types';
 
@@ -35,7 +33,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ) as PromiseFulfilledResult<Transfer[]>[];
     const data = fulfilled.map(({ value }) => value).flat();
 
-    return res.status(200).json({ success: true, message: '', transfers: data.filter(Boolean) });
+    return res
+      .status(200)
+      .json({ success: true, message: '', transfers: data.filter(Boolean).reverse() });
   } catch (error) {
     console.warn('Error in api/asset-transfers.ts: ', error);
 
@@ -51,7 +51,7 @@ type FullfilledResult = PromiseFulfilledResult<AlchemyGetAssetTransfersResponse>
 async function getAssetTransfers(address: string) {
   const transfersTo = await alchemyGetAssetTransfers({ toAddress: address });
   const transfersFrom = await alchemyGetAssetTransfers({ fromAddress: address });
-  const promise = await Promise.allSettled([transfersTo, transfersFrom]);
+  const promise = await Promise.allSettled([transfersFrom, transfersTo]);
   const fulfilled = promise.filter(({ status }) => status === 'fulfilled') as FullfilledResult;
 
   return fulfilled.map(({ value }) => value.result?.transfers).flat();

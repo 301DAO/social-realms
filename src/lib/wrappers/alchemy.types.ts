@@ -85,3 +85,40 @@ interface RawContract {
   address: string;
   decimal: string;
 }
+
+
+type Attribute = { value: string; trait_type: string };
+type Metadata = { image: string; attributes: Attribute[] };
+type Uri = { gateway: string; raw: string };
+type Contract = { address: string };
+type Id = { id: string };
+
+export type AddressNFT = {
+  contract: Contract;
+  id: Id;
+  balance: string;
+};
+
+export type AddressNFTsResponse = {
+  ownedNfts: AddressNFT[];
+  blockHash: string;
+  pageKey: string;
+  totalCount: number;
+};
+
+export type NFTMetadata = {
+  contract: Contract;
+  description: string;
+  id: Id;
+  media: Uri[];
+  metadata: Metadata;
+  timeLastUpdated: string;
+  title: string;
+  tokenUri: Uri;
+};
+
+export type NFTMetadataRequest = {
+  contractAddress: string;
+  tokenId: string;
+  tokenType?: string;
+};
