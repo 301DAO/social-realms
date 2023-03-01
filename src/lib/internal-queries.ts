@@ -10,7 +10,7 @@ interface FetchFollowingsResponse {
 
 export const fetchFollowings = async (address: string): Promise<FetchFollowingsResponse> => {
   const response = await axios.get<FetchFollowingsResponse>(
-    `${API_BASE_URL}/api/followings/${address}`
+    `/api/followings/${address}`
   );
   return response.data;
 };
